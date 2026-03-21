@@ -11,6 +11,7 @@ services:
 
   php:
     build: ./php
+    user: "www-data"
     volumes:
       - ./src:/var/www/html
 
