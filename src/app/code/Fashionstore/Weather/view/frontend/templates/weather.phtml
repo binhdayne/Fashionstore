@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <style>
 .panel.wrapper { 
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important; 
@@ -116,10 +117,140 @@
 
     <div class="right-tools" style="display:flex;align-items:center;gap:15px;">
         <div style="font-size:10px;">WELCOME, DUONG BINH!</div>
+=======
+<?php
+/** @var \Fashionstore\Weather\Block\Weather $block */
+
+// Khởi tạo Customer Session an toàn ngay trong template
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->get(\Magento\Customer\Model\Session::class);
+$isLoggedIn = $customerSession->isLoggedIn();
+$customerName = $isLoggedIn ? $customerSession->getCustomer()->getName() : 'Khách';
+
+// Get search helper and escaper for the search form
+$helper = $objectManager->get(\Magento\Search\Helper\Data::class);
+$escaper = $objectManager->get(\Magento\Framework\Escaper::class);
+$action = $helper->getResultUrl();
+$queryParam = $helper->getQueryParamName();
+$quickSearchUrl = $helper->getSuggestUrl();
+$minSearchLength = $helper->getMinQueryLength();
+?>
+
+<style>
+    /* 1. TOÀN BỘ HEADER VÀ GRADIENT */
+    .panel.wrapper { 
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important; 
+        border: none !important; 
+        position: relative; 
+        z-index: 1000;
+    }
+    .header.content { display: none !important; } 
+
+    #header-info-bar { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        width: 100%; 
+        height: 60px; 
+        padding: 0 20px;
+        position: relative;
+    }
+
+    /* KHỐI TRÁI */
+    .left-section { display: flex; align-items: center; gap: 15px; flex: 2; min-width: 0; }
+    #custom-hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 5px; z-index: 1010; }
+    #custom-hamburger div { width: 18px; height: 1px; background: #fff; }
+    
+    .weather-info { color: #fff; font-size: 10px; white-space: nowrap; }
+    .weather-info b { color: #c9a96e; letter-spacing: 1px; }
+    .divider { color: #fff; opacity: 0.2; margin: 0 5px; }
+
+    #news-section { display: flex; align-items: center; gap: 8px; overflow: hidden; white-space: nowrap; }
+    .news-label { color: #ccc; font-size: 9px; letter-spacing: 1px; font-weight: bold; }
+    #news-title { 
+        color: #fff; font-size: 10px; text-decoration: none; opacity: 0.8; 
+        transition: opacity 0.5s ease; overflow: hidden; text-overflow: ellipsis; max-width: 200px; 
+    }
+
+    /* KHỐI GIỮA */
+    .center-section { position: absolute; left: 50%; transform: translateX(-50%); z-index: 1005; }
+    .logo-text { 
+        font-family: 'Cormorant Garamond', serif; color: #fff; text-decoration: none !important; 
+        font-size: 22px; letter-spacing: 6px; text-transform: uppercase; font-weight: 300; 
+    }
+
+    /* KHỐI PHẢI */
+    .right-section { display: flex; align-items: center; justify-content: flex-end; gap: 20px; flex: 1; }
+    #custom-welcome { color: #fff; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+    .right-section .block-search .label:before, 
+    .right-section .minicart-wrapper .action.showcart:before { color: #fff !important; font-size: 14px !important; }
+   
+    #custom-search-icon { cursor: pointer; font-size: 18px; color: #fff; }
+   
+    /* SIDE MENU */
+    #menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: 0.4s; }
+    #menu-overlay.show { opacity: 1; visibility: visible; }
+
+    #dior-side-menu { 
+        position: fixed; top: 0; left: -400px; width: 380px; height: 100vh; 
+        background: #eeeeee; z-index: 9999; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); 
+        display: flex; flex-direction: column;
+    }
+    #dior-side-menu.open { left: 0 !important; }
+    .menu-header { padding: 30px 25px; border-bottom: 1px solid #ddd; cursor: pointer; font-weight: bold; font-size: 12px; color: #333; }
+    .menu-item { display: flex; justify-content: space-between; padding: 20px 25px; color: #333; text-decoration: none; border-bottom: 1px solid #e5e5e5; font-size: 14px; }
+    .menu-footer { padding: 30px 25px; background: #f0f0f0; margin-top: auto; }
+    .menu-switcher { display: flex; background: #ccc; padding: 2px; border-radius: 2px; margin-top: 15px; }
+    .switch-btn { flex: 1; text-align: center; padding: 10px; font-size: 10px; font-weight: bold; color: #fff; cursor: pointer; }
+    .switch-btn.active { background: #fff; color: #333; }
+
+    .nav-toggle, .navigation, .nav-sections, .panel.header .welcome, .panel.header .header.links { display: none !important; }
+
+    /* SEARCH OVERLAY */
+    #search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 10000; opacity: 0; visibility: hidden; transition: 0.4s; }
+    #search-overlay.show { opacity: 1; visibility: visible; }
+    #search-bar { position: fixed; top: -240px; left: 0; width: 100%; min-height: 220px; background: #fff; z-index: 10001; transition: top 0.4s; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 20px; }
+    #search-bar.show { top: 0; }
+    #search-close { position: absolute; top: 18px; left: 20px; cursor: pointer; font-size: 22px; color: #333; margin-right: 0; }
+    #search_form_container { width: 100%; max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    #search_form { width: 100%; display: flex; justify-content: center; align-items: center; }
+    .search-logo { font-family: 'Cormorant Garamond', serif; color: #000; font-size: 44px; letter-spacing: 10px; text-transform: uppercase; font-weight: 700; }
+    #search_form input { width: 100%; max-width: 1200px; padding: 14px 22px; border: 2px solid #000; border-radius: 999px; font-size: 22px; font-weight: 500; color: #111; outline: none; }
+    #search_form input::placeholder { color: #666; font-weight: 400; }
+    #search_autocomplete_overlay { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: 1200px; max-width: 100%; background: #fff; border: 1px solid #ddd; z-index: 10002; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    #search_autocomplete_overlay .autocomplete-list { list-style: none; margin: 0; padding: 0; }
+    #search_autocomplete_overlay .autocomplete-list li { border-bottom: 1px solid #eee; }
+    #search_autocomplete_overlay .autocomplete-list li:last-child { border-bottom: none; }
+    #search_autocomplete_overlay .autocomplete-list li a { display: block; padding: 10px 14px; color: #333; text-decoration: none; }
+    #search_autocomplete_overlay .autocomplete-list li a:hover { background: #f4f4f4; }
+</style>
+
+<div id="header-info-bar">
+    <div class="left-section">
+        <div id="custom-hamburger"><div></div><div></div><div></div></div>
+        <div class="weather-info"><b>HÀ NỘI</b> : <span id="w-temp">--°C</span></div>
+        <span class="divider">|</span>
+        <div id="news-section">
+            <span class="news-label">TIN KINH DOANH:</span>
+            <a href="#" id="news-title">Đang tải tin tức...</a>
+        </div>
+    </div>
+
+    <div class="center-section">
+        <a href="<?= $block->getBaseUrl() ?>" class="logo-text">FASHIONSTORE</a>
+    </div>
+
+    <div class="right-section">
+        <div id="custom-welcome">
+            CHÀO MỪNG, <?= strtoupper($customerName); ?>!
+        </div>
+        <div id="custom-search-icon">🔍︎</div>
+>>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
     </div>
 </div>
 
 <div id="menu-overlay"></div>
+<<<<<<< HEAD
 
 <div id="dior-side-menu">
     <div class="menu-header">
@@ -131,11 +262,86 @@
         <a href="#" class="menu-item">What's New <span>〉</span></a>
         <a href="#" class="menu-item">Women's Fashion <span>〉</span></a>
         <a href="#" class="menu-item">Men's Fashion <span>〉</span></a>
+=======
+<div id="dior-side-menu">
+    <div class="menu-header" id="close-btn">✕ &nbsp; ĐÓNG</div>
+
+    <div class="menu-content">
+        <div class="menu-header">TÀI KHOẢN</div>
+
+        <?php if ($isLoggedIn): ?>
+            <a href="<?= $block->getUrl('customer/account') ?>" class="menu-item">
+                Tài khoản của tôi <span>〉</span>
+            </a>
+            <a href="<?= $block->getUrl('customer/account/logout') ?>" class="menu-item">
+                Đăng xuất <span>〉</span>
+            </a>
+        <?php else: ?>
+            <a href="<?= $block->getUrl('customer/account/login') ?>" class="menu-item">
+                Đăng nhập <span>〉</span>
+            </a>
+            <a href="<?= $block->getUrl('customer/account/create') ?>" class="menu-item">
+                Đăng ký <span>〉</span>
+            </a>
+        <?php endif; ?>
+
+        <div class="menu-header">CỬA HÀNG</div>
+        <a href="/ao-nu.html" class="menu-item">Thời trang nữ <span>〉</span></a>
+        <a href="/ao-nam.html" class="menu-item">Thời trang nam <span>〉</span></a>
+        <a href="/tui-xach.html" class="menu-item">Túi xách <span>〉</span></a>
+        <a href="/giay.html" class="menu-item">Giày <span>〉</span></a>
+    </div>
+
+    <div class="menu-footer">
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;">
+            Liên hệ chúng tôi
+        </a>
+        <div class="menu-switcher">
+            <div class="switch-btn active">Thời trang & Phụ kiện</div>
+            <div class="switch-btn">Nước hoa & Mỹ phẩm</div>
+        </div>
+    </div>
+</div>
+
+<div id="search-overlay"></div>
+<div id="search-bar">
+    <div id="search-close">✕</div>
+    <div id="search_form_container">
+        <span class="search-logo">FASHIONSTORE</span>
+        <form id="search_form" class="form minisearch" action="<?= $escaper->escapeUrl($action) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search_overlay" data-role="minisearch-label">
+                    <span>Tìm kiếm</span>
+                </label>
+                <div class="control">
+                    <input id="search_overlay"
+                        data-mage-init='{
+                            "quickSearch": {
+                                "formSelector": "#search_form",
+                                "url": "<?= /* @noEscape */ $quickSearchUrl ?>",
+                                "destinationSelector": "#search_autocomplete_overlay",
+                                "minSearchLength": "<?= $escaper->escapeHtml($minSearchLength) ?>"
+                            }
+                        }'
+                        type="text"
+                        name="<?= $escaper->escapeHtmlAttr($queryParam) ?>"
+                        value=""
+                        placeholder="Tìm \"denim\""
+                        class="input-text"
+                        maxlength="<?= $escaper->escapeHtmlAttr($helper->getMaxQueryLength()) ?>"
+                        role="combobox"
+                    />
+                    <div id="search_autocomplete_overlay" class="search-autocomplete"></div>
+                </div>
+            </div>
+        </form>
+>>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
     </div>
 </div>
 
 <script>
 require(['jquery'], function($) {
+<<<<<<< HEAD
 
     $(document).on('click', '#custom-hamburger', function() {
         $('#dior-side-menu').addClass('open');
@@ -162,5 +368,192 @@ require(['jquery'], function($) {
         if(d.main) $('#w-temp').text(Math.round(d.main.temp) + "°C");
     });
 
+=======
+    let newsItems = [];
+    let newsIdx = 0;
+    let interval = null;
+
+    function showNews() {
+        if (!newsItems.length) return;
+
+        $('#news-title')
+            .stop(true, true)
+            .fadeOut(200, function() {
+                $(this)
+                    .text(newsItems[newsIdx])
+                    .fadeIn(200);
+            });
+
+        newsIdx = (newsIdx + 1) % newsItems.length;
+    }
+
+    function startSlider() {
+        if (interval) return;
+        interval = setInterval(showNews, 6000);
+    }
+
+    function loadNews() {
+        try {
+            $.get("https://api.rss2json.com/v1/api.json?rss_url=https://vnexpress.net/rss/kinh-doanh.rss")
+                .done(function(data) {
+                    if (data && data.items && data.items.length) {
+                        newsItems = data.items.map(item => item.title);
+
+                        $('#news-title').text(newsItems[0]);
+                        startSlider();
+                    }
+                })
+                .fail(function() {
+                    console.log("RSS load fail");
+                });
+        } catch (e) {
+            console.log("Error:", e);
+        }
+    }
+
+    // ⏱ delay để không block header
+    setTimeout(loadNews, 2000);
+});
+</script>
+<script>
+require(['jquery'], function($) {
+
+    // 3. Xử lý đóng mở Menu
+    $(document).on('click', '#custom-hamburger', function() {
+        $('#dior-side-menu').addClass('open');
+        $('#menu-overlay').addClass('show');
+        $('body').addClass('csc-no-scroll');
+    });
+
+    $(document).on('click', '#close-btn, #menu-overlay', function() {
+        $('#dior-side-menu').removeClass('open');
+        $('#menu-overlay').removeClass('show');
+        $('body').removeClass('csc-no-scroll');
+    });
+
+    $(document).on('click', '#search-close, #search-overlay', function() {
+        $('#search-overlay').removeClass('show');
+        $('#search-bar').removeClass('show');
+        $('body').removeClass('csc-no-scroll');
+    });
+
+    // Placeholder changing for best-selling products
+    let bestSellers = ["denim", "áo thun nam", "quần jean nữ", "giày sneaker", "túi xách da"];
+    let placeholderIdx = 0;
+    let placeholderInterval = null;
+
+    function changePlaceholder() {
+        $('#search_overlay').attr('placeholder', 'Tìm "' + bestSellers[placeholderIdx] + '"');
+        placeholderIdx = (placeholderIdx + 1) % bestSellers.length;
+    }
+
+    function startPlaceholderChange() {
+        if (placeholderInterval) clearInterval(placeholderInterval);
+        placeholderInterval = setInterval(changePlaceholder, 3000);
+        changePlaceholder(); // Initial call
+    }
+
+    function stopPlaceholderChange() {
+        if (placeholderInterval) {
+            clearInterval(placeholderInterval);
+            placeholderInterval = null;
+        }
+    }
+
+    // Start when search is opened
+    $(document).on('click', '#custom-search-icon', function() {
+        $('#search-overlay').addClass('show');
+        $('#search-bar').addClass('show');
+        $('body').addClass('csc-no-scroll');
+        $('#search_overlay').focus();
+        startPlaceholderChange();
+    });
+
+    // Stop when closed
+    $(document).on('click', '#search-close, #search-overlay', function() {
+        $('#search-overlay').removeClass('show');
+        $('#search-bar').removeClass('show');
+        $('body').removeClass('csc-no-scroll');
+        stopPlaceholderChange();
+    });
+
+    const suggestUrl = '<?= $block->getUrl('fashionstore_weather/ajax/suggest') ?>';
+    const minSearchLength = 1;
+    let suggestTimeout = null;
+
+    function renderSuggestions(items) {
+        const container = $('#search_autocomplete_overlay');
+        if (!items || !items.length) {
+            container.hide().empty();
+            return;
+        }
+        const list = $('<ul>').addClass('autocomplete-list');
+        items.forEach(item => {
+            const title = $('<span>').text(item.title || item.title || item.name || item.value || '');
+            const url = item.url || item.product_url || '#';
+            const li = $('<li>').append($('<a>').attr('href', url).append(title));
+            list.append(li);
+        });
+        container.empty().append(list).show();
+    }
+
+    $('#search_overlay').on('input', function() {
+        const q = $.trim($(this).val());
+        if (q.length < minSearchLength) {
+            renderSuggestions([]);
+            return;
+        }
+
+        if (suggestTimeout) {
+            clearTimeout(suggestTimeout);
+        }
+        suggestTimeout = setTimeout(function() {
+            $.ajax({
+                url: suggestUrl,
+                type: 'GET',
+                dataType: 'json',
+                data: { q: q },
+                success: function(data) {
+                    if (data && data.length) {
+                        renderSuggestions(data);
+                    } else {
+                        // Fallback: try built-in endpoint if module-based endpoint is empty
+                        $.ajax({
+                            url: '<?= $escaper->escapeUrl($quickSearchUrl) ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: { q: q },
+                            success: function(builtinData) {
+                                renderSuggestions(builtinData || []);
+                            },
+                            error: function() {
+                                renderSuggestions([]);
+                            }
+                        });
+                    }
+                },
+                error: function() {
+                    renderSuggestions([]);
+                }
+            });
+        }, 250);
+    });
+
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#search-bar').length && !$(e.target).is('#custom-search-icon')) {
+            $('#search_autocomplete_overlay').hide();
+        }
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.keyCode === 27 && $('#search-overlay').hasClass('show')) {
+            $('#search-overlay').removeClass('show');
+            $('#search-bar').removeClass('show');
+            $('body').removeClass('csc-no-scroll');
+        }
+    });
+
+
+>>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
 });
 </script>

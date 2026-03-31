@@ -31,3 +31,27 @@
 /* 3. Đảm bảo nút Hamburger và các nút khác vẫn nổi bật */
 #custom-hamburger div { background: #fff !important; }
 .block-search .label:before { color: #fff !important; }
+<<<<<<< HEAD
+=======
+.center-section a.logo-text {
+    color: #fff !important;
+}
+.custom-search .block-search input {
+    display: none;
+}
+
+.custom-search .block-search {
+    position: relative;
+}
+
+.custom-search .action.search {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.custom-search .action.search:before {
+    color: #fff;
+    font-size: 16px;
+}
+>>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57

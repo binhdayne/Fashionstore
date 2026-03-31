@@ -1,0 +1,15 @@
+{
+  "name": "fashionstore/language-vi-vn",
+  "description": "Vietnamese (Vietnam) language pack for Magento 2",
+  "version": "1.0.0",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "type": "magento2-language",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ]
+  }
+}
