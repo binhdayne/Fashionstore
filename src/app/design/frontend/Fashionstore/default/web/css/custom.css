@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap');
+
+/* ===== RESET ===== */
+* { box-sizing: border-box; }
+
+/* ===== TYPOGRAPHY ===== */
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #1a1a1a !important;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+    background: #fff !important;
+    border-bottom: 1px solid #1a1a1a !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 999 !important;
+    transition: all 0.3s ease !important;
+}
+
+.header.content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 15px 40px !important;
+    max-width: 100% !important;
+}
+
+/* LOGO GIỮA */
+.logo {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+/* ===== NAV ===== */
+.nav-sections {
+    background: #fff !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+}
+
+.navigation ul {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+}
+
+.navigation ul li a {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    color: #1a1a1a !important;
+    text-decoration: none !important;
+    padding: 14px 0 !important;
+    display: block !important;
+    transition: color 0.3s !important;
+}
+
+.navigation ul li a:hover {
+    color: #c9a96e !important;
+}
+
+/* ===== ẨN TIÊU ĐỀ HOME ===== */
+.cms-home .page-title-wrapper {
+    display: none !important;
+}
+
+/* ===== BUTTONS ===== */
+.action.primary {
+    background: #1a1a1a !important;
+    border: 1px solid #1a1a1a !important;
+    color: #fff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 10px !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    padding: 14px 32px !important;
+    border-radius: 0 !important;
+    transition: all 0.3s !important;
+}
+
+.action.primary:hover {
+    background: #c9a96e !important;
+    border-color: #c9a96e !important;
+}
+
+/* ===== PRODUCT CARDS ===== */
+.product-item-info {
+    border: none !important;
+}
+
+.product-item-name a {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 16px !important;
+    color: #1a1a1a !important;
+}
+
+.price-box .price {
+    color: #1a1a1a !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+}
+
+/* ===== CATEGORY PAGE ===== */
+.page-title span {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 36px !important;
+    font-weight: 300 !important;
+    letter-spacing: 6px !important;
+    text-transform: uppercase !important;
+}
+
+/* ===== FOOTER ===== */
+.page-footer {
+    background: #1a1a1a !important;
+    color: #ccc !important;
+    margin-top: 80px !important;
+}
+
+.page-footer a {
+    color: #c9a96e !important;
+}
+
+.footer.content .block-title strong {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 16px !important;
+    letter-spacing: 4px !important;
+    text-transform: uppercase !important;
+    color: #fff !important;
+}
+
+/* ===== SCROLL HIDE HEADER ===== */
+.header-scroll-down .page-header {
+    transform: translateY(-100%) !important;
+}
+
+.header-scroll-down .nav-sections {
+    transform: translateY(-100%) !important;
+}
+
+/* ẨN LOGO SVG */
+a.logo img,
+.logo img,
+header .logo img {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+}

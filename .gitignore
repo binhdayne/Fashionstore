@@ -1,0 +1,11 @@
+# Bỏ qua cấu hình của trình soạn thảo
+.vscode/
+
+# Bỏ qua các file Backup, Database dư thừa
+*.sql
+backup.sql
+src_backup/
+
+# Bỏ qua các file môi trường, bảo mật
+env/
+rootCA.pem

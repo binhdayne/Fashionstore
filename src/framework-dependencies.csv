@@ -1,0 +1,26 @@
+"Dependencies of framework:","Total number"
+,21
+
+"Dependencies for each module:",
+,21
+" -- Magento\Framework",57665
+" -- Magento\TestFramework",941
+" -- Magento\Test",3
+" -- Magento\FunctionalTestingFramework",46
+" -- Magento\SomeWidget",1
+" -- Magento\Usa",1
+" -- Magento\Giftmessage",1
+" -- Magento\Setup",23
+" -- Magento\SomeModule",2
+" -- Magento\Importer",6
+" -- Magento\theme",1
+" -- Magento\ResourceConnections",4
+" -- Magento\EAV",1
+" -- Magento\TestModule5",2
+" -- Magento\ElasticSearch",6
+" -- Magento\PayPal",3
+" -- Magento\ApplicationServer",2
+" -- Magento\AdvancedCheckout",4
+" -- Magento\RequisitionList",3
+" -- Magento\AsyncOrder",6
+" -- Magento\VisualMerchandiser",6
