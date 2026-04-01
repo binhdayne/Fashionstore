@@ -11,6 +11,7 @@ rootCA.pem
 
 # Quan trọng: Trỏ đúng vào các thư mục rác bên trong src
 src/vendor/
+vendor/
 src/generated/
 src/var/
 src/pub/static/
