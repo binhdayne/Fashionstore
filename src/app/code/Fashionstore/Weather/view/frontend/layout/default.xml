@@ -2,12 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="header.panel">
-<<<<<<< HEAD
-            <block class="Fashionstore\Weather\Block\Weather" name="fashionstore.info.bar" template="Fashionstore_Weather::weather.phtml" before="-"/>
-        </referenceContainer>
-    </body>
-</page>
-=======
             <block class="Fashionstore\Weather\Block\Weather"
                    name="fashionstore.info.bar"
                    template="Fashionstore_Weather::weather.phtml"
@@ -16,4 +10,3 @@
         </referenceContainer>
     </body>
 </page>
->>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57

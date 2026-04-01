@@ -1,14 +1,5 @@
 <?php
 namespace Fashionstore\Weather\Block;
-<<<<<<< HEAD
-use Magento\Framework\View\Element\Template;
-
-class Weather extends Template {
-    public function getApiKey() {
-        return "576aeed77ae5f7fc3f1b5d3e2dc64116";
-    }
-}
-=======
 
 use Magento\Framework\View\Element\Template;
 use Magento\Customer\Model\Session;
@@ -63,4 +54,3 @@ class Weather extends Template
         ];
     }
 }
->>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57

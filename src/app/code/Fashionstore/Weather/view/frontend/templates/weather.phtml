@@ -1,123 +1,3 @@
-<<<<<<< HEAD
-<style>
-.panel.wrapper { 
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important; 
-    border: none !important; 
-    position: relative;
-}
-
-.header.content { 
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important; 
-    display: flex !important; 
-    justify-content: center !important; 
-    padding: 18px 0 !important;
-    border: none !important;
-}
-
-/* HAMBURGER (GIỮ NGUYÊN VỊ TRÍ) */
-#custom-hamburger { 
-    position: absolute; 
-    left: 15px; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    cursor: pointer; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 4px; 
-    z-index: 1005;
-    padding: 10px;
-}
-#custom-hamburger div { width: 18px; height: 1px; background: #fff; }
-
-/* HEADER BAR (GIỮ NGUYÊN) */
-#header-info-bar { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    width: 100%; 
-    color: #fff; 
-    height: 40px; 
-    padding: 0 20px 0 50px;
-}
-
-/* LOGO */
-.logo:after { 
-    content: "FASHIONSTORE"; 
-    color: #fff; 
-    font-family: 'Cormorant Garamond', serif; 
-    font-size: 24px; 
-    letter-spacing: 7px; 
-    text-transform: uppercase; 
-}
-.logo img { display: none !important; }
-
-/* GOLD */
-#w-city { color: #c9a96e !important; font-weight: bold; }
-
-/* OVERLAY */
-#menu-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(3px);
-    z-index: 9998;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.4s;
-}
-#menu-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* MENU DIOR */
-#dior-side-menu {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 400px;
-    max-width: 85%;
-    height: 100vh;
-    background: #eeeeee;
-    z-index: 9999;
-    transition: 0.4s cubic-bezier(0.77,0.2,0.05,1.0);
-    display: flex;
-    flex-direction: column;
-}
-#dior-side-menu.open { left: 0 !important; }
-
-.menu-header { padding: 30px 25px; border-bottom: 1px solid #ddd; }
-.close-menu { cursor: pointer; font-size: 14px; }
-
-.menu-content { flex: 1; }
-.menu-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 18px 25px;
-    color: #333;
-    text-decoration: none;
-}
-.menu-item:hover { background: #e0e0e0; }
-
-/* HIDE DEFAULT */
-.panel.header .header.links, 
-.panel.header .welcome, 
-.nav-toggle, 
-.navigation, 
-.nav-sections { display: none !important; }
-</style>
-
-<div id="header-info-bar">
-    <div id="custom-hamburger"><div></div><div></div></div>
-    
-    <div class="left-info" style="display:flex;align-items:center;gap:10px;font-size:10px;">
-        <span id="w-city">HÀ NỘI</span> :
-        <span id="w-temp">--°C</span>
-    </div>
-
-    <div class="right-tools" style="display:flex;align-items:center;gap:15px;">
-        <div style="font-size:10px;">WELCOME, DUONG BINH!</div>
-=======
 <?php
 /** @var \Fashionstore\Weather\Block\Weather $block */
 
@@ -245,24 +125,10 @@ $minSearchLength = $helper->getMinQueryLength();
             CHÀO MỪNG, <?= strtoupper($customerName); ?>!
         </div>
         <div id="custom-search-icon">🔍︎</div>
->>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
     </div>
 </div>
 
 <div id="menu-overlay"></div>
-<<<<<<< HEAD
-
-<div id="dior-side-menu">
-    <div class="menu-header">
-        <div class="close-menu">✕ Close</div>
-    </div>
-
-    <div class="menu-content">
-        <a href="#" class="menu-item">Gifts <span>〉</span></a>
-        <a href="#" class="menu-item">What's New <span>〉</span></a>
-        <a href="#" class="menu-item">Women's Fashion <span>〉</span></a>
-        <a href="#" class="menu-item">Men's Fashion <span>〉</span></a>
-=======
 <div id="dior-side-menu">
     <div class="menu-header" id="close-btn">✕ &nbsp; ĐÓNG</div>
 
@@ -335,40 +201,11 @@ $minSearchLength = $helper->getMinQueryLength();
                 </div>
             </div>
         </form>
->>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
     </div>
 </div>
 
 <script>
 require(['jquery'], function($) {
-<<<<<<< HEAD
-
-    $(document).on('click', '#custom-hamburger', function() {
-        $('#dior-side-menu').addClass('open');
-        $('#menu-overlay').addClass('show');
-        $('body').css('overflow','hidden');
-    });
-
-    $(document).on('click', '.close-menu, #menu-overlay', function() {
-        $('#dior-side-menu').removeClass('open');
-        $('#menu-overlay').removeClass('show');
-        $('body').css('overflow','');
-    });
-
-    var itv = setInterval(function() {
-        var s = $('.header.content .block-search'), c = $('.header.content .minicart-wrapper');
-        if (s.length && c.length) {
-            s.appendTo('.right-tools');
-            c.appendTo('.right-tools');
-            clearInterval(itv);
-        }
-    }, 50);
-
-    $.getJSON("https://api.openweathermap.org/data/2.5/weather?lat=21.02&lon=105.85&appid=576aeed77ae5f7fc3f1b5d3e2dc64116&units=metric", function(d) {
-        if(d.main) $('#w-temp').text(Math.round(d.main.temp) + "°C");
-    });
-
-=======
     let newsItems = [];
     let newsIdx = 0;
     let interval = null;
@@ -554,6 +391,5 @@ require(['jquery'], function($) {
     });
 
 
->>>>>>> dc3f8a47b3bad2506affbec56d557de01c337b57
 });
 </script>
