@@ -1,0 +1,19 @@
+/* Custom Header Styles */
+.page-header .header-custom {
+    background: #fff;
+    padding: 20px 0;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Custom Footer Styles */
+.page-footer .footer-custom {
+    background: #333;
+    color: #fff;
+    padding: 40px 0;
+}

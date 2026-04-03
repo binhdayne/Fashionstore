@@ -1,5 +1,5 @@
 {
     "require": {
-        "mageplaza/magento-2-vietnamese-language-pack": "dev-master"
+        "mageplaza/magento-2-vietnamese-language-pack": "@dev"
     }
 }

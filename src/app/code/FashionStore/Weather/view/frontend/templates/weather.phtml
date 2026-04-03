@@ -1,0 +1,45 @@
+<?php
+/** @var \FashionStore\Weather\Block\Weather $block */
+?>
+<style>
+.fashionstore-weather-bar{display:flex;align-items:center;min-height:40px;padding:0 16px;background:#111;color:#fff;font-size:12px;gap:8px}
+.fashionstore-weather-bar strong{color:#c9a96e;letter-spacing:.08em}
+.fashionstore-weather-icon{width:18px;height:18px;display:inline-block;vertical-align:middle}
+.fashionstore-weather-status{opacity:.78}
+</style>
+<div class="fashionstore-weather-bar">
+<strong>HA NOI</strong>
+<img id="w-icon" class="fashionstore-weather-icon" src="" alt="weather icon" hidden>
+<span id="w-temp">-- C</span>
+<span id="w-status" class="fashionstore-weather-status">Dang tai thoi tiet...</span>
+</div>
+<script>
+require(["jquery"], function ($) {
+    function setFallback() {
+        $("#w-temp").text("-- C");
+        $("#w-status").text("Khong lay duoc du lieu thoi tiet");
+        $("#w-icon").attr("src", "").attr("alt", "weather icon").prop("hidden", true);
+    }
+    $.ajax({
+        url: "https://api.openweathermap.org/data/2.5/weather",
+        type: "GET",
+        dataType: "json",
+        data: { q: "Hanoi", appid: "576aeed77ae5f7fc3f1b5d3e2dc64116", units: "metric", lang: "vi" }
+    }).done(function (data) {
+        if (!(data && data.main && data.weather && data.weather[0])) {
+            setFallback();
+            return;
+        }
+        var temperature = Math.round(data.main.temp);
+        var description = data.weather[0].description || "weather";
+        var iconCode = data.weather[0].icon || "";
+        $("#w-temp").text(temperature + " C");
+        $("#w-status").text(description);
+        if (iconCode) {
+            $("#w-icon").attr("src", "https://openweathermap.org/img/wn/" + iconCode + "@2x.png").attr("alt", description).prop("hidden", false);
+        }
+    }).fail(function () {
+        setFallback();
+    });
+});
+</script>

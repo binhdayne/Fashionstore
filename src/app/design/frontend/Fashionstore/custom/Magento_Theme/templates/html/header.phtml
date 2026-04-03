@@ -1,0 +1,18 @@
+<?php
+/**
+ * Custom Header Template
+ */
+?>
+<header class="page-header">
+    <div class="header-custom">
+        <!-- Your custom header HTML here -->
+        <div class="header-top">
+            <?php echo $block->getChildHtml('header.top'); ?>
+        </div>
+        <div class="header-content">
+            <?php echo $block->getChildHtml('logo'); ?>
+            <?php echo $block->getChildHtml('top.search'); ?>
+            <?php echo $block->getChildHtml('minicart'); ?>
+        </div>
+    </div>
+</header>

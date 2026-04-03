@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header.panel">
+            <block class="FashionStore\CustomHeader\Block\Header"
+                   name="custom.header.weather"
+                   template="FashionStore_CustomHeader::header/weather.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <referenceBlock name="header.links" remove="false">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CustomHeader::header/empty.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

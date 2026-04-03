@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f64f8e1d0c24f9c4272c2a0e0aaad831",
+    "content-hash": "282ded0972f80597bf351fddefda3d2c",
     "packages": [
         {
             "name": "mageplaza/magento-2-vietnamese-language-pack",

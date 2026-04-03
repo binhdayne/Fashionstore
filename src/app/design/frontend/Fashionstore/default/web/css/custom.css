@@ -11,20 +11,35 @@ body {
 
 /* ===== HEADER ===== */
 .page-header {
-    background: #fff !important;
-    border-bottom: 1px solid #1a1a1a !important;
+    background: transparent !important;
+    border-bottom: none !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 999 !important;
     transition: all 0.3s ease !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 60px !important;
+    height: 60px !important;
+    overflow: hidden !important;
 }
 
 .header.content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 15px 40px !important;
+    display: none !important;
+    padding: 0 !important;
+    min-height: 0 !important;
     max-width: 100% !important;
+}
+
+.panel.wrapper {
+    margin: 0 !important;
+    min-height: 60px !important;
+}
+
+.page-header .header.panel {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 60px !important;
 }
 
 /* LOGO GIỮA */
@@ -69,6 +84,15 @@ body {
 /* ===== ẨN TIÊU ĐỀ HOME ===== */
 .cms-home .page-title-wrapper {
     display: none !important;
+}
+
+body.cms-home .page-main-full-width > .page-title-wrapper,
+body.cms-home .page-main-full-width > .page.messages {
+    display: none !important;
+}
+
+body.cms-home .page-main-full-width {
+    padding-top: 0 !important;
 }
 
 /* ===== BUTTONS ===== */
@@ -154,4 +178,11 @@ header .logo img {
     opacity: 0 !important;
     width: 0 !important;
     height: 0 !important;
+}
+
+/* Cho phép panel menu hamburger cuộn nếu tràn */
+.panel.menu, .panel .navigation, .panel .items, .panel .menu {
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
 }

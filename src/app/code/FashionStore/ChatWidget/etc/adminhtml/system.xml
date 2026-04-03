@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="FashionStore" translate="label" sortOrder="400">
+            <label>Fashion Store</label>
+        </tab>
+        <section id="FashionStore_chatwidget" translate="label" sortOrder="100"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Chat Widget</label>
+            <tab>FashionStore</tab>
+            <resource>FashionStore_ChatWidget::config</resource>
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Chat Widget</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="rag_url" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>RAG Backend URL</label>
+                    <comment>URL của RAG backend API, ví dụ: http://localhost:8000</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

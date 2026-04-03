@@ -1,0 +1,417 @@
+﻿<?php
+/** @var \FashionStore\CustomHeader\Block\Header $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$helper = $objectManager->get(\Magento\Search\Helper\Data::class);
+$escaper = $objectManager->get(\Magento\Framework\Escaper::class);
+$action = $helper->getResultUrl();
+$queryParam = $helper->getQueryParamName();
+$isLoggedIn = $block->isLoggedIn();
+$customerName = $block->getCustomerName();
+?>
+
+<style>
+    .page-header {
+        background: transparent !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: relative !important;
+        z-index: auto !important;
+    }
+
+    .page-header .panel.wrapper {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    .page-header .header.panel {
+        max-width: 100% !important;
+        min-height: 60px !important;
+        padding: 0 20px !important;
+        background: transparent !important;
+        display: block !important;
+    }
+
+    .header.content,
+    .nav-sections,
+    .nav-toggle,
+    .panel.header .welcome,
+    .panel.header .header.links {
+        display: none !important;
+    }
+
+    #header-info-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 60px;
+        width: 100%;
+    }
+
+    .left-section,
+    .right-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .right-section {
+        justify-content: flex-end;
+    }
+
+    .center-section {
+        flex: 0 0 auto;
+        text-align: center;
+    }
+
+    #custom-hamburger {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+    }
+
+    #custom-hamburger div {
+        width: 18px;
+        height: 1px;
+        background: #fff;
+    }
+
+    .weather-info,
+    .news-label,
+    #news-title,
+    #custom-welcome {
+        color: #fff;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-info strong,
+    .news-label {
+        color: #c9a96e;
+    }
+
+    #news-section {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    #news-title {
+        color: #fff;
+        text-decoration: none;
+        opacity: 0.85;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .logo-text {
+        color: #fff;
+        text-decoration: none !important;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+    }
+
+    #custom-search-icon {
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    #menu-overlay,
+    #search-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    #menu-overlay.show,
+    #search-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #menu-overlay {
+        z-index: 9998;
+    }
+
+    #search-overlay {
+        z-index: 10000;
+    }
+
+    #dior-side-menu {
+        position: fixed;
+        top: 0;
+        left: -380px;
+        width: 360px;
+        max-width: calc(100vw - 32px);
+        height: 100vh;
+        background: #f3f3f3;
+        z-index: 9999;
+        transition: left 0.35s ease;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    #dior-side-menu.open {
+        left: 0;
+    }
+
+    .menu-header {
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        font-weight: 700;
+        color: #222;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    #close-btn {
+        cursor: pointer;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .menu-footer {
+        margin-top: auto;
+        padding: 24px;
+        background: #ececec;
+    }
+
+    .menu-switcher {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-top: 14px;
+        border: 1px solid #d5d5d5;
+    }
+
+    .switch-btn {
+        padding: 12px 10px;
+        font-size: 12px;
+        text-align: center;
+        background: #d9d9d9;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .switch-btn.active {
+        background: #fff;
+        color: #222;
+    }
+
+    #search-bar {
+        position: fixed;
+        top: -260px;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 10001;
+        padding: 28px 20px;
+        transition: top 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    #search-bar.show {
+        top: 0;
+    }
+
+    #search-close {
+        position: absolute;
+        top: 16px;
+        left: 20px;
+        font-size: 24px;
+        color: #222;
+        cursor: pointer;
+    }
+
+    #search_form_container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        gap: 14px;
+        padding-top: 10px;
+    }
+
+    .search-logo {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 36px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-align: center;
+        color: #111;
+    }
+
+    #search_form input {
+        width: 100%;
+        border: 1px solid #111;
+        border-radius: 999px;
+        padding: 14px 22px;
+        font-size: 18px;
+        outline: none;
+    }
+
+    body.csc-no-scroll {
+        overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+        #header-info-bar {
+            gap: 12px;
+        }
+
+        #news-section,
+        #custom-welcome {
+            display: none;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            letter-spacing: 0.2em;
+        }
+    }
+</style>
+
+<div id="header-info-bar">
+    <div class="left-section">
+        <div id="custom-hamburger" aria-label="Open menu" role="button" tabindex="0">
+            <div></div><div></div><div></div>
+        </div>
+        <div class="weather-info"><strong>HA NOI</strong> <span id="w-temp">-- C</span></div>
+        <div id="news-section">
+            <span class="news-label">TIN KINH DOANH:</span>
+            <a href="#" id="news-title">Dang tai tin tuc...</a>
+        </div>
+    </div>
+
+    <div class="center-section">
+        <a href="<?= $escaper->escapeUrl($block->getBaseUrl()) ?>" class="logo-text">FashionStore</a>
+    </div>
+
+    <div class="right-section">
+        <div id="custom-welcome">CHAO MUNG, <?= $escaper->escapeHtml($customerName) ?>!</div>
+        <div id="custom-search-icon" aria-label="Open search" role="button" tabindex="0">&#128269;</div>
+    </div>
+</div>
+
+<div id="menu-overlay"></div>
+<div id="dior-side-menu">
+    <div class="menu-header" id="close-btn">X DONG</div>
+
+    <div class="menu-content">
+        <div class="menu-header">TAI KHOAN</div>
+        <?php if ($isLoggedIn): ?>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>" class="menu-item">Tai khoan cua toi <span>&gt;</span></a>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>" class="menu-item">Dang xuat <span>&gt;</span></a>
+        <?php else: ?>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>" class="menu-item">Dang nhap <span>&gt;</span></a>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item">Dang ky <span>&gt;</span></a>
+        <?php endif; ?>
+
+        <div class="menu-header">CUA HANG</div>
+        <a href="/ao-nu.html" class="menu-item">Thoi trang nu <span>&gt;</span></a>
+        <a href="/ao-nam.html" class="menu-item">Thoi trang nam <span>&gt;</span></a>
+        <a href="/tui-xach.html" class="menu-item">Tui xach <span>&gt;</span></a>
+        <a href="/giay.html" class="menu-item">Giay <span>&gt;</span></a>
+    </div>
+
+    <div class="menu-footer">
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;">Lien he chung toi</a>
+        <div class="menu-switcher">
+            <div class="switch-btn active">Thoi trang &amp; Phu kien</div>
+            <div class="switch-btn">Nuoc hoa &amp; My pham</div>
+        </div>
+    </div>
+</div>
+
+<div id="search-overlay"></div>
+<div id="search-bar">
+    <div id="search-close">&times;</div>
+    <div id="search_form_container">
+        <div class="search-logo">FashionStore</div>
+        <form id="search_form" action="<?= $escaper->escapeUrl($action) ?>" method="get">
+            <input type="text" name="<?= $escaper->escapeHtmlAttr($queryParam) ?>" placeholder="Tim san pham..." autocomplete="off">
+        </form>
+    </div>
+</div>
+
+<script>
+require(['jquery'], function ($) {
+    function toggleMenu(show) {
+        $('#dior-side-menu').toggleClass('open', show);
+        $('#menu-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#search-overlay').hasClass('show'));
+    }
+
+    function toggleSearch(show) {
+        $('#search-bar').toggleClass('show', show);
+        $('#search-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#menu-overlay').hasClass('show'));
+    }
+
+    $(document).on('click', '#custom-hamburger', function () { toggleMenu(true); });
+    $(document).on('click', '#close-btn, #menu-overlay', function () { toggleMenu(false); });
+    $(document).on('click', '#custom-search-icon', function () { toggleSearch(true); });
+    $(document).on('click', '#search-close, #search-overlay', function () { toggleSearch(false); });
+
+    $.ajax({
+        url: 'https://api.openweathermap.org/data/2.5/weather',
+        data: {
+            q: 'Hanoi',
+            appid: '576aeed77ae5f7fc3f1b5d3e2dc64116',
+            units: 'metric',
+            lang: 'vi'
+        }
+    }).done(function (data) {
+        if (data && data.main && typeof data.main.temp !== 'undefined') {
+            $('#w-temp').text(Math.round(data.main.temp) + ' C');
+        }
+    }).fail(function () {
+        $('#w-temp').text('-- C');
+    });
+
+    $.get('https://api.rss2json.com/v1/api.json?rss_url=https://vnexpress.net/rss/kinh-doanh.rss')
+        .done(function (response) {
+            if (response && response.items && response.items.length) {
+                var item = response.items[0];
+                $('#news-title').text(item.title).attr('href', item.link);
+            }
+        })
+        .fail(function () {
+            $('#news-title').text('Khong tai duoc tin tuc');
+        });
+});
+</script>
