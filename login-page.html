@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="vi">
+    <head >
+        <script>
+    var LOCALE = 'vi\u002DVN';
+    var BASE_URL = 'http\u003A\u002F\u002Flocalhost\u002F';
+    var require = {
+        'baseUrl': 'http\u003A\u002F\u002Flocalhost\u002Fstatic\u002Ffrontend\u002FFashionstore\u002Fdefault\u002Fvi_VN'
+    };</script>        <meta charset="utf-8"/>
+<meta name="title" content="Đăng nhập khách hàng"/>
+<meta name="robots" content="INDEX,FOLLOW"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>Đăng nhập khách hàng</title>
+<link  rel="stylesheet" type="text/css"  media="all" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/mage/calendar.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/css/styles-m.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/jquery/uppy/dist/uppy-custom.css" />
+<link  rel="stylesheet" type="text/css"  media="screen and (min-width: 768px)" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/css/styles-l.css" />
+<link  rel="stylesheet" type="text/css"  media="print" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/css/print.css" />
+<script  type="text/javascript"  src="http://localhost/static/frontend/Fashionstore/default/vi_VN/requirejs/require.js"></script>
+<script  type="text/javascript"  src="http://localhost/static/frontend/Fashionstore/default/vi_VN/mage/requirejs/mixins.js"></script>
+<script  type="text/javascript"  src="http://localhost/static/frontend/Fashionstore/default/vi_VN/requirejs-config.js"></script>
+<link rel="preload" as="font" crossorigin="anonymous" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/fonts/opensans/light/opensans-300.woff2" />
+<link rel="preload" as="font" crossorigin="anonymous" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/fonts/opensans/regular/opensans-400.woff2" />
+<link rel="preload" as="font" crossorigin="anonymous" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/fonts/opensans/semibold/opensans-600.woff2" />
+<link rel="preload" as="font" crossorigin="anonymous" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/fonts/opensans/bold/opensans-700.woff2" />
+<link rel="preload" as="font" crossorigin="anonymous" href="http://localhost/static/frontend/Fashionstore/default/vi_VN/fonts/Luma-Icons.woff2" />
+<link  rel="icon" type="image/x-icon" href="http://localhost/media/favicon/stores/1/Thi_t_k_ch_a_c_t_n_3_.png" />
+<link  rel="shortcut icon" type="image/x-icon" href="http://localhost/media/favicon/stores/1/Thi_t_k_ch_a_c_t_n_3_.png" />
+            <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_PageCache/js/form-key-provider": {
+                    "isPaginationCacheEnabled":
+                        0                }
+            }
+        }
+    </script>
+    </head>
+    <body data-container="body"
+          data-mage-init='{"loaderAjax": {}, "loader": { "icon": "http://localhost/static/frontend/Fashionstore/default/vi_VN/images/loader-2.gif"}}'
+        id="html-body" class="customer-account-login page-layout-1column">
+        
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_PageBuilder/js/widget-initializer": {
+                "config": {"[data-content-type=\"slider\"][data-appearance=\"default\"]":{"Magento_PageBuilder\/js\/content-type\/slider\/appearance\/default\/widget":false},"[data-content-type=\"map\"]":{"Magento_PageBuilder\/js\/content-type\/map\/appearance\/default\/widget":false},"[data-content-type=\"row\"]":{"Magento_PageBuilder\/js\/content-type\/row\/appearance\/default\/widget":false},"[data-content-type=\"tabs\"]":{"Magento_PageBuilder\/js\/content-type\/tabs\/appearance\/default\/widget":false},"[data-content-type=\"slide\"]":{"Magento_PageBuilder\/js\/content-type\/slide\/appearance\/default\/widget":{"buttonSelector":".pagebuilder-slide-button","showOverlay":"hover","dataRole":"slide"}},"[data-content-type=\"banner\"]":{"Magento_PageBuilder\/js\/content-type\/banner\/appearance\/default\/widget":{"buttonSelector":".pagebuilder-banner-button","showOverlay":"hover","dataRole":"banner"}},"[data-content-type=\"buttons\"]":{"Magento_PageBuilder\/js\/content-type\/buttons\/appearance\/inline\/widget":false},"[data-content-type=\"products\"][data-appearance=\"carousel\"]":{"Magento_PageBuilder\/js\/content-type\/products\/appearance\/carousel\/widget":false}},
+                "breakpoints": {"desktop":{"label":"Desktop","stage":true,"default":true,"class":"desktop-switcher","icon":"Magento_PageBuilder::css\/images\/switcher\/switcher-desktop.svg","conditions":{"min-width":"1024px"},"options":{"products":{"default":{"slidesToShow":"5"}}}},"tablet":{"conditions":{"max-width":"1024px","min-width":"768px"},"options":{"products":{"default":{"slidesToShow":"4"},"continuous":{"slidesToShow":"3"}}}},"mobile":{"label":"Mobile","stage":true,"class":"mobile-switcher","icon":"Magento_PageBuilder::css\/images\/switcher\/switcher-mobile.svg","media":"only screen and (max-width: 768px)","conditions":{"max-width":"768px","min-width":"640px"},"options":{"products":{"default":{"slidesToShow":"3"}}}},"mobile-small":{"conditions":{"max-width":"640px"},"options":{"products":{"default":{"slidesToShow":"2"},"continuous":{"slidesToShow":"1"}}}}}            }
+        }
+    }
+</script>
+
+<div class="cookie-status-message" id="cookie-status">
+    The store will not work correctly when cookies are disabled.</div>
+<script type="text&#x2F;javascript">document.querySelector("#cookie-status").style.display = "none";</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "cookieStatus": {}
+        }
+    }
+</script>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "mage/cookies": {
+                "expires": null,
+                "path": "\u002F",
+                "domain": ".localhost",
+                "secure": false,
+                "lifetime": "3600"
+            }
+        }
+    }
+</script>
+    <noscript>
+        <div class="message global noscript">
+            <div class="content">
+                <p>
+                    <strong>JavaScript seems to be disabled in your browser.</strong>
+                    <span>
+                        For the best experience on our site, be sure to turn on Javascript in your browser.                    </span>
+                </p>
+            </div>
+        </div>
+    </noscript>
+
+<script>
+    window.cookiesConfig = window.cookiesConfig || {};
+    window.cookiesConfig.secure = false;
+</script><script>    require.config({
+        map: {
+            '*': {
+                wysiwygAdapter: 'mage/adminhtml/wysiwyg/tiny_mce/tinymceAdapter'
+            }
+        }
+    });</script><script>    require.config({
+        paths: {
+            googleMaps: 'https\u003A\u002F\u002Fmaps.googleapis.com\u002Fmaps\u002Fapi\u002Fjs\u003Fv\u003D3.53\u0026key\u003D'
+        },
+        config: {
+            'Magento_PageBuilder/js/utils/map': {
+                style: '',
+            },
+            'Magento_PageBuilder/js/content-type/map/preview': {
+                apiKey: '',
+                apiKeyErrorMessage: 'You\u0020must\u0020provide\u0020a\u0020valid\u0020\u003Ca\u0020href\u003D\u0027http\u003A\u002F\u002Flocalhost\u002Fadminhtml\u002Fsystem_config\u002Fedit\u002Fsection\u002Fcms\u002F\u0023cms_pagebuilder\u0027\u0020target\u003D\u0027_blank\u0027\u003EGoogle\u0020Maps\u0020API\u0020key\u003C\u002Fa\u003E\u0020to\u0020use\u0020a\u0020map.'
+            },
+            'Magento_PageBuilder/js/form/element/map': {
+                apiKey: '',
+                apiKeyErrorMessage: 'You\u0020must\u0020provide\u0020a\u0020valid\u0020\u003Ca\u0020href\u003D\u0027http\u003A\u002F\u002Flocalhost\u002Fadminhtml\u002Fsystem_config\u002Fedit\u002Fsection\u002Fcms\u002F\u0023cms_pagebuilder\u0027\u0020target\u003D\u0027_blank\u0027\u003EGoogle\u0020Maps\u0020API\u0020key\u003C\u002Fa\u003E\u0020to\u0020use\u0020a\u0020map.'
+            },
+        }
+    });</script><script>
+    require.config({
+        shim: {
+            'Magento_PageBuilder/js/utils/map': {
+                deps: ['googleMaps']
+            }
+        }
+    });</script><div class="page-wrapper"><header class="page-header"><div class="panel wrapper"><div class="panel header">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    .page-header {
+        background: transparent !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: relative !important;
+        z-index: auto !important;
+    }
+
+    .page-header .panel.wrapper {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    .page-header .header.panel {
+        max-width: 100% !important;
+        min-height: 52px !important;
+        padding: 0 20px !important;
+        background: transparent !important;
+        display: block !important;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .action.skip.contentarea {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .action.skip.contentarea:focus {
+        width: auto;
+        height: auto;
+        margin: 0;
+        clip: auto;
+        white-space: normal;
+        left: 16px;
+        top: 16px;
+        z-index: 10002;
+        padding: 10px 14px;
+        background: #fff;
+        color: #111;
+    }
+
+    .weather-icon[hidden] {
+        display: none !important;
+    }
+
+    .page-title .base,
+    .page-title span,
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+        font-weight: 300 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .page-title .base,
+    .page-title span {
+        font-size: 36px !important;
+        letter-spacing: 6px !important;
+        color: #1a1a1a !important;
+    }
+
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+    }
+
+    .header.content,
+    .nav-sections,
+    .nav-toggle,
+    .panel.header .welcome,
+    .panel.header .header.links {
+        display: none !important;
+    }
+
+    #header-info-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 52px;
+        width: 100%;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .left-section,
+    .right-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .left-section {
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+
+    .right-section {
+        justify-content: flex-end;
+    }
+
+    .center-section {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+    }
+
+    #custom-hamburger {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #custom-hamburger div {
+        width: 18px;
+        height: 1px;
+        background: #fff;
+    }
+
+    .weather-info,
+    #news-title,
+    #custom-welcome {
+        color: #fff;
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-location,
+    .news-label {
+        color: #c9a96e;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+    }
+
+
+
+    .weather-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 4px;
+    }
+
+    #news-section {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    #news-title {
+        color: #fff;
+        text-decoration: none;
+        opacity: 0.85;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .logo-text,
+    .logo-text:visited,
+    .logo-text:hover,
+    .logo-text:focus {
+        color: #fff !important;
+        text-decoration: none !important;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+    }
+
+    #custom-search-icon {
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    #menu-overlay,
+    #search-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    #menu-overlay.show,
+    #search-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #menu-overlay {
+        z-index: 9998;
+    }
+
+    #search-overlay {
+        z-index: 10000;
+    }
+
+    #dior-side-menu {
+        position: fixed;
+        top: 0;
+        left: -380px;
+        width: 360px;
+        max-width: calc(100vw - 32px);
+        height: 100vh;
+        background: #f3f3f3;
+        z-index: 9999;
+        transition: left 0.35s ease;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #dior-side-menu.open {
+        left: 0;
+    }
+
+    .menu-header {
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        font-weight: 700;
+        color: #222;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    #close-btn {
+        cursor: pointer;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .auth-menu-item[hidden] {
+        display: none !important;
+    }
+
+    .menu-footer {
+        margin-top: auto;
+        padding: 24px;
+        background: #ececec;
+    }
+
+    .menu-footer a,
+    .menu-footer .switch-btn,
+    .menu-header,
+    .menu-item {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .menu-switcher {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-top: 14px;
+        border: 1px solid #d5d5d5;
+    }
+
+    .switch-btn {
+        padding: 12px 10px;
+        font-size: 12px;
+        text-align: center;
+        background: #d9d9d9;
+        color: #fff;
+        font-weight: 300;
+    }
+
+    .switch-btn.active {
+        background: #fff;
+        color: #222;
+    }
+
+    #search-bar {
+        position: fixed;
+        top: -260px;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 10001;
+        padding: 28px 20px;
+        transition: top 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #search-bar.show {
+        top: 0;
+    }
+
+    #search-close {
+        position: absolute;
+        top: 16px;
+        left: 20px;
+        font-size: 24px;
+        color: #222;
+        cursor: pointer;
+    }
+
+    #search_form_container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        gap: 14px;
+        padding-top: 10px;
+    }
+
+    #search_form {
+        position: relative;
+    }
+
+    .search-logo {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 36px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-align: center;
+        color: #111;
+    }
+
+    #search_form input {
+        width: 100%;
+        border: 1px solid #111;
+        border-radius: 999px;
+        padding: 14px 22px;
+        font-size: 18px;
+        outline: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .custom-search-autocomplete {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid rgba(17, 17, 17, 0.12);
+        border-radius: 20px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        z-index: 2;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .custom-search-suggestion {
+        display: block;
+        padding: 14px 22px;
+        color: #111;
+        text-decoration: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-size: 15px;
+        font-weight: 300;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .custom-search-suggestion + .custom-search-suggestion {
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .custom-search-suggestion:hover,
+    .custom-search-suggestion:focus {
+        background: #f7f2ea;
+        color: #000;
+    }
+
+    body.csc-no-scroll {
+        overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+        #header-info-bar {
+            gap: 12px;
+        }
+
+        #news-section,
+        #custom-welcome {
+            display: none;
+        }
+
+        .logo-text,
+        .logo-text:visited,
+        .logo-text:hover,
+        .logo-text:focus {
+            font-size: 18px;
+            letter-spacing: 0.2em;
+        }
+    }
+</style>
+
+<div id="header-info-bar">
+    <div class="left-section">
+        <div id="custom-hamburger" aria-label="M&#x1EDF;&#x20;menu" role="button" tabindex="0">
+            <div></div><div></div><div></div>
+        </div>
+        <div class="weather-info"><strong class="weather-location">Hà Nội</strong> <img id="w-icon" class="weather-icon" src="" alt="Bi&#x1EC3;u&#x20;t&#x01B0;&#x1EE3;ng&#x20;th&#x1EDD;i&#x20;ti&#x1EBF;t" hidden> <span id="w-temp">-- C</span></div>
+        <div id="news-section">
+            <span class="news-label">Tin tức:</span>
+            <a href="#" id="news-title">Đang tải tin tức...</a>
+        </div>
+    </div>
+
+    <div class="center-section">
+        <a href="http://localhost/" class="logo-text">FashionStore</a>
+    </div>
+
+    <div class="right-section">
+        <div id="custom-welcome">Chào mừng, Khách!</div>
+        <div id="custom-search-icon" aria-label="M&#x1EDF;&#x20;t&#xEC;m&#x20;ki&#x1EBF;m" role="button" tabindex="0">&#128269;&#65038;</div>
+    </div>
+</div>
+
+<div id="menu-overlay"></div>
+<div id="dior-side-menu">
+    <div class="menu-header" id="close-btn">Đóng</div>
+
+    <div class="menu-content">
+        <div class="menu-header">Tài khoản</div>
+        <a href="http://localhost/customer/account/" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden>Tài khoản của tô <span>&gt;</span></a>
+        <a href="http://localhost/customer/account/logout/" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden>Đăng xuất <span>&gt;</span></a>
+        <a href="http://localhost/customer/account/login/" class="menu-item auth-menu-item" data-auth-state="guest">Đăng nhập <span>&gt;</span></a>
+        <a href="http://localhost/customer/account/create/" class="menu-item auth-menu-item" data-auth-state="guest">Đăng ký <span>&gt;</span></a>
+
+        <div class="menu-header">Cửa hàng</div>
+        <a href="/ao-nu.html" class="menu-item">Thời trang nữ <span>&gt;</span></a>
+        <a href="/ao-nam.html" class="menu-item">Thời trang nam <span>&gt;</span></a>
+        <a href="/tui-xach.html" class="menu-item">Túi xách <span>&gt;</span></a>
+        <a href="/giay.html" class="menu-item">Giày <span>&gt;</span></a>
+    </div>
+
+    <div class="menu-footer">
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;">Liên hệ chúng tôi</a>
+        <div class="menu-switcher">
+            <div class="switch-btn active">Thời trang &amp; Phụ kiện</div>
+            <div class="switch-btn">Nước hoa &amp; Mỹ phẩm</div>
+        </div>
+    </div>
+</div>
+
+<div id="search-overlay"></div>
+<div id="search-bar">
+    <div id="search-close">&times;</div>
+    <div id="search_form_container">
+        <div class="search-logo">FashionStore</div>
+        <form id="search_form" action="http://localhost/catalogsearch/result/" method="get">
+            <input
+                id="custom-search-input"
+                type="text"
+                name="q"
+                placeholder="T&#xEC;m&#x20;s&#x1EA3;n&#x20;ph&#x1EA9;m..."
+                autocomplete="off"
+                maxlength="128">
+            <div id="custom-search-autocomplete" class="custom-search-autocomplete" hidden></div>
+        </form>
+    </div>
+</div>
+
+<script>
+require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerData) {
+    var popularSearchTerms = ["quần jean","giay","quần"];
+    var translations = {"guest":"Khách","welcome":"Chào mừng, %1!","searchPlaceholderFallback":"sản phẩm","searchPlaceholderPattern":"Tìm \u0022%1\u0022","newsLoadFailed":"Không tải được tin tức"};
+    var suggestProductsUrl = 'http\u003A\u002F\u002Flocalhost\u002Fcustomheader\u002Fsearch\u002Fsuggest\u002F';
+    var weatherUrl = 'http\u003A\u002F\u002Flocalhost\u002Fcustomheader\u002Fajax\u002Fweather\u002F';
+    var newsUrl = 'http\u003A\u002F\u002Flocalhost\u002Fcustomheader\u002Fajax\u002Fnews\u002F';
+    var placeholderIndex = 0;
+    var placeholderIntervalId = null;
+    var suggestionTimerId = null;
+    var suggestionRequest = null;
+
+    function getCustomerDisplayName(customer) {
+        if (!customer) {
+            return translations.guest || 'Guest';
+        }
+
+        return customer.fullname || customer.firstname || translations.guest || 'Guest';
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function getSearchInput() {
+        return $('#custom-search-input');
+    }
+
+    function hideSearchSuggestions() {
+        $('#custom-search-autocomplete').empty().prop('hidden', true).hide();
+    }
+
+    function renderSearchSuggestions(items) {
+        var html = '';
+
+        $.each((items || []).slice(0, 5), function (index, item) {
+            if (!item || !item.name || !item.url) {
+                return;
+            }
+
+            html += '<a class="custom-search-suggestion" href="' + escapeHtml(item.url) + '">' +
+                '<span>' + escapeHtml(item.name) + '</span>' +
+                '</a>';
+        });
+
+        if (!html) {
+            hideSearchSuggestions();
+            return;
+        }
+
+        $('#custom-search-autocomplete').html(html).prop('hidden', false).show();
+    }
+
+    function updateSearchPlaceholder() {
+        var $searchInput = getSearchInput();
+        var currentTerm;
+
+        if (!$searchInput.length || ($searchInput.is(':focus') && $.trim($searchInput.val()))) {
+            return;
+        }
+
+        currentTerm = popularSearchTerms.length
+            ? popularSearchTerms[placeholderIndex % popularSearchTerms.length]
+            : (translations.searchPlaceholderFallback || 'products');
+
+        $searchInput.attr(
+            'placeholder',
+            (translations.searchPlaceholderPattern || 'Search "%1"').replace('%1', currentTerm)
+        );
+    }
+
+    function startPlaceholderRotation() {
+        updateSearchPlaceholder();
+
+        if (placeholderIntervalId || popularSearchTerms.length <= 1) {
+            return;
+        }
+
+        placeholderIntervalId = window.setInterval(function () {
+            var $searchInput = getSearchInput();
+
+            if (!$searchInput.length || $searchInput.is(':focus') || $.trim($searchInput.val())) {
+                return;
+            }
+
+            placeholderIndex = (placeholderIndex + 1) % popularSearchTerms.length;
+            updateSearchPlaceholder();
+        }, 3000);
+    }
+
+    function fetchSearchSuggestions() {
+        var query = $.trim(getSearchInput().val());
+
+        if (!query.length) {
+            hideSearchSuggestions();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        suggestionRequest = $.ajax({
+            url: suggestProductsUrl,
+            data: { q: query },
+            dataType: 'json',
+            cache: false
+        }).done(function (items) {
+            renderSearchSuggestions($.isArray(items) ? items : []);
+        }).fail(function (xhr, status) {
+            if (status !== 'abort') {
+                hideSearchSuggestions();
+            }
+        });
+    }
+
+    function isCustomerLoggedIn(customer) {
+        return !!(customer && (customer.fullname || customer.firstname));
+    }
+
+    function renderCustomerState(customer) {
+        var loggedIn = isCustomerLoggedIn(customer);
+
+        $('#custom-welcome').text((translations.welcome || 'Welcome, %1!').replace('%1', getCustomerDisplayName(customer)));
+        $('.auth-menu-item[data-auth-state="logged-in"]').prop('hidden', !loggedIn);
+        $('.auth-menu-item[data-auth-state="guest"]').prop('hidden', loggedIn);
+    }
+
+    function toggleMenu(show) {
+        $('#dior-side-menu').toggleClass('open', show);
+        $('#menu-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#search-overlay').hasClass('show'));
+    }
+
+    function toggleSearch(show) {
+        $('#search-bar').toggleClass('show', show);
+        $('#search-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#menu-overlay').hasClass('show'));
+
+        if (show) {
+            window.setTimeout(function () {
+                getSearchInput().trigger('focus');
+                updateSearchPlaceholder();
+            }, 180);
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        window.clearTimeout(suggestionTimerId);
+        getSearchInput().val('');
+        hideSearchSuggestions();
+        updateSearchPlaceholder();
+    }
+
+    $(document).on('click', '#custom-hamburger', function () { toggleMenu(true); });
+    $(document).on('click', '#close-btn, #menu-overlay', function () { toggleMenu(false); });
+    $(document).on('click', '#custom-search-icon', function () { toggleSearch(true); });
+    $(document).on('click', '#search-close, #search-overlay', function () { toggleSearch(false); });
+
+    renderCustomerState(customerData.get('customer')());
+    customerData.get('customer').subscribe(renderCustomerState);
+    startPlaceholderRotation();
+
+    $(document).on('input propertychange', '#custom-search-input', function () {
+        window.clearTimeout(suggestionTimerId);
+
+        if (!$.trim(this.value)) {
+            hideSearchSuggestions();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        suggestionTimerId = window.setTimeout(fetchSearchSuggestions, 220);
+    });
+
+    $(document).on('focus', '#custom-search-input', function () {
+        updateSearchPlaceholder();
+
+        if ($.trim(this.value).length) {
+            fetchSearchSuggestions();
+        }
+    });
+
+    $(document).on('keydown', '#custom-search-input', function (event) {
+        if (event.key === 'Escape') {
+            hideSearchSuggestions();
+        }
+    });
+
+    $(document).on('submit', '#search_form', function (event) {
+        if (!$.trim(getSearchInput().val())) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('#search_form').length) {
+            hideSearchSuggestions();
+        }
+    });
+
+    $(document).on('click', '.custom-search-suggestion', function () {
+        hideSearchSuggestions();
+    });
+
+    $.getJSON(weatherUrl)
+        .done(function (data) {
+            if (data && typeof data.temp !== 'undefined' && data.temp !== null) {
+                $('#w-temp').text(data.temp + ' C');
+            }
+
+            if (data && data.icon) {
+                $('#w-icon').attr('src', data.icon).prop('hidden', false);
+                return;
+            }
+
+            $('#w-icon').attr('src', '').prop('hidden', true);
+        })
+        .fail(function () {
+        $('#w-temp').text('-- C');
+        $('#w-icon').attr('src', '').prop('hidden', true);
+    });
+
+    $.getJSON(newsUrl)
+        .done(function (response) {
+            if (response && response.title && response.link) {
+                $('#news-title').text(response.title).attr('href', response.link);
+            }
+        })
+        .fail(function () {
+            $('#news-title').text(translations.newsLoadFailed || 'Could not load news');
+        });
+});
+</script>
+<a class="action skip contentarea"
+   href="#contentarea">
+    <span>
+        Skip to Content    </span>
+</a>
+</div></div><div class="header content"><span data-action="toggle-nav" class="action nav-toggle"><span>Toggle Nav</span></span>
+<a
+    class="logo"
+    href="http://localhost/"
+    title="FashionStore"
+    aria-label="store logo">
+    <img src="http://localhost/static/frontend/Fashionstore/default/vi_VN/images/logo.svg"
+         title="FashionStore"
+         alt="FashionStore"
+            width="1"            height="1"    />
+</a>
+
+<div data-block="minicart" class="minicart-wrapper">
+    <a class="action showcart" href="http://localhost/checkout/cart/"
+       data-bind="scope: 'minicart_content'">
+        <span class="text">My Cart</span>
+        <span class="counter qty empty"
+              data-bind="css: { empty: !!getCartParam('summary_count') == false && !isLoading() },
+               blockLoader: isLoading">
+            <span class="counter-number">
+                <!-- ko if: getCartParam('summary_count') -->
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                <!-- /ko -->
+            </span>
+            <span class="counter-label">
+            <!-- ko if: getCartParam('summary_count') -->
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                <!-- ko i18n: 'items' --><!-- /ko -->
+            <!-- /ko -->
+            </span>
+        </span>
+    </a>
+            <div class="block block-minicart"
+             data-role="dropdownDialog"
+             data-mage-init='{"dropdownDialog":{
+                "appendTo":"[data-block=minicart]",
+                "triggerTarget":".showcart",
+                "timeout": "2000",
+                "closeOnMouseLeave": false,
+                "closeOnEscape": true,
+                "triggerClass":"active",
+                "parentClass":"active",
+                "buttons":[]}}'>
+            <div id="minicart-content-wrapper" data-bind="scope: 'minicart_content'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+                    </div>
+        <script>window.checkout = {"shoppingCartUrl":"http:\/\/localhost\/checkout\/cart\/","checkoutUrl":"http:\/\/localhost\/checkout\/","updateItemQtyUrl":"http:\/\/localhost\/checkout\/sidebar\/updateItemQty\/","removeItemUrl":"http:\/\/localhost\/checkout\/sidebar\/removeItem\/","imageTemplate":"Magento_Catalog\/product\/image_with_borders","baseUrl":"http:\/\/localhost\/","minicartMaxItemsVisible":5,"websiteId":"1","maxItemsToDisplay":10,"storeId":"1","storeGroupId":"1","customerLoginUrl":"http:\/\/localhost\/customer\/account\/login\/referer\/aHR0cDovL2xvY2FsaG9zdC9jdXN0b21lci9hY2NvdW50L2xvZ2luLw~~\/","isRedirectRequired":false,"autocomplete":"off","captcha":{"user_login":{"isCaseSensitive":false,"imageHeight":50,"imageSrc":"","refreshUrl":"http:\/\/localhost\/captcha\/refresh\/","isRequired":false,"timestamp":1775452071}}}</script>    <script type="text/x-magento-init">
+    {
+        "[data-block='minicart']": {
+            "Magento_Ui/js/core/app": {"components":{"minicart_content":{"children":{"subtotal.container":{"children":{"subtotal":{"children":{"subtotal.totals":{"config":{"display_cart_subtotal_incl_tax":0,"display_cart_subtotal_excl_tax":1,"template":"Magento_Tax\/checkout\/minicart\/subtotal\/totals"},"children":{"subtotal.totals.msrp":{"component":"Magento_Msrp\/js\/view\/checkout\/minicart\/subtotal\/totals","config":{"displayArea":"minicart-subtotal-hidden","template":"Magento_Msrp\/checkout\/minicart\/subtotal\/totals"}}},"component":"Magento_Tax\/js\/view\/checkout\/minicart\/subtotal\/totals"}},"component":"uiComponent","config":{"template":"Magento_Checkout\/minicart\/subtotal"}}},"component":"uiComponent","config":{"displayArea":"subtotalContainer"}},"item.renderer":{"component":"Magento_Checkout\/js\/view\/cart-item-renderer","config":{"displayArea":"defaultRenderer","template":"Magento_Checkout\/minicart\/item\/default"},"children":{"item.image":{"component":"Magento_Catalog\/js\/view\/image","config":{"template":"Magento_Catalog\/product\/image","displayArea":"itemImage"}},"checkout.cart.item.price.sidebar":{"component":"uiComponent","config":{"template":"Magento_Checkout\/minicart\/item\/price","displayArea":"priceSidebar"}}}},"extra_info":{"component":"uiComponent","config":{"displayArea":"extraInfo"}},"promotion":{"component":"uiComponent","config":{"displayArea":"promotion"}}},"config":{"itemRenderer":{"default":"defaultRenderer","simple":"defaultRenderer","virtual":"defaultRenderer"},"template":"Magento_Checkout\/minicart\/content"},"component":"Magento_Checkout\/js\/view\/minicart"}},"types":[]}        },
+        "*": {
+            "Magento_Ui/js/block-loader": "http\u003A\u002F\u002Flocalhost\u002Fstatic\u002Ffrontend\u002FFashionstore\u002Fdefault\u002Fvi_VN\u002Fimages\u002Floader\u002D1.gif"
+        }
+    }
+    </script>
+</div>
+<div class="block block-search">
+    <div class="block block-title"><strong>Search</strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form"
+              action="http://localhost/catalogsearch/result/" method="get">
+                        <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span>Search</span>
+                </label>
+                <div class="control">
+                    <input id="search"
+                           data-mage-init='{
+                            "quickSearch": {
+                                "formSelector": "#search_mini_form",
+                                "url": "http://localhost/search/ajax/suggest/",
+                                "destinationSelector": "#search_autocomplete",
+                                "minSearchLength": "3"
+                            }
+                        }'
+                           type="text"
+                           name="q"
+                           value=""
+                           placeholder="Search&#x20;entire&#x20;store&#x20;here..."
+                           class="input-text"
+                           maxlength="128"
+                           role="combobox"
+                           aria-haspopup="false"
+                           aria-autocomplete="both"
+                           autocomplete="off"
+                           aria-expanded="false"/>
+                    <div id="search_autocomplete" class="search-autocomplete"></div>
+                    <div class="nested">
+    <a class="action advanced" href="http://localhost/catalogsearch/advanced/" data-action="advanced-search">
+        Tìm kiếm nâng cao    </a>
+</div>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                        title="Search"
+                        class="action search"
+                        aria-label="Search"
+                >
+                    <span>Search</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<ul class="compare wrapper"><li class="item link compare" data-bind="scope: 'compareProducts'" data-role="compare-products-link">
+    <a class="action compare no-display" title="So&#x20;s&#xE1;nh&#x20;s&#x1EA3;n&#x20;ph&#x1EA9;m"
+       data-bind="attr: {'href': compareProducts().listUrl}, css: {'no-display': !compareProducts().count}"
+    >
+        So sánh sản phẩm        <span class="counter qty" data-bind="text: compareProducts().countCaption"></span>
+    </a>
+</li>
+<script type="text/x-magento-init">
+{"[data-role=compare-products-link]": {"Magento_Ui/js/core/app": {"components":{"compareProducts":{"component":"Magento_Catalog\/js\/view\/compare-products"}}}}}
+</script>
+</ul></div></header>    <div class="sections nav-sections">
+                <div class="section-items nav-sections-items"
+             data-mage-init='{"tabs":{"openedState":"active"}}'>
+                                            <div class="section-item-title nav-sections-item-title"
+                     data-role="collapsible">
+                    <a class="nav-sections-item-switch"
+                       data-toggle="switch" href="#store.menu">
+                        Menu                    </a>
+                </div>
+                <div class="section-item-content nav-sections-item-content"
+                     id="store.menu"
+                     data-role="content">
+                    
+<nav class="navigation" data-action="navigation">
+    <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+        <li  class="level0 nav-1 category-item first level-top"><a href="http://localhost/ao-nam.html"  class="level-top" ><span>Áo Nam</span></a></li><li  class="level0 nav-2 category-item level-top"><a href="http://localhost/qu-n-nam.html"  class="level-top" ><span>Quần Nam</span></a></li><li  class="level0 nav-3 category-item level-top"><a href="http://localhost/ao-n.html"  class="level-top" ><span>Áo Nữ</span></a></li><li  class="level0 nav-4 category-item level-top"><a href="http://localhost/qu-n-n.html"  class="level-top" ><span>Quần Nữ</span></a></li><li  class="level0 nav-5 category-item level-top"><a href="http://localhost/vay-d-m.html"  class="level-top" ><span>Váy &amp; Đầm</span></a></li><li  class="level0 nav-6 category-item level-top"><a href="http://localhost/giay-nam.html"  class="level-top" ><span>Giày Nam</span></a></li><li  class="level0 nav-7 category-item level-top"><a href="http://localhost/giay-n.html"  class="level-top" ><span>Giày Nữ</span></a></li><li  class="level0 nav-8 category-item level-top"><a href="http://localhost/tui-xach.html"  class="level-top" ><span>Túi Xách</span></a></li><li  class="level0 nav-9 category-item level-top"><a href="http://localhost/ph-ki-n.html"  class="level-top" ><span>Phụ Kiện</span></a></li><li  class="level0 nav-10 category-item last level-top"><a href="http://localhost/hang-sale.html"  class="level-top" ><span>Hàng Sale</span></a></li>            </ul>
+</nav>
+                </div>
+                                            <div class="section-item-title nav-sections-item-title"
+                     data-role="collapsible">
+                    <a class="nav-sections-item-switch"
+                       data-toggle="switch" href="#store.links">
+                        Tài khoản                    </a>
+                </div>
+                <div class="section-item-content nav-sections-item-content"
+                     id="store.links"
+                     data-role="content">
+                    <!-- Account links -->                </div>
+                                    </div>
+    </div>
+<main id="maincontent" class="page-main"><a id="contentarea" tabindex="-1"></a>
+<div class="page-title-wrapper">
+    <h1 class="page-title"
+                >
+        <span class="base" data-ui-id="page-title-wrapper" >Đăng nhập khách hàng</span>    </h1>
+    </div>
+<div class="page messages"><div data-placeholder="messages"></div>
+<div data-bind="scope: 'messages'">
+    <!-- ko if: cookieMessagesObservable() && cookieMessagesObservable().length > 0 -->
+    <div aria-atomic="true" role="alert" class="messages" data-bind="foreach: {
+        data: cookieMessagesObservable(), as: 'message'
+    }">
+        <div data-bind="attr: {
+            class: 'message-' + message.type + ' ' + message.type + ' message',
+            'data-ui-id': 'message-' + message.type
+        }">
+            <div data-bind="html: $parent.prepareMessageForHtml(message.text)"></div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <div aria-atomic="true" role="alert" class="messages" data-bind="foreach: {
+        data: messages().messages, as: 'message'
+    }, afterRender: purgeMessages">
+        <div data-bind="attr: {
+            class: 'message-' + message.type + ' ' + message.type + ' message',
+            'data-ui-id': 'message-' + message.type
+        }">
+            <div data-bind="html: $parent.prepareMessageForHtml(message.text)"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                        "messages": {
+                            "component": "Magento_Theme/js/view/messages"
+                        }
+                    }
+                }
+            }
+    }
+</script>
+</div><div class="columns"><div class="column main"><input name="form_key" type="hidden" value="737DdYfIEhhXrMQz" /><div id="authenticationPopup" data-bind="scope:'authenticationPopup', style: {display: 'none'}">
+        <script>window.authenticationPopup = {"autocomplete":"off","customerRegisterUrl":"http:\/\/localhost\/customer\/account\/create\/","customerForgotPasswordUrl":"http:\/\/localhost\/customer\/account\/forgotpassword\/","baseUrl":"http:\/\/localhost\/","customerLoginUrl":"http:\/\/localhost\/customer\/ajax\/login\/"}</script>    <!-- ko template: getTemplate() --><!-- /ko -->
+        <script type="text/x-magento-init">
+        {
+            "#authenticationPopup": {
+                "Magento_Ui/js/core/app": {"components":{"authenticationPopup":{"component":"Magento_Customer\/js\/view\/authentication-popup","children":{"messages":{"component":"Magento_Ui\/js\/view\/messages","displayArea":"messages"},"captcha":{"component":"Magento_Captcha\/js\/view\/checkout\/loginCaptcha","displayArea":"additional-login-form-fields","formId":"user_login","configSource":"checkout"}}}}}            },
+            "*": {
+                "Magento_Ui/js/block-loader": "http\u003A\u002F\u002Flocalhost\u002Fstatic\u002Ffrontend\u002FFashionstore\u002Fdefault\u002Fvi_VN\u002Fimages\u002Floader\u002D1.gif"
+                            }
+        }
+    </script>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/section-config": {
+                "sections": {"stores\/store\/switch":["*"],"stores\/store\/switchrequest":["*"],"directory\/currency\/switch":["*"],"*":["messages"],"customer\/account\/logout":["*","recently_viewed_product","recently_compared_product","persistent"],"customer\/account\/loginpost":["*"],"customer\/account\/createpost":["*"],"customer\/account\/editpost":["*"],"customer\/ajax\/login":["checkout-data","cart","captcha"],"catalog\/product_compare\/add":["compare-products"],"catalog\/product_compare\/remove":["compare-products"],"catalog\/product_compare\/clear":["compare-products"],"sales\/guest\/reorder":["cart"],"sales\/order\/reorder":["cart"],"checkout\/cart\/add":["cart","directory-data"],"checkout\/cart\/delete":["cart"],"checkout\/cart\/updatepost":["cart"],"checkout\/cart\/updateitemoptions":["cart"],"checkout\/cart\/couponpost":["cart"],"checkout\/cart\/estimatepost":["cart"],"checkout\/cart\/estimateupdatepost":["cart"],"checkout\/onepage\/saveorder":["cart","checkout-data","last-ordered-items"],"checkout\/sidebar\/removeitem":["cart"],"checkout\/sidebar\/updateitemqty":["cart"],"rest\/*\/v1\/carts\/*\/payment-information":["cart","last-ordered-items","captcha","instant-purchase"],"rest\/*\/v1\/guest-carts\/*\/payment-information":["cart","captcha"],"rest\/*\/v1\/guest-carts\/*\/selected-payment-method":["cart","checkout-data"],"rest\/*\/v1\/carts\/*\/selected-payment-method":["cart","checkout-data","instant-purchase"],"customer\/address\/*":["instant-purchase"],"customer\/account\/*":["instant-purchase"],"vault\/cards\/deleteaction":["instant-purchase"],"multishipping\/checkout\/overviewpost":["cart"],"paypal\/express\/placeorder":["cart","checkout-data"],"paypal\/payflowexpress\/placeorder":["cart","checkout-data"],"paypal\/express\/onauthorization":["cart","checkout-data"],"persistent\/index\/unsetcookie":["persistent"],"review\/product\/post":["review"],"paymentservicespaypal\/smartbuttons\/placeorder":["cart","checkout-data"],"paymentservicespaypal\/smartbuttons\/cancel":["cart","checkout-data"],"wishlist\/index\/add":["wishlist"],"wishlist\/index\/remove":["wishlist"],"wishlist\/index\/updateitemoptions":["wishlist"],"wishlist\/index\/update":["wishlist"],"wishlist\/index\/cart":["wishlist","cart"],"wishlist\/index\/fromcart":["wishlist","cart"],"wishlist\/index\/allcart":["wishlist","cart"],"wishlist\/shared\/allcart":["wishlist","cart"],"wishlist\/shared\/cart":["cart"],"braintree\/paypal\/placeorder":["cart","checkout-data"],"braintree\/googlepay\/placeorder":["cart","checkout-data"]},
+                "clientSideSections": ["checkout-data","cart-data"],
+                "baseUrls": ["http:\/\/localhost\/"],
+                "sectionNames": ["messages","customer","compare-products","last-ordered-items","cart","directory-data","captcha","instant-purchase","loggedAsCustomer","persistent","review","payments","wishlist","recently_viewed_product","recently_compared_product","product_data_storage","paypal-billing-agreement"]            }
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/customer-data": {
+                "sectionLoadUrl": "http\u003A\u002F\u002Flocalhost\u002Fcustomer\u002Fsection\u002Fload\u002F",
+                "expirableSectionLifetime": 60,
+                "expirableSectionNames": ["cart","persistent"],
+                "cookieLifeTime": "3600",
+                "cookieDomain": "",
+                "updateSessionUrl": "http\u003A\u002F\u002Flocalhost\u002Fcustomer\u002Faccount\u002FupdateSession\u002F",
+                "isLoggedIn": ""
+            }
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/invalidation-processor": {
+                "invalidationRules": {
+                    "website-rule": {
+                        "Magento_Customer/js/invalidation-rules/website-rule": {
+                            "scopeConfig": {
+                                "websiteId": "1"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "pageCache": {"url":"http:\/\/localhost\/page_cache\/block\/render\/","handles":["default","customer_account_login"],"originalRequest":{"route":"customer","controller":"account","action":"login","uri":"\/customer\/account\/login\/"},"versionCookieName":"private_content_version"}        }
+    }
+</script>
+<div class="login-container"><div class="block block-customer-login">
+    <div class="block-title">
+        <strong id="block-customer-login-heading" role="heading" aria-level="2">Khách hàng đã đăng ký</strong>
+    </div>
+    <div class="block-content" aria-labelledby="block-customer-login-heading">
+        <form class="form form-login"
+              action="http://localhost/customer/account/loginPost/"
+              method="post"
+              id="login-form"
+              data-mage-init='{"validation":{}}'>
+            <input name="form_key" type="hidden" value="737DdYfIEhhXrMQz" />            <fieldset class="fieldset login" data-hasrequired="* Required Fields">
+                <div class="field note">Nếu bạn đã có tài khoản, hãy đăng nhập bằng địa chỉ email của bạn.</div>
+                <div class="field email required">
+                    <label class="label" for="email"><span>Email</span></label>
+                    <div class="control">
+                        <input name="login[username]" value=""
+                             autocomplete="off"                               id="email" type="email" class="input-text"
+                               title="Email"
+                               data-mage-init='{"mage/trim-input":{}}'
+                               data-validate="{required:true, 'validate-email':true}">
+                    </div>
+                </div>
+                <div class="field password required">
+                    <label for="pass" class="label"><span>Mật khẩu</span></label>
+                    <div class="control">
+                        <input name="login[password]" type="password"
+                             autocomplete="off"                               class="input-text" id="password"
+                               title="M&#x1EAD;t&#x20;kh&#x1EA9;u"
+                               data-validate="{required:true}">
+                    </div>
+                </div>
+                <div class="field choice" data-bind="scope: 'showPassword'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+                    <div class="fashionstore-social-login" aria-label="Tuy&#x20;chon&#x20;dang&#x20;nhap&#x20;mang&#x20;xa&#x20;hoi">
+        <div class="fashionstore-social-login__divider">
+            <span>Hoac tiep tuc voi</span>
+        </div>
+        <div class="fashionstore-social-login__actions">
+                                            <a class="action fashionstore-social-login__button fashionstore-social-login__button--google"
+                   href="http://localhost/sociallogin/auth/redirect/provider/google/"
+                                       >
+                    <span class="fashionstore-social-login__icon" aria-hidden="true">
+                        G                    </span>
+                    <span>Dang nhap voi Google</span>
+                </a>
+                                                            <a class="action fashionstore-social-login__button fashionstore-social-login__button--facebook"
+                   href="http://localhost/sociallogin/auth/redirect/provider/facebook/"
+                                       >
+                    <span class="fashionstore-social-login__icon" aria-hidden="true">
+                        F                    </span>
+                    <span>Dang nhap voi Facebook</span>
+                </a>
+                                    </div>
+    </div>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action login primary" name="send" id="send2" >
+                            <span>Đăng nhập</span>
+                        </button>
+                    </div>
+                    <div class="secondary"><a class="action remind" href="http://localhost/customer/account/forgotpassword/"><span>Quên mật khẩu?</span></a></div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+        <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Customer/js/block-submit-on-send": {
+                    "formId": "login-form"
+                },
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "showPassword": {
+                            "component": "Magento_Customer/js/show-password",
+                            "passwordSelector": "#password"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</div>
+<div class="block block-new-customer">
+    <div class="block-title">
+        <strong id="block-new-customer-heading" role="heading" aria-level="2">Khách hàng mới</strong>
+    </div>
+    <div class="block-content" aria-labelledby="block-new-customer-heading">
+        <p>Tạo tài khoản mang lại nhiều lợi ích: thanh toán nhanh hơn, lưu nhiều địa chỉ, theo dõi đơn hàng và hơn thế nữa.</p>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <a href="http://localhost/customer/account/create/" class="action create primary"><span>Tạo tài khoản</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+</div><script type="text/x-magento-init">
+    {
+        "body": {
+            "requireCookie": {"noCookieUrl":"http:\/\/localhost\/cookie\/index\/noCookies\/","triggers":[".action.login"],"isRedirectCmsPage":true}        }
+    }
+</script>
+</div></div></main><footer class="page-footer"><div class="footer content"><div class="block newsletter">
+    <div class="title"><strong>Newsletter</strong></div>
+    <div class="content">
+        <form class="form subscribe"
+            novalidate
+            action="http://localhost/newsletter/subscriber/new/"
+            method="post"
+            data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+            id="newsletter-validate-detail">
+            <div class="field newsletter">
+                <div class="control">
+                    <label for="newsletter">
+                        <span class="label">
+                            Sign Up for Our Newsletter:                        </span>
+                        <input name="email" type="email" id="newsletter"
+                               placeholder="Nhập địa chỉ email của bạn"
+                               data-mage-init='{"mage/trim-input":{}}'
+                               data-validate="{required:true, 'validate-email':true}"
+                        />
+                    </label>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="action subscribe primary"
+                        title="&#x0110;&#x0103;ng&#x20;k&#xFD;"
+                        type="submit"
+                        aria-label="Subscribe"
+                    >
+                    <span>Đăng ký</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/block-submit-on-send": {
+                "formId": "newsletter-validate-detail"
+            }
+        }
+    }
+</script>
+<ul class="footer links"><li class="nav item"><a href="http://localhost/privacy-policy-cookie-restriction-mode/">Chính sách bảo mật và Cookie</a></li><li class="nav item"><a href="http://localhost/search/term/popular/">Cụm từ tìm kiếm</a></li><li class="nav item"><a href="http://localhost/catalogsearch/advanced/" data-action="advanced-search">Tìm kiếm nâng cao</a></li><li class="nav item"><a href="http://localhost/sales/guest/form/">Orders and Returns</a></li><li class="nav item"><a href="http://localhost/contact/">Liên hệ với chúng tôi</a></li></ul></div></footer><script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "storage-manager": {
+                            "component": "Magento_Catalog/js/storage-manager",
+                            "appendTo": "",
+                            "storagesConfiguration" : {"recently_viewed_product":{"requestConfig":{"syncUrl":"http:\/\/localhost\/catalog\/product\/frontend_action_synchronize\/"},"lifetime":"1000","allowToSendRequest":null},"recently_compared_product":{"requestConfig":{"syncUrl":"http:\/\/localhost\/catalog\/product\/frontend_action_synchronize\/"},"lifetime":"1000","allowToSendRequest":null},"product_data_storage":{"updateRequestConfig":{"url":"http:\/\/localhost\/rest\/default\/V1\/products-render-info"},"requestConfig":{"syncUrl":"http:\/\/localhost\/catalog\/product\/frontend_action_synchronize\/"},"allowToSendRequest":null}}                        }
+                    }
+                }
+            }
+        }
+</script>
+<style>
+#fs-chat-root *{box-sizing:border-box;margin:0;padding:0}
+#fs-chat-root{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;bottom:32px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+#fs-chat-window{width:360px;background:#fafaf8;border:0.5px solid #d0cbc4;display:flex;flex-direction:column;opacity:0;transform:translateY(16px) scale(0.97);pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+#fs-chat-window.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+#fs-chat-header{background:#0a0a0a;padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between}
+.fs-header-left{display:flex;align-items:center;gap:12px}
+.fs-avatar{width:30px;height:30px;border-radius:50%;border:0.5px solid #b8976a;display:flex;align-items:center;justify-content:center}
+.fs-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:14px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;color:#fafaf8}
+.fs-subtitle{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#b8976a;margin-top:2px}
+.fs-close-btn{background:none;border:none;cursor:pointer;color:#666;padding:4px;display:flex;align-items:center;justify-content:center;transition:color .2s}
+.fs-close-btn:hover{color:#fafaf8}
+.fs-divider{height:1px;background:linear-gradient(90deg,transparent,#b8976a 30%,#b8976a 70%,transparent);opacity:.4}
+#fs-messages{overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:260px;max-height:320px;background:#fafaf8}
+#fs-messages::-webkit-scrollbar{width:3px}
+#fs-messages::-webkit-scrollbar-thumb{background:#e8e5e0}
+.fs-msg{display:flex;flex-direction:column;gap:3px;max-width:85%}
+.fs-msg.bot{align-self:flex-start}
+.fs-msg.user{align-self:flex-end}
+.fs-msg-sender{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#9a9590;padding:0 2px}
+.fs-msg.user .fs-msg-sender{text-align:right}
+.fs-msg-bubble{padding:10px 14px;font-size:12px;line-height:1.7;letter-spacing:.02em}
+.fs-msg.bot .fs-msg-bubble{background:#f0ede8;color:#0a0a0a;border-left:1.5px solid #b8976a}
+.fs-msg.user .fs-msg-bubble{background:#0a0a0a;color:#fafaf8}
+.fs-typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:#f0ede8;border-left:1.5px solid #b8976a;width:fit-content}
+.fs-typing span{width:4px;height:4px;border-radius:50%;background:#b8976a;animation:fs-dot 1.2s infinite}
+.fs-typing span:nth-child(2){animation-delay:.2s}
+.fs-typing span:nth-child(3){animation-delay:.4s}
+@keyframes fs-dot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+#fs-suggestions{padding:0 16px 10px;display:flex;flex-wrap:wrap;gap:6px;background:#fafaf8}
+.fs-chip{font-family:'Montserrat','Helvetica Neue',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border:0.5px solid #c8c3bc;background:transparent;color:#6a6560;cursor:pointer;transition:all .2s}
+.fs-chip:hover{border-color:#b8976a;color:#b8976a;background:#faf8f5}
+#fs-footer{border-top:0.5px solid #e8e5e0;padding:12px 14px;display:flex;align-items:center;gap:10px;background:#fafaf8}
+#fs-input{flex:1;border:none;background:transparent;font-family:'Cormorant Garamond',Georgia,serif;font-size:13px;font-style:italic;letter-spacing:.04em;color:#0a0a0a;outline:none}
+#fs-input::placeholder{color:#b8b3ac}
+#fs-send{width:32px;height:32px;background:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+#fs-send:hover{background:#333}
+#fs-brand{text-align:center;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#c8c3bc;padding:7px 0 5px;border-top:0.5px solid #e8e5e0;background:#fafaf8}
+#fs-bubble{width:56px;height:56px;border-radius:50%;background:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .3s,background .3s;flex-shrink:0}
+#fs-bubble:hover{transform:scale(1.06);background:#1a1a1a}
+#fs-bubble-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#9a9590;text-align:center}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<div id="fs-chat-root">
+  <div id="fs-chat-window">
+    <div id="fs-chat-header">
+      <div class="fs-header-left">
+        <div class="fs-avatar">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="5.5" r="2.5" stroke="#b8976a" stroke-width="0.9"/>
+            <path d="M3 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#b8976a" stroke-width="0.9" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="fs-title">Maison</div>
+          <div class="fs-subtitle">Tro ly thoi trang</div>
+        </div>
+      </div>
+      <button class="fs-close-btn" id="fs-close-btn" aria-label="Dong chat">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fs-divider"></div>
+    <div id="fs-messages">
+      <div class="fs-msg bot">
+        <div class="fs-msg-sender">Maison</div>
+        <div class="fs-msg-bubble">Bonjour. Toi la tro ly cua Fashion Store. Toi co the giup ban tim san pham, tu van phong cach, hoac giai dap thac mac ve bo suu tap.</div>
+      </div>
+    </div>
+    <div id="fs-suggestions">
+      <button class="fs-chip" data-q="Tui moi nhat">Tui moi nhat</button>
+      <button class="fs-chip" data-q="Tu van outfit">Tu van outfit</button>
+      <button class="fs-chip" data-q="Chinh sach doi tra">Doi tra</button>
+      <button class="fs-chip" data-q="Khuyen mai hien tai">Khuyen mai</button>
+    </div>
+    <div id="fs-footer">
+      <input id="fs-input" type="text" placeholder="Hoi ve bo suu tap..." autocomplete="off"/>
+      <button id="fs-send" aria-label="Gui">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M1 7h12M8 3l5 4-5 4" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div id="fs-brand">Fashion Store - AI Assistant</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+    <button id="fs-bubble" aria-label="Mo chat">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 4h16a1 1 0 011 1v9a1 1 0 01-1 1H7l-4 3V5a1 1 0 011-1z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M7 9h8M7 12h5" stroke="#b8976a" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div id="fs-bubble-label">Chat</div>
+  </div>
+</div>
+<script>
+(function(){
+  var RAG_URL='http://localhost:8000';
+  var isOpen=false;
+  var win=document.getElementById('fs-chat-window');
+  var msgs=document.getElementById('fs-messages');
+  var inp=document.getElementById('fs-input');
+  var sugg=document.getElementById('fs-suggestions');
+  function toggle(){isOpen=!isOpen;win.classList.toggle('open',isOpen);if(isOpen)inp.focus();}
+  document.getElementById('fs-bubble').addEventListener('click',toggle);
+  document.getElementById('fs-close-btn').addEventListener('click',toggle);
+  document.querySelectorAll('.fs-chip').forEach(function(c){c.addEventListener('click',function(){inp.value=c.getAttribute('data-q');send();});});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  document.getElementById('fs-send').addEventListener('click',send);
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function addMsg(r,t){var d=document.createElement('div');d.className='fs-msg '+r;d.innerHTML='<div class="fs-msg-sender">'+(r==='bot'?'Maison':'Ban')+'</div><div class="fs-msg-bubble">'+esc(t)+'</div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function showTyping(){var d=document.createElement('div');d.className='fs-msg bot';d.id='fs-typing';d.innerHTML='<div class="fs-msg-sender">Maison</div><div class="fs-typing"><span></span><span></span><span></span></div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function rmTyping(){var t=document.getElementById('fs-typing');if(t)t.remove();}
+  function send(){var t=inp.value.trim();if(!t)return;inp.value='';sugg.style.display='none';addMsg('user',t);showTyping();fetch(RAG_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,use_pdf_context:true,use_mysql_context:true})}).then(function(r){return r.json();}).then(function(d){rmTyping();addMsg('bot',d.answer||'Xin loi, toi chua the tra loi.');}).catch(function(){rmTyping();addMsg('bot','Ket noi that bai. Vui long thu lai.');});}
+}());
+</script><small class="copyright">
+    <span>Bản quyền © 2014-nay thuộc về Magento, Inc. Bảo lưu mọi quyền.</span>
+</small>
+</div>    </body>
+</html>

@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
 
 /* ===== RESET ===== */
 * { box-sizing: border-box; }
 
 /* ===== TYPOGRAPHY ===== */
 body {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-weight: 300 !important;
     color: #1a1a1a !important;
 }
 
@@ -65,7 +66,7 @@ body {
 }
 
 .navigation ul li a {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
     font-size: 10px !important;
     font-weight: 400 !important;
     letter-spacing: 3px !important;
@@ -100,7 +101,8 @@ body.cms-home .page-main-full-width {
     background: #1a1a1a !important;
     border: 1px solid #1a1a1a !important;
     color: #fff !important;
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-weight: 300 !important;
     font-size: 10px !important;
     letter-spacing: 3px !important;
     text-transform: uppercase !important;
@@ -127,18 +129,28 @@ body.cms-home .page-main-full-width {
 
 .price-box .price {
     color: #1a1a1a !important;
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
     font-size: 13px !important;
-    font-weight: 400 !important;
+    font-weight: 300 !important;
 }
 
 /* ===== CATEGORY PAGE ===== */
 .page-title span {
-    font-family: 'Cormorant Garamond', serif !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
     font-size: 36px !important;
     font-weight: 300 !important;
     letter-spacing: 6px !important;
     text-transform: uppercase !important;
+}
+
+.sidebar .block-title strong,
+.sidebar-additional .block-title strong {
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 300 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: #1a1a1a !important;
 }
 
 /* ===== FOOTER ===== */

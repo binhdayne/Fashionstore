@@ -1,0 +1,30 @@
+<?php
+/** @var \FashionStore\SocialLogin\Block\Login\Buttons $block */
+$providers = $block->getEnabledProviders();
+?>
+<?php if ($providers !== []): ?>
+    <div class="fashionstore-social-login" aria-label="<?= $block->escapeHtmlAttr(__('Social login options')) ?>">
+        <div class="fashionstore-social-login__divider">
+            <span><?= $block->escapeHtml(__('Or continue with')) ?></span>
+        </div>
+        <div class="fashionstore-social-login__actions">
+            <?php foreach ($providers as $provider): ?>
+                <?php $isConfigured = $provider['is_configured'] === '1'; ?>
+                <a class="action fashionstore-social-login__button fashionstore-social-login__button--<?= $block->escapeHtmlAttr($provider['code']) ?><?= $isConfigured ? '' : ' fashionstore-social-login__button--pending' ?>"
+                   href="<?= $block->escapeUrl($isConfigured ? $provider['url'] : '#') ?>"
+                   <?= $isConfigured ? '' : 'aria-disabled="true"' ?>
+                   <?= $isConfigured ? '' : 'onclick="return false;"' ?> >
+                    <span class="fashionstore-social-login__icon" aria-hidden="true">
+                        <?= $block->escapeHtml(strtoupper(substr($provider['label'], 0, 1))) ?>
+                    </span>
+                    <span><?= $block->escapeHtml(__('Sign in with %1', $provider['label'])) ?></span>
+                </a>
+                <?php if (!$isConfigured): ?>
+                    <div class="fashionstore-social-login__hint">
+                        <?= $block->escapeHtml(__('%1 login is visible, but it still needs Client ID and Client Secret in admin config.', $provider['label'])) ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif; ?>

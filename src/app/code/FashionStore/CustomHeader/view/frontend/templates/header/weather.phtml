@@ -5,10 +5,31 @@ $helper = $objectManager->get(\Magento\Search\Helper\Data::class);
 $escaper = $objectManager->get(\Magento\Framework\Escaper::class);
 $action = $helper->getResultUrl();
 $queryParam = $helper->getQueryParamName();
-$guestDisplayName = 'Kh&#225;ch';
+$guestDisplayName = (string) __('Guest');
+$popularSearchTerms = $block->getPopularSearchTerms();
+$popularSearchTermsJson = json_encode(
+    array_values($popularSearchTerms),
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+$suggestProductsUrl = $block->getSuggestProductsUrl();
+$weatherUrl = $block->getWeatherUrl();
+$newsUrl = $block->getNewsUrl();
+$maxQueryLength = $block->getMaxQueryLength();
+$translationStringsJson = json_encode(
+    [
+        'guest' => (string) __('Guest'),
+        'welcome' => (string) __('Welcome, %1!'),
+        'searchPlaceholderFallback' => (string) __('products'),
+        'searchPlaceholderPattern' => (string) __('Search "%1"'),
+        'newsLoadFailed' => (string) __('Could not load news'),
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
 ?>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
     .page-header {
         background: transparent !important;
         border: none !important;
@@ -37,6 +58,61 @@ $guestDisplayName = 'Kh&#225;ch';
         padding: 0 20px !important;
         background: transparent !important;
         display: block !important;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .action.skip.contentarea {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .action.skip.contentarea:focus {
+        width: auto;
+        height: auto;
+        margin: 0;
+        clip: auto;
+        white-space: normal;
+        left: 16px;
+        top: 16px;
+        z-index: 10002;
+        padding: 10px 14px;
+        background: #fff;
+        color: #111;
+    }
+
+    .weather-icon[hidden] {
+        display: none !important;
+    }
+
+    .page-title .base,
+    .page-title span,
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+        font-weight: 300 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .page-title .base,
+    .page-title span {
+        font-size: 36px !important;
+        letter-spacing: 6px !important;
+        color: #1a1a1a !important;
+    }
+
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-size: 16px !important;
+        color: #1a1a1a !important;
     }
 
     .header.content,
@@ -54,6 +130,7 @@ $guestDisplayName = 'Kh&#225;ch';
         gap: 20px;
         min-height: 52px;
         width: 100%;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
     }
 
     .left-section,
@@ -63,6 +140,11 @@ $guestDisplayName = 'Kh&#225;ch';
         gap: 14px;
         flex: 1;
         min-width: 0;
+    }
+
+    .left-section {
+        flex-wrap: nowrap;
+        gap: 10px;
     }
 
     .right-section {
@@ -83,6 +165,7 @@ $guestDisplayName = 'Kh&#225;ch';
         flex-direction: column;
         gap: 4px;
         padding: 4px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
     }
 
     #custom-hamburger div {
@@ -92,14 +175,31 @@ $guestDisplayName = 'Kh&#225;ch';
     }
 
     .weather-info,
-    .news-label,
     #news-title,
     #custom-welcome {
         color: #fff;
         font-size: 10px;
+        font-weight: 300;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         white-space: nowrap;
+    }
+
+    .weather-location,
+    .news-label {
+        color: #c9a96e;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
     }
 
 
@@ -115,9 +215,11 @@ $guestDisplayName = 'Kh&#225;ch';
     #news-section {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 4px;
+        flex: 0 1 auto;
         min-width: 0;
         overflow: hidden;
+        white-space: nowrap;
     }
 
     #news-title {
@@ -184,6 +286,7 @@ $guestDisplayName = 'Kh&#225;ch';
         display: flex;
         flex-direction: column;
         overflow-y: auto;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
     }
 
     #dior-side-menu.open {
@@ -213,6 +316,7 @@ $guestDisplayName = 'Kh&#225;ch';
         color: #222;
         text-decoration: none;
         font-size: 14px;
+        font-weight: 300;
     }
 
     .auth-menu-item[hidden] {
@@ -223,6 +327,13 @@ $guestDisplayName = 'Kh&#225;ch';
         margin-top: auto;
         padding: 24px;
         background: #ececec;
+    }
+
+    .menu-footer a,
+    .menu-footer .switch-btn,
+    .menu-header,
+    .menu-item {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
     }
 
     .menu-switcher {
@@ -239,7 +350,7 @@ $guestDisplayName = 'Kh&#225;ch';
         text-align: center;
         background: #d9d9d9;
         color: #fff;
-        font-weight: 700;
+        font-weight: 300;
     }
 
     .switch-btn.active {
@@ -257,6 +368,7 @@ $guestDisplayName = 'Kh&#225;ch';
         padding: 28px 20px;
         transition: top 0.3s ease;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
     }
 
     #search-bar.show {
@@ -280,6 +392,10 @@ $guestDisplayName = 'Kh&#225;ch';
         padding-top: 10px;
     }
 
+    #search_form {
+        position: relative;
+    }
+
     .search-logo {
         font-family: 'Cormorant Garamond', serif;
         font-size: 36px;
@@ -296,6 +412,43 @@ $guestDisplayName = 'Kh&#225;ch';
         padding: 14px 22px;
         font-size: 18px;
         outline: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .custom-search-autocomplete {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid rgba(17, 17, 17, 0.12);
+        border-radius: 20px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        z-index: 2;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .custom-search-suggestion {
+        display: block;
+        padding: 14px 22px;
+        color: #111;
+        text-decoration: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-size: 15px;
+        font-weight: 300;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .custom-search-suggestion + .custom-search-suggestion {
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .custom-search-suggestion:hover,
+    .custom-search-suggestion:focus {
+        background: #f7f2ea;
+        color: #000;
     }
 
     body.csc-no-scroll {
@@ -324,13 +477,13 @@ $guestDisplayName = 'Kh&#225;ch';
 
 <div id="header-info-bar">
     <div class="left-section">
-        <div id="custom-hamburger" aria-label="M&#7903; menu" role="button" tabindex="0">
+        <div id="custom-hamburger" aria-label="<?= $escaper->escapeHtmlAttr(__('Open menu')) ?>" role="button" tabindex="0">
             <div></div><div></div><div></div>
         </div>
-        <div class="weather-info"><strong>H&#192; N&#7896;I</strong> <img id="w-icon" class="weather-icon" src="" alt="weather icon" hidden> <span id="w-temp">-- C</span></div>
+        <div class="weather-info"><strong class="weather-location"><?= $escaper->escapeHtml(__('Hanoi')) ?></strong> <img id="w-icon" class="weather-icon" src="" alt="<?= $escaper->escapeHtmlAttr(__('Weather icon')) ?>" hidden> <span id="w-temp">-- C</span></div>
         <div id="news-section">
-            <span class="news-label">TIN KINH DOANH:</span>
-            <a href="#" id="news-title">&#272;ang t&#7843;i tin t&#7913;c...</a>
+            <span class="news-label"><?= $escaper->escapeHtml(__('News:')) ?></span>
+            <a href="#" id="news-title"><?= $escaper->escapeHtml(__('Loading news...')) ?></a>
         </div>
     </div>
 
@@ -339,34 +492,34 @@ $guestDisplayName = 'Kh&#225;ch';
     </div>
 
     <div class="right-section">
-        <div id="custom-welcome">CH&#192;O M&#7914;NG, <?= $guestDisplayName ?>!</div>
-        <div id="custom-search-icon" aria-label="M&#7903; t&#236;m ki&#7871;m" role="button" tabindex="0">&#128269;</div>
+        <div id="custom-welcome"><?= $escaper->escapeHtml(__('Welcome, %1!', $guestDisplayName)) ?></div>
+        <div id="custom-search-icon" aria-label="<?= $escaper->escapeHtmlAttr(__('Open search')) ?>" role="button" tabindex="0">&#128269;&#65038;</div>
     </div>
 </div>
 
 <div id="menu-overlay"></div>
 <div id="dior-side-menu">
-    <div class="menu-header" id="close-btn">&#272;&#211;NG</div>
+    <div class="menu-header" id="close-btn"><?= $escaper->escapeHtml(__('Close')) ?></div>
 
     <div class="menu-content">
-        <div class="menu-header">T&#192;I KHO&#7842;N</div>
-        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden>T&#224;i kho&#7843;n c&#7911;a t&#244;i <span>&gt;</span></a>
-        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden>&#272;&#259;ng xu&#7845;t <span>&gt;</span></a>
-        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>" class="menu-item auth-menu-item" data-auth-state="guest">&#272;&#259;ng nh&#7853;p <span>&gt;</span></a>
-        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item auth-menu-item" data-auth-state="guest">&#272;&#259;ng k&#253; <span>&gt;</span></a>
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Account')) ?></div>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('My Account')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('Log Out')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Log In')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Register')) ?> <span>&gt;</span></a>
 
-        <div class="menu-header">C&#7916;A H&#192;NG</div>
-        <a href="/ao-nu.html" class="menu-item">Th&#7901;i trang n&#7919; <span>&gt;</span></a>
-        <a href="/ao-nam.html" class="menu-item">Th&#7901;i trang nam <span>&gt;</span></a>
-        <a href="/tui-xach.html" class="menu-item">T&#250;i x&#225;ch <span>&gt;</span></a>
-        <a href="/giay.html" class="menu-item">Gi&#224;y <span>&gt;</span></a>
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Store')) ?></div>
+        <a href="/ao-nu.html" class="menu-item"><?= $escaper->escapeHtml(__('Women\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/ao-nam.html" class="menu-item"><?= $escaper->escapeHtml(__('Men\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/tui-xach.html" class="menu-item"><?= $escaper->escapeHtml(__('Bags')) ?> <span>&gt;</span></a>
+        <a href="/giay.html" class="menu-item"><?= $escaper->escapeHtml(__('Shoes')) ?> <span>&gt;</span></a>
     </div>
 
     <div class="menu-footer">
-        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;">Li&#234;n h&#7879; ch&#250;ng t&#244;i</a>
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;"><?= $escaper->escapeHtml(__('Contact us')) ?></a>
         <div class="menu-switcher">
-            <div class="switch-btn active">Th&#7901;i trang &amp; Ph&#7909; ki&#7879;n</div>
-            <div class="switch-btn">N&#432;&#7899;c hoa &amp; M&#7929; ph&#7849;m</div>
+            <div class="switch-btn active"><?= $escaper->escapeHtml(__('Fashion & Accessories')) ?></div>
+            <div class="switch-btn"><?= $escaper->escapeHtml(__('Fragrance & Beauty')) ?></div>
         </div>
     </div>
 </div>
@@ -377,19 +530,133 @@ $guestDisplayName = 'Kh&#225;ch';
     <div id="search_form_container">
         <div class="search-logo">FashionStore</div>
         <form id="search_form" action="<?= $escaper->escapeUrl($action) ?>" method="get">
-            <input type="text" name="<?= $escaper->escapeHtmlAttr($queryParam) ?>" placeholder="T&#236;m s&#7843;n ph&#7849;m..." autocomplete="off">
+            <input
+                id="custom-search-input"
+                type="text"
+                name="<?= $escaper->escapeHtmlAttr($queryParam) ?>"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Search products...')) ?>"
+                autocomplete="off"
+                maxlength="<?= $escaper->escapeHtmlAttr($maxQueryLength) ?>">
+            <div id="custom-search-autocomplete" class="custom-search-autocomplete" hidden></div>
         </form>
     </div>
 </div>
 
 <script>
 require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerData) {
+    var popularSearchTerms = <?= /* @noEscape */ $popularSearchTermsJson ?: '[]' ?>;
+    var translations = <?= /* @noEscape */ $translationStringsJson ?: '{}' ?>;
+    var suggestProductsUrl = '<?= $escaper->escapeJs($suggestProductsUrl) ?>';
+    var weatherUrl = '<?= $escaper->escapeJs($weatherUrl) ?>';
+    var newsUrl = '<?= $escaper->escapeJs($newsUrl) ?>';
+    var placeholderIndex = 0;
+    var placeholderIntervalId = null;
+    var suggestionTimerId = null;
+    var suggestionRequest = null;
+
     function getCustomerDisplayName(customer) {
         if (!customer) {
-            return 'Kh\u00e1ch';
+            return translations.guest || 'Guest';
         }
 
-        return customer.fullname || customer.firstname || 'Kh\u00e1ch';
+        return customer.fullname || customer.firstname || translations.guest || 'Guest';
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function getSearchInput() {
+        return $('#custom-search-input');
+    }
+
+    function hideSearchSuggestions() {
+        $('#custom-search-autocomplete').empty().prop('hidden', true).hide();
+    }
+
+    function renderSearchSuggestions(items) {
+        var html = '';
+
+        $.each((items || []).slice(0, 5), function (index, item) {
+            if (!item || !item.name || !item.url) {
+                return;
+            }
+
+            html += '<a class="custom-search-suggestion" href="' + escapeHtml(item.url) + '">' +
+                '<span>' + escapeHtml(item.name) + '</span>' +
+                '</a>';
+        });
+
+        if (!html) {
+            hideSearchSuggestions();
+            return;
+        }
+
+        $('#custom-search-autocomplete').html(html).prop('hidden', false).show();
+    }
+
+    function updateSearchPlaceholder() {
+        var $searchInput = getSearchInput();
+        var currentTerm;
+
+        if (!$searchInput.length || ($searchInput.is(':focus') && $.trim($searchInput.val()))) {
+            return;
+        }
+
+        currentTerm = popularSearchTerms.length
+            ? popularSearchTerms[placeholderIndex % popularSearchTerms.length]
+            : (translations.searchPlaceholderFallback || 'products');
+
+        $searchInput.attr(
+            'placeholder',
+            (translations.searchPlaceholderPattern || 'Search "%1"').replace('%1', currentTerm)
+        );
+    }
+
+    function startPlaceholderRotation() {
+        updateSearchPlaceholder();
+
+        if (placeholderIntervalId || popularSearchTerms.length <= 1) {
+            return;
+        }
+
+        placeholderIntervalId = window.setInterval(function () {
+            var $searchInput = getSearchInput();
+
+            if (!$searchInput.length || $searchInput.is(':focus') || $.trim($searchInput.val())) {
+                return;
+            }
+
+            placeholderIndex = (placeholderIndex + 1) % popularSearchTerms.length;
+            updateSearchPlaceholder();
+        }, 3000);
+    }
+
+    function fetchSearchSuggestions() {
+        var query = $.trim(getSearchInput().val());
+
+        if (!query.length) {
+            hideSearchSuggestions();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        suggestionRequest = $.ajax({
+            url: suggestProductsUrl,
+            data: { q: query },
+            dataType: 'json',
+            cache: false
+        }).done(function (items) {
+            renderSearchSuggestions($.isArray(items) ? items : []);
+        }).fail(function (xhr, status) {
+            if (status !== 'abort') {
+                hideSearchSuggestions();
+            }
+        });
     }
 
     function isCustomerLoggedIn(customer) {
@@ -399,7 +666,7 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
     function renderCustomerState(customer) {
         var loggedIn = isCustomerLoggedIn(customer);
 
-        $('#custom-welcome').text('CH\u00c0O M\u1eeaNG, ' + getCustomerDisplayName(customer) + '!');
+        $('#custom-welcome').text((translations.welcome || 'Welcome, %1!').replace('%1', getCustomerDisplayName(customer)));
         $('.auth-menu-item[data-auth-state="logged-in"]').prop('hidden', !loggedIn);
         $('.auth-menu-item[data-auth-state="guest"]').prop('hidden', loggedIn);
     }
@@ -414,6 +681,23 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         $('#search-bar').toggleClass('show', show);
         $('#search-overlay').toggleClass('show', show);
         $('body').toggleClass('csc-no-scroll', show || $('#menu-overlay').hasClass('show'));
+
+        if (show) {
+            window.setTimeout(function () {
+                getSearchInput().trigger('focus');
+                updateSearchPlaceholder();
+            }, 180);
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        window.clearTimeout(suggestionTimerId);
+        getSearchInput().val('');
+        hideSearchSuggestions();
+        updateSearchPlaceholder();
     }
 
     $(document).on('click', '#custom-hamburger', function () { toggleMenu(true); });
@@ -423,40 +707,76 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
 
     renderCustomerState(customerData.get('customer')());
     customerData.get('customer').subscribe(renderCustomerState);
+    startPlaceholderRotation();
 
-    $.ajax({
-        url: 'https://api.openweathermap.org/data/2.5/weather',
-        data: {
-            q: 'Hanoi',
-            appid: '576aeed77ae5f7fc3f1b5d3e2dc64116',
-            units: 'metric',
-            lang: 'vi'
+    $(document).on('input propertychange', '#custom-search-input', function () {
+        window.clearTimeout(suggestionTimerId);
+
+        if (!$.trim(this.value)) {
+            hideSearchSuggestions();
+            updateSearchPlaceholder();
+            return;
         }
-    }).done(function (data) {
-        if (data && data.main && typeof data.main.temp !== 'undefined') {
-            $('#w-temp').text(Math.round(data.main.temp) + ' C');
-            if (data.weather && data.weather.length && data.weather[0].icon) {
-                $('#w-icon')
-                    .attr('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png')
-                    .prop('hidden', false);
-            } else {
-                $('#w-icon').attr('src', '').prop('hidden', true);
+
+        suggestionTimerId = window.setTimeout(fetchSearchSuggestions, 220);
+    });
+
+    $(document).on('focus', '#custom-search-input', function () {
+        updateSearchPlaceholder();
+
+        if ($.trim(this.value).length) {
+            fetchSearchSuggestions();
+        }
+    });
+
+    $(document).on('keydown', '#custom-search-input', function (event) {
+        if (event.key === 'Escape') {
+            hideSearchSuggestions();
+        }
+    });
+
+    $(document).on('submit', '#search_form', function (event) {
+        if (!$.trim(getSearchInput().val())) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('#search_form').length) {
+            hideSearchSuggestions();
+        }
+    });
+
+    $(document).on('click', '.custom-search-suggestion', function () {
+        hideSearchSuggestions();
+    });
+
+    $.getJSON(weatherUrl)
+        .done(function (data) {
+            if (data && typeof data.temp !== 'undefined' && data.temp !== null) {
+                $('#w-temp').text(data.temp + ' C');
             }
-        }
-    }).fail(function () {
+
+            if (data && data.icon) {
+                $('#w-icon').attr('src', data.icon).prop('hidden', false);
+                return;
+            }
+
+            $('#w-icon').attr('src', '').prop('hidden', true);
+        })
+        .fail(function () {
         $('#w-temp').text('-- C');
         $('#w-icon').attr('src', '').prop('hidden', true);
     });
 
-    $.get('https://api.rss2json.com/v1/api.json?rss_url=https://vnexpress.net/rss/kinh-doanh.rss')
+    $.getJSON(newsUrl)
         .done(function (response) {
-            if (response && response.items && response.items.length) {
-                var item = response.items[0];
-                $('#news-title').text(item.title).attr('href', item.link);
+            if (response && response.title && response.link) {
+                $('#news-title').text(response.title).attr('href', response.link);
             }
         })
         .fail(function () {
-            $('#news-title').text('\u004b\u0068\u00f4\u006e\u0067 \u0074\u1ea3\u0069 \u0111\u01b0\u1ee3\u0063 \u0074\u0069\u006e \u0074\u1ee9\u0063');
+            $('#news-title').text(translations.newsLoadFailed || 'Could not load news');
         });
 });
 </script>

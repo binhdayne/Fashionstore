@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Magento: Enable Fast Frontend Dev",
+      "type": "shell",
+      "command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento cache:disable full_page block_html; php bin/magento config:set dev/css/merge_css_files 0; php bin/magento config:set dev/css/minify_files 0; php bin/magento config:set dev/js/merge_files 0; php bin/magento config:set dev/js/minify_files 0; php bin/magento config:set dev/js/enable_js_bundling 0; php bin/magento cache:flush\"",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Magento: Refresh Translate Cache",
+      "type": "shell",
+      "command": "docker compose exec php bash -lc \"cd /var/www/html; php bin/magento cache:clean translate\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "Magento: Rebuild Frontend Static",
+      "type": "shell",
+      "command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento setup:static-content:deploy -f vi_VN en_US; php bin/magento cache:flush\"",
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+}

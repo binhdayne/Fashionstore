@@ -1,0 +1,90 @@
+.fashionstore-social-login {
+    margin: 22px 0 18px;
+
+    &__divider {
+        align-items: center;
+        color: #666;
+        display: flex;
+        font-size: 12px;
+        gap: 12px;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+        text-transform: uppercase;
+
+        &::before,
+        &::after {
+            background: #d5d5d5;
+            content: '';
+            flex: 1;
+            height: 1px;
+        }
+    }
+
+    &__actions {
+        display: grid;
+        gap: 12px;
+    }
+
+    &__button {
+        align-items: center;
+        border: 1px solid #d8d8d8;
+        border-radius: 999px;
+        color: #1f1f1f;
+        display: inline-flex;
+        font-weight: 600;
+        gap: 12px;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        text-decoration: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+        &:hover,
+        &:focus {
+            border-color: #111;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        &--google .fashionstore-social-login__icon {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            color: #db4437;
+        }
+
+        &--facebook {
+            background: #1877f2;
+            border-color: #1877f2;
+            color: #ffffff;
+        }
+
+        &--facebook .fashionstore-social-login__icon {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+        }
+
+        &--pending {
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+    }
+
+    &__icon {
+        align-items: center;
+        border-radius: 50%;
+        display: inline-flex;
+        font-size: 16px;
+        font-weight: 700;
+        height: 28px;
+        justify-content: center;
+        width: 28px;
+    }
+
+    &__hint {
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: -4px;
+        padding: 0 8px;
+    }
+}
