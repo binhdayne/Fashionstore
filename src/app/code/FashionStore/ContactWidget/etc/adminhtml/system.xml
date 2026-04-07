@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="FashionStore_contactwidget" translate="label" sortOrder="110"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Contact Widget</label>
+            <tab>FashionStore</tab>
+            <resource>FashionStore_ContactWidget::config</resource>
+            <group id="general" translate="label comment" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Contact Widget</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="hotline_number" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Hotline Number</label>
+                    <comment>Phone number used for the call link, for example 0862344733.</comment>
+                </field>
+                <field id="zalo_url" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Zalo URL</label>
+                    <comment>Example: https://zalo.me/0862344733</comment>
+                </field>
+                <field id="messenger_url" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Messenger URL</label>
+                    <comment>Example: https://m.me/yourpage</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.cart.item.renderers.default">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CartOptions::cart/item/default.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.simple">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CartOptions::cart/item/default.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.configurable">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CartOptions::cart/item/default.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.virtual">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CartOptions::cart/item/default.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.bundle">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">FashionStore_CartOptions::cart/item/default.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="checkout.cart.item.renderers.default.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.simple.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.configurable.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.virtual.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.bundle.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.downloadable.actions.move_to_wishlist" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.grouped.actions.move_to_wishlist" remove="true"/>
+
+        <referenceBlock name="checkout.cart.item.renderers.default.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.simple.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.configurable.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.virtual.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.bundle.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.downloadable.actions.edit" remove="true"/>
+        <referenceBlock name="checkout.cart.item.renderers.grouped.actions.edit" remove="true"/>
+    </body>
+</page>

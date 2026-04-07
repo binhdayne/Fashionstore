@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <FashionStore_contactwidget>
+            <general>
+                <enabled>1</enabled>
+                <hotline_number>+84862344733</hotline_number>
+                <zalo_url>https://zalo.me/0862344733</zalo_url>
+                <messenger_url>https://www.facebook.com/share/186F3HL1Zc/</messenger_url>
+            </general>
+        </FashionStore_contactwidget>
+    </default>
+</config>

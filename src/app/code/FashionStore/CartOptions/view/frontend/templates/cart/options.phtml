@@ -1,0 +1,826 @@
+<?php
+/** @var \FashionStore\CartOptions\Block\Cart\Options $block */
+$deliveryData = $block->getDeliveryData();
+$savedAddresses = $block->getSavedAddresses();
+$selectedCustomerAddressId = $block->getSelectedCustomerAddressId();
+$showManualAddressForm = $block->shouldShowManualAddressForm();
+$paymentMethods = $block->getAvailablePaymentMethods();
+$selectedPaymentMethod = $block->getSelectedPaymentMethod();
+?>
+<?php if ($block->canRender()): ?>
+    <style>
+        .checkout-cart-index {
+            background: linear-gradient(180deg, #fbf8f2 0%, #f5f1e8 100%) !important;
+        }
+
+        .checkout-cart-index .page-main {
+            max-width: 1320px !important;
+            padding-top: 36px !important;
+            padding-bottom: 48px !important;
+        }
+
+        .checkout-cart-index .cart-container {
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 32px !important;
+        }
+
+        .checkout-cart-index .cart-container::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        .checkout-cart-index .form.form-cart,
+        .checkout-cart-index .cart-summary {
+            float: none !important;
+            width: auto !important;
+        }
+
+        .checkout-cart-index .cart-container > .form.form-cart {
+            order: 1 !important;
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            max-width: calc(100% - 412px) !important;
+        }
+
+        .checkout-cart-index .cart-container > .cart-summary {
+            order: 2 !important;
+            flex: 0 0 380px !important;
+            margin: 0 !important;
+            padding: 28px 24px !important;
+            background: #fff !important;
+            border: 1px solid #ece4d5 !important;
+            box-shadow: 0 18px 44px rgba(26, 26, 26, 0.06) !important;
+            position: sticky !important;
+            top: 88px !important;
+        }
+
+        .checkout-cart-index .cart.table-wrapper {
+            margin: 0 !important;
+            width: 100% !important;
+            padding: 20px 22px 8px !important;
+            background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%) !important;
+            border: 1px solid #ece4d5 !important;
+            box-shadow: 0 18px 44px rgba(26, 26, 26, 0.05) !important;
+            overflow: hidden !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table,
+        .checkout-cart-index #shopping-cart-table thead,
+        .checkout-cart-index #shopping-cart-table tbody.cart.item,
+        .checkout-cart-index #shopping-cart-table tr,
+        .checkout-cart-index #shopping-cart-table th,
+        .checkout-cart-index #shopping-cart-table td {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table thead {
+            margin-bottom: 8px !important;
+        }
+
+        .checkout-cart-index .cart.table-wrapper thead .col.item,
+        .checkout-cart-index .cart.table-wrapper thead .col.price,
+        .checkout-cart-index .cart.table-wrapper thead .col.qty,
+        .checkout-cart-index .cart.table-wrapper thead .col.subtotal,
+        .checkout-cart-index .cart.table-wrapper thead .col.msrp {
+            display: block !important;
+            float: none !important;
+            width: auto !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table thead tr,
+        .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
+            display: grid !important;
+            grid-template-columns: minmax(240px, 1.7fr) 128px 96px 150px !important;
+            gap: 16px !important;
+            align-items: start !important;
+        }
+
+        .checkout-cart-index .cart.table-wrapper thead th {
+            padding: 0 0 18px !important;
+            border-bottom: 1px solid #e8e0d2 !important;
+            font-size: 10px !important;
+            font-weight: 500 !important;
+            letter-spacing: 2px !important;
+            text-transform: uppercase !important;
+            color: #74654a !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table td[data-th]::before,
+        .checkout-cart-index #shopping-cart-table .col::before {
+            display: none !important;
+            content: none !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table tbody.cart.item {
+            padding: 22px 0 14px !important;
+            border-top: 1px solid #f1ebde !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table tbody.cart.item:first-of-type {
+            border-top: none !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table tbody.cart.item td {
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            vertical-align: top !important;
+        }
+
+        .checkout-cart-index .cart.table-wrapper .col.price,
+        .checkout-cart-index .cart.table-wrapper .col.qty,
+        .checkout-cart-index .cart.table-wrapper .col.subtotal,
+        .checkout-cart-index .cart.table-wrapper .col.msrp {
+            float: none !important;
+            width: auto !important;
+            white-space: normal !important;
+            text-align: left !important;
+        }
+
+        .checkout-cart-index .cart.item .col.item {
+            display: flex !important;
+            gap: 14px !important;
+            min-width: 0 !important;
+        }
+
+        .checkout-cart-index .cart.item .product-item-photo {
+            width: 98px !important;
+            min-width: 98px !important;
+            padding: 8px !important;
+            background: #f5efe4 !important;
+            border-radius: 14px !important;
+            overflow: hidden !important;
+        }
+
+        .checkout-cart-index .cart.item .product-item-photo .product-image-container {
+            width: 100% !important;
+        }
+
+        .checkout-cart-index .cart.item .product-item-details {
+            min-width: 0 !important;
+        }
+
+        .checkout-cart-index .cart.item .product-item-name {
+            margin: 0 0 8px !important;
+            font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            line-height: 1.3 !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+        }
+
+        .checkout-cart-index .cart.item .product-item-name a {
+            color: #1a1a1a !important;
+        }
+
+        .checkout-cart-index .cart.item .item-options dt,
+        .checkout-cart-index .cart.item .item-options dd {
+            font-size: 12px !important;
+            line-height: 1.5 !important;
+        }
+
+        .checkout-cart-index .cart.item .item-options dt {
+            color: #7a6c53 !important;
+        }
+
+        .checkout-cart-index .cart.item .item-options dd {
+            color: #1a1a1a !important;
+            font-weight: 500 !important;
+        }
+
+        .checkout-cart-index .cart.item .col.price,
+        .checkout-cart-index .cart.item .col.qty,
+        .checkout-cart-index .cart.item .col.subtotal {
+            padding-top: 4px !important;
+            min-width: 0 !important;
+        }
+
+        .checkout-cart-index .cart.item .col.price .price,
+        .checkout-cart-index .cart.item .col.subtotal .price {
+            color: #9b6b2d !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            line-height: 1.25 !important;
+            white-space: nowrap !important;
+        }
+
+        .checkout-cart-index .cart.item .control.qty {
+            width: 116px !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-control {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            border: 1px solid #d7d0c3 !important;
+            border-radius: 6px !important;
+            overflow: hidden !important;
+            background: #fff !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-enhanced {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            border: 1px solid #d7d0c3 !important;
+            border-radius: 6px !important;
+            overflow: hidden !important;
+            background: #fff !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-control label {
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-enhanced label {
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-control .label {
+            display: none !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-enhanced .label {
+            display: none !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 34px !important;
+            height: 34px !important;
+            padding: 0 !important;
+            border: none !important;
+            border-right: 1px solid #d7d0c3 !important;
+            border-radius: 0 !important;
+            background: #fff !important;
+            color: #9f9f9f !important;
+            font-size: 20px !important;
+            line-height: 1 !important;
+            cursor: pointer !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button--increment {
+            border-right: none !important;
+            border-left: 1px solid #d7d0c3 !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button:hover {
+            background: #faf7f0 !important;
+            color: #7a5a27 !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button span {
+            display: block !important;
+            transform: translateY(-2px);
+        }
+
+        .checkout-cart-index .cart.item .input-text.qty {
+            height: 34px !important;
+            border: none !important;
+            background: #fff !important;
+            border-radius: 0 !important;
+            text-align: center !important;
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            color: #666 !important;
+            box-shadow: none !important;
+            width: 36px !important;
+            min-width: 36px !important;
+            padding: 0 !important;
+            -moz-appearance: textfield !important;
+            appearance: textfield !important;
+        }
+
+        .checkout-cart-index .cart.item .input-text.qty::-webkit-outer-spin-button,
+        .checkout-cart-index .cart.item .input-text.qty::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table .item-actions {
+            margin-top: 12px !important;
+        }
+
+        .checkout-cart-index #shopping-cart-table .item-actions td {
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+            gap: 14px !important;
+        }
+
+        .checkout-cart-index .cart.main.actions {
+            display: flex !important;
+            gap: 12px !important;
+            margin-top: 20px !important;
+        }
+
+        .checkout-cart-index .cart.main.actions .action {
+            min-height: 42px !important;
+            border-radius: 999px !important;
+            padding: 0 20px !important;
+            border: 1px solid #d7ccb8 !important;
+            background: #fff !important;
+            color: #1a1a1a !important;
+            font-size: 9px !important;
+            letter-spacing: 2px !important;
+            text-transform: uppercase !important;
+        }
+
+        .checkout-cart-index .cart-summary > .summary.title {
+            display: block !important;
+            margin: 0 0 22px !important;
+            font-size: 0 !important;
+        }
+
+        .checkout-cart-index .cart-summary > .summary.title::after {
+            content: 'ĐƠN HÀNG';
+            display: block;
+            font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2.8px;
+            color: #1a1a1a;
+        }
+
+        .checkout-cart-index .cart-summary > .block.shipping,
+        .checkout-cart-index .cart-summary > .block.discount,
+        .checkout-cart-index .cart-summary .block.discount,
+        .checkout-cart-index .cart-summary #block-discount,
+        .checkout-cart-index .cart-discount,
+        .checkout-cart-index .block.discount,
+        .checkout-cart-index #block-discount,
+        .checkout-cart-index [aria-controls='block-discount'],
+        .checkout-cart-index .cart-container > .block.discount,
+        .checkout-cart-index .cart-container > .cart-discount,
+        .checkout-cart-index .fashionstore-cart-options {
+            display: none !important;
+        }
+
+        .checkout-cart-index .cart-summary > .cart-totals,
+        .checkout-cart-index .checkout.methods.items {
+            margin-top: 18px !important;
+            padding-top: 18px !important;
+            border-top: 1px dashed #ddd1bc !important;
+        }
+
+        .checkout-cart-index .cart-summary .table-wrapper {
+            border: none !important;
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals tbody tr:not(.grand.totals) {
+            display: none !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals th,
+        .checkout-cart-index .cart-summary .table.totals td {
+            padding: 10px 0 16px !important;
+            border: none !important;
+            color: #1a1a1a !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .grand th,
+        .checkout-cart-index .cart-summary .table.totals .grand td {
+            border-bottom: 1px dashed #ddd1bc !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .grand .mark strong {
+            font-size: 0 !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .grand .mark strong::after {
+            content: 'Tổng giá trị đơn hàng';
+            font-size: 15px;
+            font-weight: 400;
+            color: #1a1a1a;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .grand .price,
+        .checkout-cart-index .cart-summary .table.totals .grand .amount {
+            color: #d2232a !important;
+            font-size: 28px !important;
+            font-weight: 600 !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items {
+            list-style: none !important;
+            padding: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .item {
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .action.multicheckout,
+        .checkout-cart-index .checkout.methods.items .paypal,
+        .checkout-cart-index .checkout.methods.items .amazon,
+        .checkout-cart-index .checkout.methods.items .braintree,
+        .checkout-cart-index .checkout.methods.items .shortcut-buttons,
+        .checkout-cart-index .checkout.methods.items .item + .item {
+            display: none !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout {
+            width: 100% !important;
+            min-height: 52px !important;
+            border-radius: 6px !important;
+            background: #d2232a !important;
+            border: 1px solid #d2232a !important;
+            color: #fff !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+            box-shadow: 0 8px 16px rgba(210, 35, 42, 0.2) !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout:hover {
+            background: #b81d24 !important;
+            border-color: #b81d24 !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout span {
+            font-size: 0 !important;
+        }
+
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout span::after {
+            content: 'TIẾP TỤC THANH TOÁN →';
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+        }
+
+        .checkout-cart-index .checkout.methods.items::after {
+            content: 'Dùng mã giảm giá ở bước tiếp theo';
+            display: block;
+            margin-top: 14px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #1a1a1a;
+            text-align: center;
+        }
+
+        .checkout-cart-index .action-towishlist,
+        .checkout-cart-index .towishlist,
+        .checkout-cart-index .action.towishlist,
+        .checkout-cart-index a[data-post][class*='towishlist'],
+        .checkout-cart-index .action-edit,
+        .checkout-cart-index .action.action-edit,
+        .checkout-cart-index a[title='Edit item parameters'] {
+            display: none !important;
+        }
+
+        @media (max-width: 1200px) {
+            .checkout-cart-index #shopping-cart-table thead tr,
+            .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
+                grid-template-columns: minmax(220px, 1.5fr) 110px 84px 128px !important;
+                gap: 12px !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .checkout-cart-index .cart-container {
+                display: block !important;
+            }
+
+            .checkout-cart-index .cart-container > .form.form-cart,
+            .checkout-cart-index .cart-container > .cart-summary {
+                max-width: none !important;
+            }
+
+            .checkout-cart-index .cart-container > .cart-summary {
+                position: static !important;
+                margin-top: 24px !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .checkout-cart-index #shopping-cart-table thead {
+                display: none !important;
+            }
+
+            .checkout-cart-index .cart.table-wrapper .col.price,
+            .checkout-cart-index .cart.table-wrapper .col.qty,
+            .checkout-cart-index .cart.table-wrapper .col.subtotal,
+            .checkout-cart-index .cart.table-wrapper .col.msrp {
+                width: 100% !important;
+            }
+
+            .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            .checkout-cart-index .cart.table-wrapper,
+            .checkout-cart-index .cart-container > .cart-summary {
+                padding: 20px 18px !important;
+            }
+
+            .checkout-cart-index .cart.item .product-item-photo {
+                width: 84px !important;
+                min-width: 84px !important;
+            }
+
+            .checkout-cart-index .cart.item .product-item-name {
+                font-size: 16px !important;
+            }
+
+            .checkout-cart-index .cart.main.actions {
+                flex-direction: column !important;
+            }
+
+            .checkout-cart-index .cart.main.actions .action {
+                width: 100% !important;
+            }
+        }
+
+        .checkout-cart-index .control.qty > label {
+            margin: 0 !important;
+        }
+    </style>
+    <div class="fashionstore-cart-options">
+        <div class="fashionstore-cart-options__heading">
+            <span class="fashionstore-cart-options__eyebrow"><?= $block->escapeHtml(__('Fashionstore Checkout')) ?></span>
+            <strong><?= $block->escapeHtml(__('Thong tin nhan hang va thanh toan')) ?></strong>
+        </div>
+        <div class="fashionstore-cart-options__content">
+            <form id="fashionstore-cart-options-form"
+                  class="fashionstore-cart-options-form"
+                  action="<?= $block->escapeUrl($block->getFormAction()) ?>"
+                  method="post"
+                  data-mage-init='{"FashionStore_CartOptions/js/cart-options":{}}'>
+                <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>">
+                <input type="hidden" name="shipping_country_id" value="<?= $block->escapeHtmlAttr($deliveryData['country_id']) ?>">
+                <input type="hidden" name="selected_customer_address_id" value="<?= $block->escapeHtmlAttr((string) $selectedCustomerAddressId) ?>" data-selected-address-id>
+
+                <div class="fashionstore-cart-options__section">
+                    <div class="fashionstore-cart-options__section-title"><?= $block->escapeHtml(__('Dia chi nhan hang')) ?></div>
+                    <?php if ($savedAddresses): ?>
+                        <div class="fashionstore-cart-options__address-book" data-address-book>
+                            <?php foreach ($savedAddresses as $address): ?>
+                                <label class="fashionstore-cart-options__address-card<?= $address['is_selected'] ? ' is-selected' : '' ?>" for="saved-address-<?= $block->escapeHtmlAttr((string) $address['id']) ?>">
+                                    <input id="saved-address-<?= $block->escapeHtmlAttr((string) $address['id']) ?>"
+                                           class="fashionstore-cart-options__address-radio"
+                                           type="radio"
+                                           name="saved_address_option"
+                                           value="<?= $block->escapeHtmlAttr((string) $address['id']) ?>"
+                                           data-address='<?= $block->escapeHtmlAttr($address['data_json']) ?>'
+                                           <?= $address['is_selected'] ? 'checked' : '' ?>>
+                                    <span class="fashionstore-cart-options__address-body">
+                                        <span class="fashionstore-cart-options__address-head">
+                                            <span class="fashionstore-cart-options__address-name"><?= $block->escapeHtml($address['name']) ?></span>
+                                            <?php if ($address['is_default']): ?>
+                                                <span class="fashionstore-cart-options__address-badge"><?= $block->escapeHtml(__('Mac dinh')) ?></span>
+                                            <?php endif; ?>
+                                        </span>
+                                        <span class="fashionstore-cart-options__address-line"><?= $block->escapeHtml($address['inline']) ?></span>
+                                        <span class="fashionstore-cart-options__address-phone"><?= $block->escapeHtml($address['telephone']) ?></span>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+
+                            <label class="fashionstore-cart-options__address-card fashionstore-cart-options__address-card--manual<?= $showManualAddressForm ? ' is-selected' : '' ?>" for="saved-address-manual">
+                                <input id="saved-address-manual"
+                                       class="fashionstore-cart-options__address-radio"
+                                       type="radio"
+                                       name="saved_address_option"
+                                       value=""
+                                       <?= $showManualAddressForm ? 'checked' : '' ?>>
+                                <span class="fashionstore-cart-options__address-body">
+                                    <span class="fashionstore-cart-options__address-head">
+                                        <span class="fashionstore-cart-options__address-name"><?= $block->escapeHtml(__('Nhap dia chi moi')) ?></span>
+                                    </span>
+                                    <span class="fashionstore-cart-options__address-line"><?= $block->escapeHtml(__('Dung khi ban muon giao den noi khac voi so da luu.')) ?></span>
+                                </span>
+                            </label>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="fashionstore-cart-options__manual-address<?= $showManualAddressForm ? '' : ' is-collapsed' ?>" data-manual-address>
+                        <div class="fashionstore-cart-options__grid">
+                            <div class="field">
+                                <label for="shipping_firstname"><?= $block->escapeHtml(__('Ho')) ?></label>
+                                <input id="shipping_firstname" name="shipping_firstname" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['firstname']) ?>">
+                            </div>
+                            <div class="field">
+                                <label for="shipping_lastname"><?= $block->escapeHtml(__('Ten')) ?></label>
+                                <input id="shipping_lastname" name="shipping_lastname" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['lastname']) ?>">
+                            </div>
+                            <div class="field field-full">
+                                <label for="shipping_telephone"><?= $block->escapeHtml(__('So dien thoai')) ?></label>
+                                <input id="shipping_telephone" name="shipping_telephone" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['telephone']) ?>">
+                            </div>
+                            <div class="field field-full">
+                                <label for="shipping_street_1"><?= $block->escapeHtml(__('So nha, ten duong')) ?></label>
+                                <input id="shipping_street_1" name="shipping_street_1" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['street_1']) ?>">
+                            </div>
+                            <div class="field field-full">
+                                <label for="shipping_street_2"><?= $block->escapeHtml(__('Phuong/Xa, Quan/Huyen')) ?></label>
+                                <input id="shipping_street_2" name="shipping_street_2" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['street_2']) ?>">
+                            </div>
+                            <div class="field">
+                                <label for="shipping_city"><?= $block->escapeHtml(__('Tinh/Thanh pho')) ?></label>
+                                <input id="shipping_city" name="shipping_city" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['city']) ?>">
+                            </div>
+                            <div class="field">
+                                <label for="shipping_region"><?= $block->escapeHtml(__('Khu vuc')) ?></label>
+                                <input id="shipping_region" name="shipping_region" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['region']) ?>">
+                            </div>
+                            <div class="field field-full">
+                                <label for="shipping_postcode"><?= $block->escapeHtml(__('Ma buu dien')) ?></label>
+                                <input id="shipping_postcode" name="shipping_postcode" type="text" value="<?= $block->escapeHtmlAttr($deliveryData['postcode']) ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fashionstore-cart-options__section">
+                    <div class="fashionstore-cart-options__section-title"><?= $block->escapeHtml(__('Phuong thuc thanh toan')) ?></div>
+                    <?php if ($paymentMethods): ?>
+                        <div class="fashionstore-cart-options__payment-list">
+                            <?php foreach ($paymentMethods as $paymentMethod): ?>
+                                <label class="fashionstore-cart-options__payment-item fashionstore-cart-options__payment-item--<?= $block->escapeHtmlAttr($paymentMethod['modifier']) ?>" for="payment-method-<?= $block->escapeHtmlAttr($paymentMethod['code']) ?>">
+                                    <input id="payment-method-<?= $block->escapeHtmlAttr($paymentMethod['code']) ?>"
+                                           name="payment_method"
+                                           type="radio"
+                                           value="<?= $block->escapeHtmlAttr($paymentMethod['code']) ?>"
+                                           <?= $selectedPaymentMethod === $paymentMethod['code'] ? 'checked' : '' ?>>
+                                    <span class="fashionstore-cart-options__payment-icon">
+                                        <img src="<?= $block->escapeUrl($paymentMethod['icon_url']) ?>" alt="<?= $block->escapeHtmlAttr($paymentMethod['title']) ?>">
+                                    </span>
+                                    <span class="fashionstore-cart-options__payment-copy">
+                                        <span class="fashionstore-cart-options__payment-topline">
+                                            <span class="fashionstore-cart-options__payment-title"><?= $block->escapeHtml($paymentMethod['title']) ?></span>
+                                            <span class="fashionstore-cart-options__payment-badge"><?= $block->escapeHtml($paymentMethod['badge']) ?></span>
+                                        </span>
+                                        <span class="fashionstore-cart-options__payment-description"><?= $block->escapeHtml($paymentMethod['description']) ?></span>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="fashionstore-cart-options__empty">
+                            <?= $block->escapeHtml(__('Chua co payment method nao dang bat cho %1.', $block->getVisiblePaymentLabels())) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="fashionstore-cart-options__actions">
+                    <button type="submit" name="go_to_checkout" value="1" class="action secondary fashionstore-cart-options__submit">
+                        <span><?= $block->escapeHtml(__('Cap nhat va sang checkout')) ?></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    if (!window.fashionstoreCartQtyButtonsInitialized) {
+        window.fashionstoreCartQtyButtonsInitialized = true;
+
+        (function () {
+            var autoUpdateTimer = null;
+
+            function normalizeValue(input) {
+                var currentValue = parseInt(input.value || '1', 10);
+
+                if (isNaN(currentValue) || currentValue < 1) {
+                    currentValue = 1;
+                }
+
+                input.value = String(currentValue);
+                return currentValue;
+            }
+
+            function scheduleCartUpdate() {
+                var form = document.getElementById('form-validate');
+                var actionContainer = document.getElementById('update_cart_action_container');
+
+                if (!form || !actionContainer) {
+                    return;
+                }
+
+                if (autoUpdateTimer) {
+                    window.clearTimeout(autoUpdateTimer);
+                }
+
+                autoUpdateTimer = window.setTimeout(function () {
+                    actionContainer.value = 'update_qty';
+                    form.dispatchEvent(new Event('submit', {
+                        bubbles: true,
+                        cancelable: true
+                    }));
+                }, 450);
+            }
+
+            function updateInput(input, action) {
+                var currentValue = normalizeValue(input);
+                var nextValue = action === 'increment'
+                    ? currentValue + 1
+                    : Math.max(1, currentValue - 1);
+
+                input.value = String(nextValue);
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                scheduleCartUpdate();
+            }
+
+            function createButton(action, targetId, symbol, label) {
+                var button = document.createElement('button');
+                var span = document.createElement('span');
+
+                button.type = 'button';
+                button.className = 'fashionstore-qty-button fashionstore-qty-button--' + action;
+                button.setAttribute('data-qty-action', action);
+                button.setAttribute('data-target', '#' + targetId);
+                button.setAttribute('aria-label', label);
+
+                span.textContent = symbol;
+                button.appendChild(span);
+
+                return button;
+            }
+
+            function enhanceQtyControls() {
+                document.querySelectorAll('.checkout-cart-index .control.qty').forEach(function (control, index) {
+                    var input = control.querySelector('input.qty');
+                    var label;
+                    var wrapper;
+                    var inputId;
+
+                    if (!input || control.getAttribute('data-fashionstore-qty-enhanced') === 'true') {
+                        return;
+                    }
+
+                    label = control.querySelector('label');
+                    inputId = input.id || ('fashionstore-cart-qty-' + index);
+                    input.id = inputId;
+
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'fashionstore-qty-enhanced';
+                    wrapper.appendChild(createButton('decrement', inputId, '-', 'Decrease quantity'));
+                    if (label) {
+                        wrapper.appendChild(label);
+                    } else {
+                        wrapper.appendChild(input);
+                    }
+                    wrapper.appendChild(createButton('increment', inputId, '+', 'Increase quantity'));
+
+                    control.textContent = '';
+                    control.appendChild(wrapper);
+                    control.setAttribute('data-fashionstore-qty-enhanced', 'true');
+                    normalizeValue(input);
+                });
+            }
+
+            enhanceQtyControls();
+
+            if (!window.fashionstoreCartQtyObserverInitialized) {
+                window.fashionstoreCartQtyObserverInitialized = true;
+
+                new MutationObserver(function () {
+                    enhanceQtyControls();
+                }).observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+
+            document.addEventListener('click', function (event) {
+                var button = event.target.closest('[data-qty-action]');
+                var input;
+
+                if (!button) {
+                    return;
+                }
+
+                input = document.querySelector(button.getAttribute('data-target'));
+                if (!input) {
+                    return;
+                }
+
+                updateInput(input, button.getAttribute('data-qty-action'));
+            });
+
+            document.addEventListener('change', function (event) {
+                var input = event.target.closest('.checkout-cart-index input.qty');
+
+                if (!input) {
+                    return;
+                }
+
+                normalizeValue(input);
+                scheduleCartUpdate();
+            });
+        }());
+    }
+    </script>
+<?php endif; ?>

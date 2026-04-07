@@ -1,0 +1,46 @@
+<?php
+/** @var \FashionStore\ContactWidget\Block\Widget $block */
+if (!$block->isEnabled()) {
+    return;
+}
+$contactMethods = $block->getContactMethods();
+?>
+<style>
+#fs-contact-widget{position:fixed;right:32px;bottom:120px;z-index:10001;display:flex;flex-direction:column;gap:12px;align-items:flex-end;pointer-events:auto}
+#fs-contact-widget *{box-sizing:border-box}
+.fs-contact-button{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;position:relative;box-shadow:0 10px 22px rgba(0,0,0,.14);transition:transform .25s ease,box-shadow .25s ease,opacity .25s ease}
+.fs-contact-button:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 14px 28px rgba(0,0,0,.18);opacity:.95}
+.fs-contact-button svg{width:25px;height:25px;display:block}
+.fs-contact-tooltip{position:absolute;right:68px;top:50%;transform:translateY(-50%) translateX(8px);background:rgba(0,0,0,.84);color:#fff;padding:7px 12px;border-radius:999px;font-size:12px;line-height:1;white-space:nowrap;opacity:0;visibility:hidden;transition:all .25s ease}
+.fs-contact-tooltip:after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);border-left:6px solid rgba(0,0,0,.84);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.fs-contact-button:hover .fs-contact-tooltip{opacity:1;visibility:visible;transform:translateY(-50%) translateX(0)}
+@media (max-width: 768px){#fs-contact-widget{right:18px;bottom:106px;gap:10px}.fs-contact-button{width:48px;height:48px}.fs-contact-button svg{width:22px;height:22px}.fs-contact-tooltip{display:none}}
+@media (max-width: 480px){#fs-contact-widget{right:14px;bottom:98px}}
+</style>
+<div id="fs-contact-widget" aria-label="<?= $block->escapeHtmlAttr(__('Contact widget')) ?>">
+    <?php foreach ($contactMethods as $method): ?>
+        <a class="fs-contact-button fs-contact-button-<?= $block->escapeHtmlAttr($method['code']) ?>"
+           href="<?= $block->escapeUrl($method['href']) ?>"
+           style="background: <?= $block->escapeHtmlAttr($method['background']) ?>;"
+           aria-label="<?= $block->escapeHtmlAttr($method['label']) ?>"
+           title="<?= $block->escapeHtmlAttr($method['label']) ?>"
+           <?= $block->shouldOpenNewTab($method['code']) ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>
+            <?php if ($method['code'] === 'hotline'): ?>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M7.2 4h2.1c.5 0 .9.34 1.02.82l.62 2.52c.1.4-.02.83-.31 1.12l-1.3 1.3a13.62 13.62 0 0 0 4.98 4.98l1.3-1.3c.29-.29.72-.41 1.12-.31l2.52.62c.48.12.82.52.82 1.02v2.1c0 .62-.5 1.13-1.13 1.16C11.83 19.35 4.65 12.17 4.04 5.13 4.01 4.5 4.52 4 5.14 4H7.2Z" fill="#fff"/>
+                </svg>
+            <?php elseif ($method['code'] === 'messenger'): ?>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 3C6.75 3 2.5 6.95 2.5 11.83c0 2.78 1.38 5.26 3.55 6.88V22l3.2-1.76c.86.24 1.78.36 2.75.36 5.25 0 9.5-3.95 9.5-8.83S17.25 3 12 3Z" fill="#fff"/>
+                    <path d="m8.15 13.66 2.74-2.92 1.88 1.6 3.02-2.92-2.74 2.92-1.88-1.6-3.02 2.92Z" fill="#1877f2"/>
+                </svg>
+            <?php else: ?>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="4.5" fill="#fff"/>
+                    <path d="M8 8.2h2.1l1.96 2.85 1.95-2.85H16l-2.87 4.06L16 16h-2.1l-1.96-2.78L9.98 16H8l2.9-3.77L8 8.2Z" fill="#0084ff"/>
+                </svg>
+            <?php endif; ?>
+            <span class="fs-contact-tooltip"><?= $block->escapeHtml($method['label']) ?></span>
+        </a>
+    <?php endforeach; ?>
+</div>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="FashionStore_CartOptions::css/cart-options.css"/>
+    </head>
+    <body>
+        <referenceBlock name="checkout.cart.shipping" remove="true"/>
+        <referenceBlock name="checkout.cart.coupon" remove="true"/>
+        <referenceBlock name="checkout.cart.shortcut.buttons" remove="true"/>
+        <referenceContainer name="cart.summary">
+            <block class="FashionStore\CartOptions\Block\Cart\Options"
+                   name="fashionstore.cart.options"
+                   template="FashionStore_CartOptions::cart/options.phtml"
+                   after="checkout.cart.totals"/>
+        </referenceContainer>
+    </body>
+</page>
