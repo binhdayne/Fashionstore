@@ -1,0 +1,113 @@
+/* Floating Contact Widget Styles - Minimal, SVG Only */
+
+.floating-contact-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.contact-icon {
+    width: 50px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.contact-button:hover {
+    opacity: 0.8;
+}
+
+.contact-button:hover .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-10px);
+}
+
+.tooltip-text {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid rgba(0, 0, 0, 0.8);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .floating-contact-widget {
+        bottom: 15px;
+        right: 15px;
+        gap: 10px;
+    }
+
+    .contact-icon {
+        width: 45px;
+    }
+
+    .tooltip-text {
+        right: 60px;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .floating-contact-widget {
+        bottom: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+
+    .contact-icon {
+        width: 42px;
+    }
+
+    .tooltip-text {
+        right: 55px;
+        font-size: 10px;
+        padding: 5px 8px;
+    }
+}

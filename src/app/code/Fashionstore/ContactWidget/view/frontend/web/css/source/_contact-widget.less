@@ -1,0 +1,244 @@
+//
+// Floating Contact Widget Styles
+// @category   Fashionstore
+// @package    Fashionstore_ContactWidget
+//
+
+// Colors
+@button-green: #28a745;
+@button-blue: #0084ff;
+@button-gradient: linear-gradient(135deg, #0084ff, #00d4ff);
+@shadow-color: rgba(0, 0, 0, 0.3);
+@text-color: #fff;
+
+// Floating Contact Widget Container
+.floating-contact-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+
+    @media (max-width: 768px) {
+        bottom: 15px;
+        right: 15px;
+        gap: 10px;
+    }
+}
+
+// Shake Animation - rung nhẹ liên tục
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(-2px) translateY(-2px) rotate(-0.5deg);
+    }
+    50% {
+        transform: translateX(2px) translateY(2px) rotate(0.5deg);
+    }
+    75% {
+        transform: translateX(-1px) translateY(1px) rotate(-0.3deg);
+    }
+}
+
+// Scale Up Animation - phóng to nhẹ
+@keyframes scaleUp {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+// Contact Button Styles
+.contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    color: @text-color;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 8px @shadow-color;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    animation: shake 2s infinite;
+
+    @media (max-width: 768px) {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .button-icon {
+        display: block;
+        line-height: 1;
+    }
+
+    // Hover Effects - dừng shake và phóng to
+    &:hover {
+        animation: none;
+        transform: scale(1.15);
+        box-shadow: 0 6px 12px @shadow-color;
+
+        .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-10px);
+        }
+    }
+
+    // Hover hiệu ứng ripple
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    &:active::before {
+        animation: ripple 0.6s ease-out;
+    }
+}
+
+// Ripple Animation
+@keyframes ripple {
+    to {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+    }
+}
+
+// Hotline Button - Green
+.contact-button-hotline {
+    background-color: @button-green;
+
+    &:hover {
+        background-color: darken(@button-green, 10%);
+    }
+
+    &:active {
+        background-color: darken(@button-green, 15%);
+    }
+}
+
+// Zalo Button - Blue
+.contact-button-zalo {
+    background-color: @button-blue;
+
+    &:hover {
+        background-color: darken(@button-blue, 10%);
+    }
+
+    &:active {
+        background-color: darken(@button-blue, 15%);
+    }
+}
+
+// Messenger Button - Gradient
+.contact-button-messenger {
+    background: @button-gradient;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, lighten(#0084ff, 5%), lighten(#00d4ff, 5%));
+    }
+
+    &:active {
+        background: linear-gradient(135deg, darken(#0084ff, 5%), darken(#00d4ff, 5%));
+    }
+}
+
+// Tooltip Text
+.tooltip-text {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateX(0);
+    translate: 0 -50%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: @text-color;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: -1;
+
+    @media (max-width: 768px) {
+        right: 60px;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    // Mũi tên tooltip
+    &::after {
+        content: '';
+        position: absolute;
+        right: -5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid rgba(0, 0, 0, 0.8);
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+    }
+}
+
+// Responsive cho màn hình nhỏ
+@media (max-width: 480px) {
+    .floating-contact-widget {
+        bottom: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+
+    .contact-button {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+    }
+
+    .tooltip-text {
+        right: 55px;
+        font-size: 10px;
+        padding: 5px 8px;
+    }
+}

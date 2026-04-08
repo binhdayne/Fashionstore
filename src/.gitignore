@@ -1,0 +1,9 @@
+vendor/
+generated/
+var/
+pub/static/
+pub/media/
+app/etc/env.php
+app/etc/config.php
+*.log
+.env

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Fashionstore_ContactWidget::css/contact-widget.css"/>
+    </head>
+    <body>
+        <referenceContainer name="before.body.end">
+            <block class="Fashionstore\ContactWidget\Block\Widget"
+                   name="fashionstore.contact.widget"
+                   template="Fashionstore_ContactWidget::contact-widget.phtml"/>
+        </referenceContainer>
+    </body>
+</layout>
