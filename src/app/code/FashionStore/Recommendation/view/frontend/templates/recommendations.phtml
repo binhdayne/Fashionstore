@@ -1,0 +1,75 @@
+<?php
+/** @var \FashionStore\Recommendation\Block\Recommendations $block */
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<style>
+.fashionstore-recommendation{margin:32px 0;padding:28px;border:1px solid #e7dccf;background:linear-gradient(135deg,#fffaf4 0%,#f4eee5 100%)}
+.fashionstore-recommendation__heading{margin:0 0 8px;font:600 30px/1.1 "Cormorant Garamond",serif;color:#2e261f}
+.fashionstore-recommendation__subheading{margin:0 0 20px;font:400 13px/1.5 "Montserrat",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8a715a}
+.fashionstore-recommendation__status{margin:0 0 16px;font:400 13px/1.5 "Montserrat",sans-serif;color:#5e5348}
+.fashionstore-recommendation__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.fashionstore-recommendation__card{display:flex;flex-direction:column;gap:10px;padding:14px;background:#fff;border:1px solid rgba(138,113,90,.18);text-decoration:none;transition:transform .2s ease,box-shadow .2s ease, border-color .2s ease}
+.fashionstore-recommendation__card:hover{transform:translateY(-3px);border-color:#8a715a;box-shadow:0 14px 28px rgba(46,38,31,.08)}
+.fashionstore-recommendation__image{aspect-ratio:3/4;width:100%;object-fit:cover;background:#f3ece3}
+.fashionstore-recommendation__name{font:600 17px/1.3 "Cormorant Garamond",serif;color:#2e261f}
+.fashionstore-recommendation__price{font:600 14px/1.3 "Montserrat",sans-serif;color:#6b4f36}
+.fashionstore-recommendation__reason{font:400 12px/1.5 "Montserrat",sans-serif;color:#7b6b5c}
+@media (max-width: 767px){.fashionstore-recommendation{padding:20px}.fashionstore-recommendation__heading{font-size:24px}}
+</style>
+
+<section class="fashionstore-recommendation"
+         data-url="<?= $block->escapeUrl($block->getAjaxUrl()) ?>"
+         data-user-id="<?= $block->escapeHtmlAttr($block->getCurrentUserIdentifier()) ?>"
+         data-product-id="<?= (int) $block->getCurrentProductId() ?>"
+         data-category-id="<?= (int) $block->getCurrentCategoryId() ?>"
+         data-top-k="<?= (int) $block->getDefaultTopK() ?>">
+    <h2 class="fashionstore-recommendation__heading">Recommended for You</h2>
+    <p class="fashionstore-recommendation__subheading">Collaborative filtering + content similarity</p>
+    <p class="fashionstore-recommendation__status">Dang tai du lieu goi y...</p>
+    <div class="fashionstore-recommendation__grid"></div>
+</section>
+
+<script>
+require(['jquery'], function ($) {
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    $('.fashionstore-recommendation').each(function () {
+        var root = $(this);
+        var grid = root.find('.fashionstore-recommendation__grid');
+        var status = root.find('.fashionstore-recommendation__status');
+
+        $.getJSON(root.data('url'), {
+            user_id: root.data('user-id'),
+            product_id: root.data('product-id'),
+            category_id: root.data('category-id'),
+            top_k: root.data('top-k')
+        }).done(function (response) {
+            var items = response && response.items ? response.items : [];
+
+            if (!items.length) {
+                status.text('Chua co goi y phu hop cho nguoi dung hien tai.');
+                return;
+            }
+
+            status.text('Che do goi y: ' + escapeHtml(response.mode || 'hybrid'));
+
+            $.each(items, function (_, item) {
+                grid.append(
+                    '<a class="fashionstore-recommendation__card" href="' + escapeHtml(item.url) + '">' +
+                        '<img class="fashionstore-recommendation__image" src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '">' +
+                        '<span class="fashionstore-recommendation__name">' + escapeHtml(item.name) + '</span>' +
+                        '<span class="fashionstore-recommendation__price">' + escapeHtml(item.price_html) + '</span>' +
+                        '<span class="fashionstore-recommendation__reason">' + escapeHtml(item.reason) + '</span>' +
+                    '</a>'
+                );
+            });
+        }).fail(function () {
+            status.text('Khong ket noi duoc recommendation service.');
+        });
+    });
+});
+</script>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="FashionStore" translate="label" sortOrder="400">
+            <label>Fashion Store</label>
+        </tab>
+        <section id="fashionstore_recommendation" translate="label" sortOrder="110"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Recommendation Engine</label>
+            <tab>FashionStore</tab>
+            <resource>FashionStore_Recommendation::config</resource>
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Recommendation Engine</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="service_url" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Python Service URL</label>
+                    <comment>Vi du: http://localhost:8000</comment>
+                </field>
+                <field id="top_k" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Top K</label>
+                    <comment>So luong san pham goi y mac dinh tren frontend.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

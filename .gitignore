@@ -4,5 +4,7 @@ src/var/
 src/pub/static/
 src/pub/media/
 src/app/etc/env.php
+src/auth.json
+local-backup/
 *.log
 .env
