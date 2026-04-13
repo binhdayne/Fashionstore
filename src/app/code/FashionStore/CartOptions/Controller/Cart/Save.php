@@ -4,20 +4,28 @@ declare(strict_types=1);
 namespace FashionStore\CartOptions\Controller\Cart;
 
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\DataObject;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class Save extends Action
 {
     private const DEFAULT_COUNTRY_ID = 'VN';
+    private const SESSION_KEY_ACTIVE = 'fashionstore_buy_now_active';
+    private const SESSION_KEY_ITEM_IDS = 'fashionstore_buy_now_item_ids';
+    private const SESSION_KEY_ORIGINAL_QUOTE_ID = 'fashionstore_buy_now_original_quote_id';
+    private const SESSION_KEY_QUOTE_ID = 'fashionstore_buy_now_quote_id';
 
     private CheckoutSession $checkoutSession;
 
@@ -31,6 +39,12 @@ class Save extends Action
 
     private AddressRepositoryInterface $addressRepository;
 
+    private QuoteFactory $quoteFactory;
+
+    private CustomerRepositoryInterface $customerRepository;
+
+    private Json $jsonSerializer;
+
     public function __construct(
         Context $context,
         CheckoutSession $checkoutSession,
@@ -38,7 +52,10 @@ class Save extends Action
         CartRepositoryInterface $cartRepository,
         PaymentHelper $paymentHelper,
         CustomerSession $customerSession,
-        AddressRepositoryInterface $addressRepository
+        AddressRepositoryInterface $addressRepository,
+        QuoteFactory $quoteFactory,
+        CustomerRepositoryInterface $customerRepository,
+        Json $jsonSerializer
     ) {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
@@ -47,6 +64,9 @@ class Save extends Action
         $this->paymentHelper = $paymentHelper;
         $this->customerSession = $customerSession;
         $this->addressRepository = $addressRepository;
+        $this->quoteFactory = $quoteFactory;
+        $this->customerRepository = $customerRepository;
+        $this->jsonSerializer = $jsonSerializer;
     }
 
     public function execute(): Redirect
@@ -60,29 +80,44 @@ class Save extends Action
             return $resultRedirect->setPath('checkout/cart');
         }
 
+        $this->restoreOriginalQuoteIfNeeded();
+
         $quote = $this->checkoutSession->getQuote();
         if (!$quote->getItemsCount()) {
             return $resultRedirect->setPath('checkout/cart');
         }
 
         try {
+            $selectedItems = $this->getSelectedCheckoutItems();
+
+            if ($goToCheckout && $selectedItems !== []) {
+                $checkoutQuote = $this->buildCheckoutQuoteFromSelection($quote, $selectedItems);
+
+                if (!$checkoutQuote->isVirtual()) {
+                    $this->updateShippingAddress($checkoutQuote);
+                }
+
+                $this->applyPaymentMethod($checkoutQuote);
+                $checkoutQuote->collectTotals();
+                $this->cartRepository->save($checkoutQuote);
+                $this->activateTemporaryCheckoutQuote($checkoutQuote, (int) $quote->getId());
+
+                return $resultRedirect->setPath('checkout');
+            }
+
             if (!$quote->isVirtual()) {
                 $this->updateShippingAddress($quote);
             }
 
-            $paymentMethod = trim((string) $request->getParam('payment_method', ''));
-            if ($paymentMethod !== '') {
-                $availablePaymentMethods = $this->getAvailablePaymentMethodCodes($quote);
-                if (in_array($paymentMethod, $availablePaymentMethods, true)) {
-                    $quote->getPayment()->setMethod($paymentMethod);
-                }
-            }
+            $this->applyPaymentMethod($quote);
 
             $quote->collectTotals();
             $this->cartRepository->save($quote);
             $this->messageManager->addSuccessMessage(__('Da cap nhat thong tin giao hang va thanh toan.'));
         } catch (\Throwable $throwable) {
             $this->messageManager->addErrorMessage(__('Khong the cap nhat thong tin luc nay.'));
+
+            return $resultRedirect->setPath('checkout/cart');
         }
 
         if ($goToCheckout) {
@@ -90,6 +125,140 @@ class Save extends Action
         }
 
         return $resultRedirect->setPath('checkout/cart');
+    }
+
+    /**
+     * @return array<int, float>
+     */
+    private function getSelectedCheckoutItems(): array
+    {
+        $selection = trim((string) $this->getRequest()->getParam('checkout_selection', ''));
+
+        if ($selection === '') {
+            return [];
+        }
+
+        try {
+            $decodedSelection = $this->jsonSerializer->unserialize($selection);
+        } catch (\InvalidArgumentException $exception) {
+            return [];
+        }
+
+        if (!is_array($decodedSelection)) {
+            return [];
+        }
+
+        $selectedItems = [];
+
+        foreach ($decodedSelection as $selectedItem) {
+            if (!is_array($selectedItem)) {
+                continue;
+            }
+
+            $itemId = (int) ($selectedItem['item_id'] ?? 0);
+            $qty = (float) ($selectedItem['qty'] ?? 0);
+
+            if ($itemId <= 0 || $qty <= 0) {
+                continue;
+            }
+
+            $selectedItems[$itemId] = $qty;
+        }
+
+        return $selectedItems;
+    }
+
+    /**
+     * @param array<int, float> $selectedItems
+     */
+    private function buildCheckoutQuoteFromSelection(Quote $sourceQuote, array $selectedItems): Quote
+    {
+        $checkoutQuote = $this->quoteFactory->create();
+        $checkoutQuote->setStoreId((int) $sourceQuote->getStoreId());
+        $checkoutQuote->setIsActive(true);
+        $checkoutQuote->setInventoryProcessed(false);
+
+        if ($this->customerSession->isLoggedIn()) {
+            $customer = $this->customerRepository->getById((int) $this->customerSession->getCustomerId());
+            $checkoutQuote->setCustomer($customer);
+            $checkoutQuote->setCustomerIsGuest(0);
+        } else {
+            $checkoutQuote->setCustomerIsGuest(1);
+            $checkoutQuote->setCustomerEmail((string) $sourceQuote->getCustomerEmail());
+        }
+
+        foreach ($selectedItems as $itemId => $qty) {
+            $quoteItem = $sourceQuote->getItemById($itemId);
+            if (!$quoteItem || $quoteItem->getParentItemId()) {
+                continue;
+            }
+
+            $buyRequest = $quoteItem->getBuyRequest();
+            $requestData = $buyRequest ? $buyRequest->getData() : [];
+            $requestData['qty'] = $qty;
+
+            $result = $checkoutQuote->addProduct($quoteItem->getProduct(), new DataObject($requestData));
+            if (is_string($result)) {
+                throw new LocalizedException(__($result));
+            }
+        }
+
+        if (count($checkoutQuote->getAllVisibleItems()) === 0) {
+            throw new LocalizedException(__('Vui long chon it nhat mot san pham de thanh toan.'));
+        }
+
+        return $checkoutQuote;
+    }
+
+    private function applyPaymentMethod(Quote $quote): void
+    {
+        $paymentMethod = trim((string) $this->getRequest()->getParam('payment_method', ''));
+        if ($paymentMethod === '') {
+            return;
+        }
+
+        $availablePaymentMethods = $this->getAvailablePaymentMethodCodes($quote);
+        if (in_array($paymentMethod, $availablePaymentMethods, true)) {
+            $quote->getPayment()->setMethod($paymentMethod);
+        }
+    }
+
+    private function activateTemporaryCheckoutQuote(Quote $checkoutQuote, int $originalQuoteId): void
+    {
+        $temporaryItemIds = [];
+
+        foreach ($checkoutQuote->getAllVisibleItems() as $item) {
+            if ($item->getId()) {
+                $temporaryItemIds[] = (int) $item->getId();
+            }
+        }
+
+        $this->checkoutSession->replaceQuote($checkoutQuote);
+        $this->checkoutSession->setData(self::SESSION_KEY_ACTIVE, true);
+        $this->checkoutSession->setData(self::SESSION_KEY_QUOTE_ID, (int) $checkoutQuote->getId());
+        $this->checkoutSession->setData(self::SESSION_KEY_ITEM_IDS, $temporaryItemIds);
+
+        if ($originalQuoteId > 0 && $originalQuoteId !== (int) $checkoutQuote->getId()) {
+            $this->checkoutSession->setData(self::SESSION_KEY_ORIGINAL_QUOTE_ID, $originalQuoteId);
+        } else {
+            $this->checkoutSession->unsetData(self::SESSION_KEY_ORIGINAL_QUOTE_ID);
+        }
+    }
+
+    private function restoreOriginalQuoteIfNeeded(): void
+    {
+        $temporaryQuoteId = (int) $this->checkoutSession->getData(self::SESSION_KEY_QUOTE_ID);
+        $originalQuoteId = (int) $this->checkoutSession->getData(self::SESSION_KEY_ORIGINAL_QUOTE_ID);
+
+        if ($temporaryQuoteId <= 0 || $originalQuoteId <= 0 || (int) $this->checkoutSession->getQuoteId() !== $temporaryQuoteId) {
+            return;
+        }
+
+        try {
+            $originalQuote = $this->cartRepository->get($originalQuoteId);
+            $this->checkoutSession->replaceQuote($originalQuote);
+        } catch (LocalizedException $exception) {
+        }
     }
 
     private function updateShippingAddress(Quote $quote): void

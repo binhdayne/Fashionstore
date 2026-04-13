@@ -405,3 +405,45 @@
         width: 100% !important;
     }
 }
+
+.catalog-product-view .box-tocart .fashionstore-product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.catalog-product-view .box-tocart .fashionstore-product-actions .action {
+    min-width: 216px;
+    min-height: 52px;
+    border-radius: 12px;
+}
+
+.catalog-product-view .box-tocart .fashionstore-product-actions .action.tocart {
+    margin-right: 0;
+}
+
+.catalog-product-view .box-tocart .fashionstore-product-actions .action.buynow {
+    border: 1px solid #1a1a1a;
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.catalog-product-view .box-tocart .fashionstore-product-actions .action.buynow:hover,
+.catalog-product-view .box-tocart .fashionstore-product-actions .action.buynow:focus {
+    border-color: #9b6b2d;
+    background: #9b6b2d;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .catalog-product-view .box-tocart .fashionstore-product-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .catalog-product-view .box-tocart .fashionstore-product-actions .action {
+        width: 100%;
+        min-width: 0;
+    }
+}

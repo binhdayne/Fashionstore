@@ -1,0 +1,55 @@
+
+/* ===== DIOR PAYMENT STYLE ===== */
+
+.dior-payment {
+    background: #fff;
+}
+
+.dior-title {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.dior-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Card style */
+.dior-method-item {
+    border: 1px solid #e5e5e5;
+    padding: 16px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+/* Hover */
+.dior-method-item:hover {
+    border-color: #000;
+}
+
+/* Selected */
+._active .dior-method-item {
+    border-color: #000;
+}
+
+/* Radio button */
+.payment-method input[type="radio"] {
+    accent-color: black;
+}
+
+/* Place order button */
+.action.primary.checkout {
+    background: #000;
+    color: #fff;
+    border: none;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.action.primary.checkout:hover {
+    opacity: 0.85;
+}

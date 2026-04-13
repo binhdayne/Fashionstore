@@ -130,7 +130,7 @@ class Options extends Template
 
     public function getVisiblePaymentLabels(): string
     {
-        return 'COD, VNPay, MoMo';
+        return 'VNPay, MoMo, ZaloPay';
     }
 
     public function isCustomerLoggedIn(): bool
@@ -213,9 +213,10 @@ class Options extends Template
     {
         $normalizedCode = strtolower($code);
 
-        return $normalizedCode === 'cashondelivery'
-            || str_contains($normalizedCode, 'vnpay')
-            || str_contains($normalizedCode, 'momo');
+        return str_contains($normalizedCode, 'vnpay')
+            || str_contains($normalizedCode, 'momo')
+            || str_contains($normalizedCode, 'zalopay')
+            || $normalizedCode === 'zalo';
     }
 
     private function hasManualQuoteAddress(): bool
@@ -244,18 +245,13 @@ class Options extends Template
     private function buildPaymentPresentation(string $code, string $fallbackTitle): array
     {
         $normalizedCode = strtolower($code);
-        $iconPath = 'FashionStore_CartOptions::images/payment-cod.svg';
+        $iconPath = 'FashionStore_CartOptions::images/payment-vnpay.svg';
         $title = $fallbackTitle;
         $description = 'Hoan tat don hang tren trang checkout an toan va nhanh gon.';
         $badge = 'Pay';
         $modifier = 'generic';
 
-        if ($normalizedCode === 'cashondelivery') {
-            $title = 'Thanh toan khi nhan hang';
-            $description = 'Thanh toan bang tien mat khi shipper giao don den dia chi cua ban.';
-            $badge = 'COD';
-            $modifier = 'cod';
-        } elseif (str_contains($normalizedCode, 'vnpay')) {
+        if (str_contains($normalizedCode, 'vnpay')) {
             $title = 'VNPay';
             $description = 'Quet QR, ATM noi dia, the quoc te va ung dung ngan hang tuong thich VNPay.';
             $badge = 'Gateway';
@@ -267,6 +263,12 @@ class Options extends Template
             $badge = 'Wallet';
             $modifier = 'momo';
             $iconPath = 'FashionStore_CartOptions::images/payment-momo.svg';
+        } elseif (str_contains($normalizedCode, 'zalopay') || $normalizedCode === 'zalo') {
+            $title = 'ZaloPay';
+            $description = 'Vi dien tu ZaloPay ho tro quet QR, lien ket ngan hang va thanh toan nhanh tren di dong.';
+            $badge = 'Wallet';
+            $modifier = 'zalopay';
+            $iconPath = 'FashionStore_CartOptions::images/payment-zalopay.svg';
         }
 
         return [

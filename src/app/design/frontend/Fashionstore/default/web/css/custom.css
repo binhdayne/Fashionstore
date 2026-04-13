@@ -153,6 +153,116 @@ body.cms-home .page-main-full-width {
     color: #1a1a1a !important;
 }
 
+.catalog-category-view.page-layout-2columns-left .sidebar.sidebar-main,
+.catalog-category-view.page-layout-2columns-left .sidebar.sidebar-additional,
+.catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-main,
+.catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-additional {
+    display: none !important;
+}
+
+.catalog-category-view.page-layout-2columns-left .column.main,
+.catalogsearch-result-index.page-layout-2columns-left .column.main {
+    width: 100% !important;
+    float: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.catalog-category-view .toolbar.toolbar-products,
+.catalogsearch-result-index .toolbar.toolbar-products {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.catalog-category-view .toolbar.toolbar-products .fashionstore-toolbar-meta,
+.catalogsearch-result-index .toolbar.toolbar-products .fashionstore-toolbar-meta {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 14px !important;
+    margin-left: auto !important;
+}
+
+.catalog-category-view .fashionstore-price-filter-wrap,
+.catalogsearch-result-index .fashionstore-price-filter-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.catalog-category-view .fashionstore-price-filter-label,
+.catalogsearch-result-index .fashionstore-price-filter-label {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #3a3a3a !important;
+    white-space: nowrap !important;
+}
+
+.catalog-category-view .fashionstore-price-filter-select,
+.catalogsearch-result-index .fashionstore-price-filter-select {
+    min-width: 180px !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+    border: 1px solid #d4d4d4 !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    color: #1f1f1f !important;
+}
+
+.catalog-category-view .toolbar-sorter,
+.catalogsearch-result-index .toolbar-sorter {
+    margin: 0 !important;
+}
+
+.catalog-category-view .toolbar-sorter .sorter-label,
+.catalogsearch-result-index .toolbar-sorter .sorter-label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #6f6f6f !important;
+    margin-right: 10px !important;
+}
+
+.catalog-category-view .toolbar-sorter .sorter-options,
+.catalogsearch-result-index .toolbar-sorter .sorter-options {
+    min-width: 170px !important;
+    height: 38px !important;
+    border: 1px solid #d4d4d4 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    padding: 0 30px 0 10px !important;
+}
+
+@media (max-width: 992px) {
+    .catalog-category-view .toolbar.toolbar-products,
+    .catalogsearch-result-index .toolbar.toolbar-products {
+        align-items: flex-start !important;
+    }
+
+    .catalog-category-view .toolbar.toolbar-products .fashionstore-toolbar-meta,
+    .catalogsearch-result-index .toolbar.toolbar-products .fashionstore-toolbar-meta {
+        width: 100% !important;
+        justify-content: space-between !important;
+        margin-left: 0 !important;
+    }
+
+    .catalog-category-view .fashionstore-price-filter-wrap,
+    .catalogsearch-result-index .fashionstore-price-filter-wrap {
+        flex: 1 1 auto !important;
+    }
+
+    .catalog-category-view .fashionstore-price-filter-select,
+    .catalogsearch-result-index .fashionstore-price-filter-select,
+    .catalog-category-view .toolbar-sorter .sorter-options,
+    .catalogsearch-result-index .toolbar-sorter .sorter-options {
+        min-width: 150px !important;
+    }
+}
+
 /* ===== FOOTER ===== */
 .page-footer {
     background: #1a1a1a !important;
@@ -199,390 +309,237 @@ header .logo img {
     overscroll-behavior: contain;
 }
 
-/* ===== CART ===== */
-.checkout-cart-index {
-    background: linear-gradient(180deg, #fbf8f2 0%, #f5f1e8 100%) !important;
+/* ===== PRODUCT DETAIL (UNIQLO-LIKE) ===== */
+.catalog-product-view .page-main {
+    max-width: 1360px !important;
 }
 
-.checkout-cart-index .page-main {
-    max-width: 1320px !important;
-    padding-top: 36px !important;
-    padding-bottom: 48px !important;
+.catalog-product-view .product.media {
+    padding-right: 24px !important;
 }
 
-.checkout-cart-index .page-title-wrapper {
-    margin-bottom: 24px !important;
+.catalog-product-view .product-info-main {
+    padding-left: 10px !important;
 }
 
-.checkout-cart-index .page-title {
-    margin-bottom: 0 !important;
-}
-
-.checkout-cart-index .page-title span {
-    font-size: 34px !important;
-    font-weight: 400 !important;
-    letter-spacing: 4px !important;
-}
-
-.checkout-cart-index .cart-container {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 32px !important;
-    align-items: flex-start !important;
-}
-
-.checkout-cart-index .cart-container::after {
-    display: none !important;
-    content: none !important;
-}
-
-.checkout-cart-index .form.form-cart,
-.checkout-cart-index .cart-summary {
-    float: none !important;
-    width: auto !important;
-}
-
-.checkout-cart-index .cart-container > .form.form-cart {
-    order: 1 !important;
-    flex: 1 1 0 !important;
-    max-width: calc(100% - 412px) !important;
-    min-width: 0;
-    width: 100% !important;
-}
-
-.checkout-cart-index .cart-container > .cart-summary {
-    order: 2 !important;
-    flex: 0 0 380px !important;
-    margin: 0 !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    padding: 28px 24px !important;
-    background: #fff !important;
-    border: 1px solid #ece4d5 !important;
-    box-shadow: 0 18px 44px rgba(26, 26, 26, 0.06) !important;
-    position: sticky !important;
-    top: 88px !important;
-}
-
-.checkout-cart-index .cart.table-wrapper {
-    margin: 0 !important;
-    width: 100% !important;
-    padding: 24px 28px 10px !important;
-    background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%) !important;
-    border: 1px solid #ece4d5 !important;
-    box-shadow: 0 18px 44px rgba(26, 26, 26, 0.05) !important;
-}
-
-.checkout-cart-index #shopping-cart-table {
-    width: 100% !important;
-    table-layout: fixed !important;
-}
-
-.checkout-cart-index #shopping-cart-table .col.item {
-    width: 52% !important;
-}
-
-.checkout-cart-index #shopping-cart-table .col.price,
-.checkout-cart-index #shopping-cart-table .col.qty,
-.checkout-cart-index #shopping-cart-table .col.subtotal {
-    width: 16% !important;
-}
-
-.checkout-cart-index .cart.table-wrapper thead th {
-    padding: 0 0 18px !important;
-    border-bottom: 1px solid #e8e0d2 !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 2.8px !important;
-    text-transform: uppercase !important;
-    color: #74654a !important;
-}
-
-.checkout-cart-index #shopping-cart-table tbody.cart.item td {
-    padding: 28px 0 !important;
-    border-top: 1px solid #f1ebde !important;
-    vertical-align: top !important;
-    background: transparent !important;
-}
-
-.checkout-cart-index #shopping-cart-table tbody.cart.item:first-of-type td {
-    border-top: none !important;
-}
-
-.checkout-cart-index .cart.item .col.item {
-    display: flex !important;
-    gap: 20px !important;
-}
-
-.checkout-cart-index .cart.item .product-item-photo {
-    width: 126px !important;
-    min-width: 126px !important;
-    padding: 10px !important;
-    background: #f5efe4 !important;
-    border-radius: 18px !important;
-    overflow: hidden !important;
-}
-
-.checkout-cart-index .cart.item .product-item-photo .product-image-container {
-    width: 100% !important;
-}
-
-.checkout-cart-index .cart.item .product-item-details {
-    padding: 2px 0 0 !important;
-}
-
-.checkout-cart-index .cart.item .product-item-name {
-    margin: 0 0 12px !important;
+.catalog-product-view .product-info-main .page-title-wrapper .page-title {
     font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-size: 42px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em !important;
+    margin-bottom: 14px !important;
+}
+
+.catalog-product-view .product-info-main .price-box .price {
+    font-size: 52px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    color: #111 !important;
+}
+
+/* Ẩn chọn màu theo yêu cầu */
+.catalog-product-view .swatch-attribute[data-attribute-code='color'] {
+    display: none !important;
+}
+
+.catalog-product-view .swatch-attribute[data-attribute-code='size'] {
+    margin: 8px 0 22px !important;
+}
+
+.catalog-product-view .swatch-attribute[data-attribute-code='size'] .swatch-attribute-label {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    letter-spacing: .02em !important;
+    text-transform: none !important;
+    color: #606060 !important;
+    margin: 0 0 12px !important;
+}
+
+.catalog-product-view .swatch-attribute[data-attribute-code='size'] .swatch-option {
+    min-width: 52px !important;
+    height: 44px !important;
+    padding: 0 12px !important;
+    border: 1px solid #b8b8b8 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #222 !important;
     font-size: 24px !important;
     font-weight: 500 !important;
-    line-height: 1.35 !important;
+    margin: 0 8px 8px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-.checkout-cart-index .cart.item .product-item-name a {
-    color: #1a1a1a !important;
+.catalog-product-view .swatch-attribute[data-attribute-code='size'] .swatch-option.selected,
+.catalog-product-view .swatch-attribute[data-attribute-code='size'] .swatch-option:hover {
+    border-color: #000 !important;
+    box-shadow: inset 0 0 0 2px #000 !important;
+    color: #000 !important;
 }
 
-.checkout-cart-index .cart.item .item-options {
-    margin: 14px 0 0 !important;
+.catalog-product-view .fashionstore-size-select-hidden {
+    display: none !important;
 }
 
-.checkout-cart-index .cart.item .item-options dt,
-.checkout-cart-index .cart.item .item-options dd {
-    font-size: 13px !important;
-    line-height: 1.7 !important;
+.catalog-product-view .fashionstore-size-options {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
 }
 
-.checkout-cart-index .cart.item .item-options dt {
-    color: #7a6c53 !important;
-    font-weight: 400 !important;
-}
-
-.checkout-cart-index .cart.item .item-options dd {
-    color: #1a1a1a !important;
+.catalog-product-view .fashionstore-size-option {
+    min-width: 52px !important;
+    height: 44px !important;
+    padding: 0 12px !important;
+    border: 1px solid #b8b8b8 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #222 !important;
+    font-size: 24px !important;
     font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-.checkout-cart-index .cart.item .col.price,
-.checkout-cart-index .cart.item .col.subtotal {
-    white-space: nowrap !important;
+.catalog-product-view .fashionstore-size-option.selected,
+.catalog-product-view .fashionstore-size-option:hover {
+    border-color: #000 !important;
+    box-shadow: inset 0 0 0 2px #000 !important;
 }
 
-.checkout-cart-index .cart.item .col.price .price,
-.checkout-cart-index .cart.item .col.subtotal .price {
-    color: #9b6b2d !important;
-    font-size: 28px !important;
-    font-weight: 600 !important;
-    line-height: 1.1 !important;
+.catalog-product-view .fashionstore-size-option.disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
 }
 
-.checkout-cart-index .cart.item .col.price .old-price .price,
-.checkout-cart-index .cart.item .col.price .price-excluding-tax + .old-price .price {
-    color: #9d9d9d !important;
-    font-size: 16px !important;
-    font-weight: 400 !important;
-    text-decoration: line-through !important;
+.catalog-product-view .fashionstore-pdp-buybox {
+    margin-top: 14px !important;
 }
 
-.checkout-cart-index .cart.item .field.qty {
+.catalog-product-view .fashionstore-pdp-buybox .field.qty {
+    margin: 0 0 14px !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .field.qty .label {
+    display: none !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .field.qty .control {
+    width: 168px !important;
+    height: 56px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: stretch !important;
+    background: #f6f6f6 !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .qty-btn {
+    width: 48px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #777 !important;
+    font-size: 34px !important;
+    font-weight: 300 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .input-text.qty {
+    width: 72px !important;
+    border: 0 !important;
+    background: transparent !important;
+    text-align: center !important;
+    font-size: 36px !important;
+    font-weight: 500 !important;
+    color: #111 !important;
+    box-shadow: none !important;
     margin: 0 !important;
 }
 
-.checkout-cart-index .cart.item .control.qty {
-    width: 96px !important;
-}
-
-.checkout-cart-index .cart.item .input-text.qty {
-    height: 48px !important;
-    border: 1px solid #d8d0c2 !important;
-    background: #fff !important;
-    border-radius: 12px !important;
-    text-align: center !important;
-    font-size: 18px !important;
-    font-weight: 500 !important;
-    color: #1a1a1a !important;
-    box-shadow: none !important;
-}
-
-.checkout-cart-index .cart.item .item-actions td {
-    padding-top: 0 !important;
-}
-
-.checkout-cart-index .cart.item .actions-toolbar {
+.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions {
     display: flex !important;
-    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin-top: 12px !important;
 }
 
-.checkout-cart-index .cart.item .actions-toolbar > .action,
-.checkout-cart-index .cart.item .actions-toolbar .action-edit,
-.checkout-cart-index .cart.item .actions-toolbar .action-delete {
-    color: #8c6f3d !important;
-}
-
-.checkout-cart-index .cart.main.actions {
-    display: flex !important;
-    gap: 12px !important;
-    margin-top: 20px !important;
-}
-
-.checkout-cart-index .cart.main.actions .action {
-    min-height: 48px !important;
+.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action {
+    min-height: 56px !important;
     border-radius: 999px !important;
     padding: 0 24px !important;
-    border: 1px solid #d7ccb8 !important;
+    letter-spacing: 0 !important;
+    text-transform: uppercase !important;
+    font-size: 34px !important;
+    font-weight: 600 !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .action.tocart {
+    flex: 1 1 auto !important;
+    background: #000 !important;
+    border: 1px solid #000 !important;
+    color: #fff !important;
+}
+
+.catalog-product-view .fashionstore-pdp-buybox .action.buynow {
+    flex: 1 1 auto !important;
     background: #fff !important;
-    color: #1a1a1a !important;
-    font-size: 10px !important;
-    letter-spacing: 2.8px !important;
-    text-transform: uppercase !important;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-.checkout-cart-index .cart.main.actions .action:hover {
-    border-color: #c9a96e !important;
-    color: #8c6f3d !important;
+.catalog-product-view .product-info-main .product.attribute.sku,
+.catalog-product-view .product-info-main .product-info-stock-sku,
+.catalog-product-view .product-info-main .product-info-stock-sku .sku,
+.catalog-product-view .product-info-main .product-info-stock-sku > .type,
+.catalog-product-view .product-info-main .product-info-stock-sku > .value {
+	display: none !important;
 }
 
-.checkout-cart-index .cart-summary > .summary.title {
-    display: block !important;
-    margin: 0 0 22px !important;
-    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    letter-spacing: 2.8px !important;
-    text-transform: uppercase !important;
-    color: #1a1a1a !important;
-}
-
-.checkout-cart-index .cart-summary > .block,
-.checkout-cart-index .cart-summary > .cart-totals,
-.checkout-cart-index .cart-summary > .checkout.methods.items {
-    margin-top: 18px !important;
-    padding-top: 18px !important;
-    border-top: 1px dashed #ddd1bc !important;
-}
-
-.checkout-cart-index .cart-summary .title,
-.checkout-cart-index .cart-summary .block .title strong {
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 2.8px !important;
-    text-transform: uppercase !important;
-    color: #74654a !important;
-}
-
-.checkout-cart-index .cart-summary .table.totals {
-    margin-bottom: 0 !important;
-}
-
-.checkout-cart-index .cart-summary .table.totals th,
-.checkout-cart-index .cart-summary .table.totals td {
-    padding: 10px 0 !important;
-    border: none !important;
-    color: #1a1a1a !important;
-}
-
-.checkout-cart-index .cart-summary .table.totals .amount,
-.checkout-cart-index .cart-summary .table.totals .price {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-}
-
-.checkout-cart-index .cart-summary .table.totals .grand .price,
-.checkout-cart-index .cart-summary .table.totals .grand .amount {
-    color: #9b6b2d !important;
-    font-size: 32px !important;
-}
-
-.checkout-cart-index .checkout.methods.items {
-    list-style: none !important;
-    padding: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-.checkout-cart-index .checkout.methods.items .item {
-    margin: 0 !important;
-}
-
-.checkout-cart-index .checkout.methods.items .action.primary.checkout {
-    width: 100% !important;
-    min-height: 54px !important;
-    border-radius: 12px !important;
-    background: #1a1a1a !important;
-    border-color: #1a1a1a !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    letter-spacing: 2.4px !important;
-    box-shadow: 0 14px 26px rgba(26, 26, 26, 0.16) !important;
-}
-
-.checkout-cart-index .checkout.methods.items .action.primary.checkout:hover {
-    background: #c9a96e !important;
-    border-color: #c9a96e !important;
-}
-
-.checkout-cart-index .cart-summary .discount,
-.checkout-cart-index .cart-summary .shipping {
-    background: #fcfaf5 !important;
-    border: 1px solid #ece4d5 !important;
-    padding: 16px 18px !important;
-}
-
-.checkout-cart-index .cart-summary input,
-.checkout-cart-index .cart-summary select {
-    border-radius: 10px !important;
-    border-color: #d9cfbf !important;
-    height: 44px !important;
+.catalog-product-view .fashionstore-size-select-hidden {
+    display: none !important;
 }
 
 @media (max-width: 1024px) {
-    .checkout-cart-index .cart-container {
-        display: block !important;
+    .catalog-product-view .product.media {
+        padding-right: 0 !important;
     }
 
-    .checkout-cart-index .cart-container > .cart-summary,
-    .checkout-cart-index .cart-container > .form.form-cart {
-        flex: none !important;
-        max-width: none !important;
+    .catalog-product-view .product-info-main {
+        padding-left: 0 !important;
     }
 
-    .checkout-cart-index .cart-container > .cart-summary {
-        position: static !important;
-        margin-top: 24px !important;
-    }
-}
-
-@media (max-width: 767px) {
-    .checkout-cart-index #shopping-cart-table {
-        table-layout: auto !important;
+    .catalog-product-view .product-info-main .page-title-wrapper .page-title {
+        font-size: 30px !important;
     }
 
-    .checkout-cart-index .page-main {
-        padding-top: 24px !important;
+    .catalog-product-view .product-info-main .price-box .price {
+        font-size: 34px !important;
     }
 
-    .checkout-cart-index .cart.table-wrapper,
-    .checkout-cart-index .cart-container > .cart-summary {
-        padding: 20px 18px !important;
-    }
-
-    .checkout-cart-index .cart.item .col.item {
-        gap: 14px !important;
-    }
-
-    .checkout-cart-index .cart.item .product-item-photo {
-        width: 92px !important;
-        min-width: 92px !important;
-    }
-
-    .checkout-cart-index .cart.item .product-item-name {
+    .catalog-product-view .swatch-attribute[data-attribute-code='size'] .swatch-option {
         font-size: 18px !important;
     }
 
-    .checkout-cart-index .cart.main.actions {
-        flex-direction: column !important;
+    .catalog-product-view .fashionstore-pdp-buybox .field.qty .control {
+        width: 148px !important;
+        height: 50px !important;
     }
 
-    .checkout-cart-index .cart.main.actions .action {
+    .catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action {
         width: 100% !important;
+        font-size: 22px !important;
     }
 }

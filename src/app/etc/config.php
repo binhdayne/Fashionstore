@@ -359,6 +359,7 @@ return [
         'FashionStore_ContactWidget' => 1,
         'FashionStore_CustomHeader' => 1,
         'FashionStore_ExchangeRate' => 1,
+        'FashionStore_ProductSize' => 1,
         'FashionStore_SocialLogin' => 1,
         'FashionStore_Weather' => 1,
         'PayPal_Braintree' => 1,

@@ -1,0 +1,303 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Thêm vào giỏ hàng'); ?>
+<?php $buyNowTitle = __('Mua ngay'); ?>
+<?php
+$productUrl = $_product ? (string) $_product->getProductUrl() : '';
+$facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($productUrl);
+$instagramShareUrl = 'https://www.instagram.com/';
+$loginUrl = $block->getUrl('customer/account/login');
+?>
+<?php if ($_product->isSaleable()) :?>
+<div class="box-tocart fashionstore-pdp-buybox">
+	<div class="fieldset">
+		<?php if ($block->shouldRenderQuantity()) :?>
+		<div class="field qty">
+			<label class="label" for="qty"><span><?= $block->escapeHtml(__('Số lượng')) ?></span></label>
+			<div class="control">
+				<button type="button"
+						class="qty-btn qty-btn-minus"
+						data-role="qty-decrease"
+						aria-label="<?= $block->escapeHtmlAttr(__('Giảm số lượng')) ?>">-</button>
+				<input type="number"
+					   name="qty"
+					   id="qty"
+					   min="1"
+					   value="<?= $block->getProductDefaultQty() * 1 ?>"
+					   title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+					   class="input-text qty"
+					   data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+					   />
+				<button type="button"
+						class="qty-btn qty-btn-plus"
+						data-role="qty-increase"
+						aria-label="<?= $block->escapeHtmlAttr(__('Tăng số lượng')) ?>">+</button>
+			</div>
+		</div>
+		<?php endif; ?>
+		<input type="hidden" name="return_url" value="" data-role="buy-now-return-url">
+		<input type="hidden" name="fashionstore_buy_now" value="0" data-role="buy-now-flag">
+		<div class="actions fashionstore-product-actions">
+			<button type="submit"
+					title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+					class="action primary tocart"
+					id="product-addtocart-button" disabled>
+				<span><?= $block->escapeHtml($buttonTitle) ?></span>
+			</button>
+			<button type="button"
+					title="<?= $block->escapeHtmlAttr($buyNowTitle) ?>"
+					class="action secondary buynow"
+					id="product-buynow-button"
+					data-role="buy-now"
+					disabled>
+				<span><?= $block->escapeHtml($buyNowTitle) ?></span>
+			</button>
+			<?= $block->getChildHtml('', true) ?>
+		</div>
+		<div class="fashionstore-buy-now-login-required" data-role="buy-now-login-required" hidden>
+			<?= $block->escapeHtml(__('Vui lòng')) ?>
+			<a href="<?= $block->escapeUrl($loginUrl) ?>" data-role="buy-now-login-link">
+				<?= $block->escapeHtml(__('Đăng nhập')) ?>
+			</a>
+			<?= $block->escapeHtml(__('để sử dụng Mua ngay.')) ?>
+		</div>
+		<div class="fashionstore-buy-now-size-required" data-role="buy-now-size-required" hidden>
+			<?= $block->escapeHtml(__('Vui lòng chọn size trước khi mua ngay.')) ?>
+		</div>
+		<div class="fashionstore-share-actions" aria-label="<?= $block->escapeHtmlAttr(__('Chia sẻ sản phẩm')) ?>">
+			<a class="fashionstore-share-link facebook"
+			   href="<?= $block->escapeUrl($facebookShareUrl) ?>"
+			   target="_blank"
+			   rel="noopener noreferrer">
+				<span><?= $block->escapeHtml(__('Chia sẻ Facebook')) ?></span>
+			</a>
+			<a class="fashionstore-share-link instagram"
+			   href="<?= $block->escapeUrl($instagramShareUrl) ?>"
+			   target="_blank"
+			   rel="noopener noreferrer"
+			   title="<?= $block->escapeHtmlAttr(__('Mở Instagram để chia sẻ link sản phẩm')) ?>">
+				<span><?= $block->escapeHtml(__('Chia sẻ Instagram')) ?></span>
+			</a>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
+<style>
+	.catalog-product-view .field[data-attribute-code='color'],
+	.catalog-product-view .swatch-attribute[data-attribute-code='color'] {
+		display: none !important;
+	}
+
+	.catalog-product-view .fashionstore-size-options {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 8px;
+	}
+
+	.catalog-product-view .fashionstore-size-option {
+		min-width: 48px;
+		height: 40px;
+		padding: 0 10px;
+		border: 1px solid #b8b8b8;
+		background: #fff;
+		color: #222;
+		font-size: 15px;
+		font-weight: 500;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.catalog-product-view .fashionstore-size-option.selected,
+	.catalog-product-view .fashionstore-size-option:hover {
+		border-color: #000;
+		box-shadow: inset 0 0 0 2px #000;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .field.qty .control {
+		width: 152px;
+		height: 48px;
+		border: 1px solid #e0e0e0;
+		border-radius: 999px;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		background: #f6f6f6;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .qty-btn {
+		width: 42px;
+		height: 100%;
+		border: 0;
+		background: transparent;
+		color: #777;
+		font-size: 26px;
+		font-weight: 300;
+		line-height: 1;
+		padding: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .input-text.qty {
+		width: 68px;
+		height: 100%;
+		border: 0;
+		background: transparent;
+		text-align: center;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 48px;
+		color: #111;
+		box-shadow: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions {
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		gap: 14px;
+		margin-top: 12px;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action {
+		min-height: 48px;
+		border-radius: 999px;
+		padding: 0 20px;
+		margin: 0 !important;
+		letter-spacing: 0;
+		text-transform: uppercase;
+		font-size: 15px;
+		font-weight: 600;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action span {
+		display: inline-flex;
+		align-items: center;
+		line-height: 1;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .action.tocart {
+		flex: 1 1 auto;
+		background: #000;
+		border: 1px solid #000;
+		color: #fff;
+	}
+
+	.catalog-product-view .fashionstore-pdp-buybox .action.buynow {
+		flex: 1 1 auto;
+		background: #fff;
+		border: 1px solid #000;
+		color: #000;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.catalog-product-view .product-addto-links .action.tocompare,
+	.catalog-product-view .product-social-links .action.tocompare {
+		display: none !important;
+	}
+
+	.catalog-product-view .product-info-main .product-info-stock-sku,
+	.catalog-product-view .product-info-main .product.attribute.sku {
+		display: none !important;
+	}
+
+	.catalog-product-view .fashionstore-size-select-hidden {
+		display: none !important;
+	}
+
+	.catalog-product-view .product-social-links .action.tocompare + .separator,
+	.catalog-product-view .product-addto-links .action.tocompare + .separator {
+		display: none !important;
+	}
+
+	.catalog-product-view .fashionstore-share-actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 14px;
+		flex-wrap: wrap;
+	}
+
+	.catalog-product-view .fashionstore-buy-now-login-required {
+		margin-top: 10px;
+		font-size: 14px;
+		line-height: 1.4;
+		color: #b42318;
+	}
+
+	.catalog-product-view .fashionstore-buy-now-size-required {
+		margin-top: 8px;
+		font-size: 14px;
+		line-height: 1.4;
+		color: #b42318;
+	}
+
+	.catalog-product-view .fashionstore-buy-now-login-required a {
+		color: #111;
+		text-decoration: underline;
+		font-weight: 600;
+	}
+
+	.catalog-product-view .fashionstore-share-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 40px;
+		padding: 0 14px;
+		border-radius: 999px;
+		font-size: 13px;
+		font-weight: 500;
+		text-decoration: none;
+		border: 1px solid #d5d5d5;
+	}
+
+	.catalog-product-view .fashionstore-share-link.facebook {
+		color: #1877f2;
+		border-color: #1877f2;
+	}
+
+	.catalog-product-view .fashionstore-share-link.instagram {
+		color: #c13584;
+		border-color: #c13584;
+	}
+
+	@media (max-width: 767px) {
+		.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action {
+			width: 100%;
+			font-size: 15px;
+		}
+	}
+</style>
+<script type="text/x-magento-init">
+	{
+		"#product_addtocart_form": {
+			"Magento_Catalog/js/validate-product": {},
+			"Magento_Catalog/js/buy-now": {
+				"buyNowUrl": "<?= $block->escapeJs($block->escapeUrl($block->getUrl('fashionstore_cartoptions/cart/buynow'))) ?>",
+				"loginUrl": "<?= $block->escapeJs($block->escapeUrl($loginUrl)) ?>"
+			}
+		}
+	}
+</script>

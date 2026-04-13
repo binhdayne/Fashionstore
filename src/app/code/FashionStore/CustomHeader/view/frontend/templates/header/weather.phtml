@@ -509,10 +509,10 @@ $translationStringsJson = json_encode(
         <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Register')) ?> <span>&gt;</span></a>
 
         <div class="menu-header"><?= $escaper->escapeHtml(__('Store')) ?></div>
-        <a href="/ao-nu.html" class="menu-item"><?= $escaper->escapeHtml(__('Women\'s Fashion')) ?> <span>&gt;</span></a>
-        <a href="/ao-nam.html" class="menu-item"><?= $escaper->escapeHtml(__('Men\'s Fashion')) ?> <span>&gt;</span></a>
-        <a href="/tui-xach.html" class="menu-item"><?= $escaper->escapeHtml(__('Bags')) ?> <span>&gt;</span></a>
-        <a href="/giay.html" class="menu-item"><?= $escaper->escapeHtml(__('Shoes')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('ao-nu.html')) ?>" class="menu-item"><?= $escaper->escapeHtml(__('Women\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('ao-nam.html')) ?>" class="menu-item"><?= $escaper->escapeHtml(__('Men\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('tui-xach.html')) ?>" class="menu-item"><?= $escaper->escapeHtml(__('Bags')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('giay-nam.html')) ?>" class="menu-item"><?= $escaper->escapeHtml(__('Shoes')) ?> <span>&gt;</span></a>
     </div>
 
     <div class="menu-footer">

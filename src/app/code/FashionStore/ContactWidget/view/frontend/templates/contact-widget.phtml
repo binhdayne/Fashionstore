@@ -1,5 +1,9 @@
 <?php
 /** @var \FashionStore\ContactWidget\Block\Widget $block */
+if ($block->getRequest()->getFullActionName() === 'checkout_index_index') {
+    return;
+}
+
 if (!$block->isEnabled()) {
     return;
 }

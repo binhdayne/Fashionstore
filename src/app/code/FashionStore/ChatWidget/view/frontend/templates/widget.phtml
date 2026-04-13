@@ -1,11 +1,13 @@
 <?php
 /** @var \FashionStore\ChatWidget\Block\Widget $block */
+if ($block->getRequest()->getFullActionName() === 'checkout_index_index') { return; }
 if (!$block->isEnabled()) { return; }
 $ragUrl = $block->escapeUrl($block->getRagUrl());
 ?>
 <style>
 #fs-chat-root *{box-sizing:border-box;margin:0;padding:0}
-#fs-chat-root{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;bottom:32px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+#fs-chat-root{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;bottom:32px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none}
+#fs-chat-root > *{pointer-events:auto}
 #fs-chat-window{width:360px;background:#fafaf8;border:0.5px solid #d0cbc4;display:flex;flex-direction:column;opacity:0;transform:translateY(16px) scale(0.97);pointer-events:none;transition:opacity .35s ease,transform .35s ease}
 #fs-chat-window.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
 #fs-chat-header{background:#0a0a0a;padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between}

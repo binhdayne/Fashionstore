@@ -146,6 +146,65 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             min-width: 0 !important;
         }
 
+        .checkout-cart-index .fashionstore-cart-item-selector {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
+            flex: 0 0 24px !important;
+            width: 24px !important;
+            min-width: 24px !important;
+            margin-top: 10px !important;
+            cursor: pointer !important;
+        }
+
+        .checkout-cart-index .fashionstore-cart-item-selector__input {
+            position: absolute !important;
+            inset: 0 !important;
+            opacity: 0 !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+        }
+
+        .checkout-cart-index .fashionstore-cart-item-selector__control {
+            width: 18px !important;
+            height: 18px !important;
+            border: 1px solid #cdbfa7 !important;
+            border-radius: 5px !important;
+            background: #fff !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+            position: relative !important;
+        }
+
+        .checkout-cart-index .fashionstore-cart-item-selector__input:checked + .fashionstore-cart-item-selector__control {
+            background: #1a1a1a !important;
+            border-color: #1a1a1a !important;
+        }
+
+        .checkout-cart-index .fashionstore-cart-item-selector__input:checked + .fashionstore-cart-item-selector__control::after {
+            content: '' !important;
+            position: absolute !important;
+            left: 5px !important;
+            top: 1px !important;
+            width: 5px !important;
+            height: 10px !important;
+            border: solid #fff !important;
+            border-width: 0 2px 2px 0 !important;
+            transform: rotate(45deg) !important;
+        }
+
+        .checkout-cart-index .fashionstore-cart-item-selector__label {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
         .checkout-cart-index .cart.item .product-item-photo {
             width: 98px !important;
             min-width: 98px !important;
@@ -209,7 +268,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.item .control.qty {
-            width: 116px !important;
+            width: 78px !important;
         }
 
         .checkout-cart-index .fashionstore-qty-control {
@@ -224,11 +283,23 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .fashionstore-qty-enhanced {
             display: inline-flex !important;
-            align-items: center !important;
+            align-items: stretch !important;
             gap: 0 !important;
             border: 1px solid #d7d0c3 !important;
             border-radius: 6px !important;
             overflow: hidden !important;
+            background: #fff !important;
+            line-height: 0 !important;
+            vertical-align: top !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-buttons {
+            display: inline-flex !important;
+            flex-direction: column !important;
+            flex: 0 0 28px !important;
+            width: 28px !important;
+            min-width: 28px !important;
+            border-left: 1px solid #d7d0c3 !important;
             background: #fff !important;
         }
 
@@ -237,7 +308,16 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .fashionstore-qty-enhanced label {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex: 0 0 48px !important;
+            width: 48px !important;
+            min-width: 48px !important;
+            height: 38px !important;
             margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
         }
 
         .checkout-cart-index .fashionstore-qty-control .label {
@@ -252,22 +332,23 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            width: 34px !important;
-            height: 34px !important;
+            flex: 1 1 50% !important;
+            width: 28px !important;
+            height: 18px !important;
             padding: 0 !important;
             border: none !important;
-            border-right: 1px solid #d7d0c3 !important;
             border-radius: 0 !important;
             background: #fff !important;
             color: #9f9f9f !important;
-            font-size: 20px !important;
-            line-height: 1 !important;
             cursor: pointer !important;
         }
 
         .checkout-cart-index .fashionstore-qty-button--increment {
-            border-right: none !important;
-            border-left: 1px solid #d7d0c3 !important;
+            border-bottom: 1px solid #d7d0c3 !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button--increment {
+            border-left: none !important;
         }
 
         .checkout-cart-index .fashionstore-qty-button:hover {
@@ -277,21 +358,36 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .fashionstore-qty-button span {
             display: block !important;
-            transform: translateY(-2px);
+            width: 0 !important;
+            height: 0 !important;
+            border-left: 4px solid transparent !important;
+            border-right: 4px solid transparent !important;
+            transform: none !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button--increment span {
+            border-bottom: 6px solid currentColor !important;
+        }
+
+        .checkout-cart-index .fashionstore-qty-button--decrement span {
+            border-top: 6px solid currentColor !important;
         }
 
         .checkout-cart-index .cart.item .input-text.qty {
-            height: 34px !important;
+            display: block !important;
+            height: 38px !important;
+            margin: 0 !important;
             border: none !important;
             background: #fff !important;
             border-radius: 0 !important;
             text-align: center !important;
             font-size: 16px !important;
             font-weight: 400 !important;
+            line-height: 38px !important;
             color: #666 !important;
             box-shadow: none !important;
-            width: 36px !important;
-            min-width: 36px !important;
+            width: 48px !important;
+            min-width: 48px !important;
             padding: 0 !important;
             -moz-appearance: textfield !important;
             appearance: textfield !important;
@@ -429,7 +525,8 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             display: none !important;
         }
 
-        .checkout-cart-index .checkout.methods.items .action.primary.checkout {
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout,
+        .checkout-cart-index .checkout.methods.items .action.primary.fashionstore-selected-checkout-trigger {
             width: 100% !important;
             min-height: 52px !important;
             border-radius: 6px !important;
@@ -443,16 +540,19 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             box-shadow: 0 8px 16px rgba(210, 35, 42, 0.2) !important;
         }
 
-        .checkout-cart-index .checkout.methods.items .action.primary.checkout:hover {
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout:hover,
+        .checkout-cart-index .checkout.methods.items .action.primary.fashionstore-selected-checkout-trigger:hover {
             background: #b81d24 !important;
             border-color: #b81d24 !important;
         }
 
-        .checkout-cart-index .checkout.methods.items .action.primary.checkout span {
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout span,
+        .checkout-cart-index .checkout.methods.items .action.primary.fashionstore-selected-checkout-trigger span {
             font-size: 0 !important;
         }
 
-        .checkout-cart-index .checkout.methods.items .action.primary.checkout span::after {
+        .checkout-cart-index .checkout.methods.items .action.primary.checkout span::after,
+        .checkout-cart-index .checkout.methods.items .action.primary.fashionstore-selected-checkout-trigger span::after {
             content: 'TIẾP TỤC THANH TOÁN →';
             font-size: 12px;
             font-weight: 700;
@@ -559,6 +659,8 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                   method="post"
                   data-mage-init='{"FashionStore_CartOptions/js/cart-options":{}}'>
                 <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>">
+                                <input type="hidden" name="go_to_checkout" value="0" data-role="checkout-intent">
+                                <input type="hidden" name="checkout_selection" value="" data-role="checkout-selection">
                 <input type="hidden" name="shipping_country_id" value="<?= $block->escapeHtmlAttr($deliveryData['country_id']) ?>">
                 <input type="hidden" name="selected_customer_address_id" value="<?= $block->escapeHtmlAttr((string) $selectedCustomerAddressId) ?>" data-selected-address-id>
 
@@ -704,6 +806,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 var form = document.getElementById('form-validate');
                 var actionContainer = document.getElementById('update_cart_action_container');
 
+                if (window.fashionstoreCartSubmittingSelectedCheckout) {
+                    return;
+                }
+
                 if (!form || !actionContainer) {
                     return;
                 }
@@ -733,7 +839,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 scheduleCartUpdate();
             }
 
-            function createButton(action, targetId, symbol, label) {
+            function createButton(action, targetId, label) {
                 var button = document.createElement('button');
                 var span = document.createElement('span');
 
@@ -742,8 +848,8 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 button.setAttribute('data-qty-action', action);
                 button.setAttribute('data-target', '#' + targetId);
                 button.setAttribute('aria-label', label);
+                span.setAttribute('aria-hidden', 'true');
 
-                span.textContent = symbol;
                 button.appendChild(span);
 
                 return button;
@@ -753,6 +859,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 document.querySelectorAll('.checkout-cart-index .control.qty').forEach(function (control, index) {
                     var input = control.querySelector('input.qty');
                     var label;
+                    var buttonStack;
                     var wrapper;
                     var inputId;
 
@@ -766,13 +873,18 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
                     wrapper = document.createElement('div');
                     wrapper.className = 'fashionstore-qty-enhanced';
-                    wrapper.appendChild(createButton('decrement', inputId, '-', 'Decrease quantity'));
+
                     if (label) {
                         wrapper.appendChild(label);
                     } else {
                         wrapper.appendChild(input);
                     }
-                    wrapper.appendChild(createButton('increment', inputId, '+', 'Increase quantity'));
+
+                    buttonStack = document.createElement('div');
+                    buttonStack.className = 'fashionstore-qty-buttons';
+                    buttonStack.appendChild(createButton('increment', inputId, 'Increase quantity'));
+                    buttonStack.appendChild(createButton('decrement', inputId, 'Decrease quantity'));
+                    wrapper.appendChild(buttonStack);
 
                     control.textContent = '';
                     control.appendChild(wrapper);
@@ -820,6 +932,140 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 normalizeValue(input);
                 scheduleCartUpdate();
             });
+
+            function collectSelectedCheckoutItems() {
+                var cartForm = document.getElementById('form-validate');
+                var selectedItems = [];
+
+                if (!cartForm) {
+                    return selectedItems;
+                }
+
+                cartForm.querySelectorAll('[data-role="fashionstore-cart-select"]:checked').forEach(function (checkbox) {
+                    var itemId = parseInt(checkbox.getAttribute('data-item-id') || checkbox.value || '0', 10);
+                    var qtyInput = document.getElementById('cart-' + itemId + '-qty');
+                    var qtyValue = qtyInput ? parseFloat(qtyInput.value || '1') : 1;
+
+                    if (!itemId) {
+                        return;
+                    }
+
+                    if (isNaN(qtyValue) || qtyValue <= 0) {
+                        qtyValue = 1;
+                    }
+
+                    selectedItems.push({
+                        item_id: itemId,
+                        qty: qtyValue
+                    });
+                });
+
+                return selectedItems;
+            }
+
+            function syncSelectedCheckoutState() {
+                var selectionField = document.querySelector('[data-role="checkout-selection"]');
+                var selectedItems = collectSelectedCheckoutItems();
+
+                if (selectionField) {
+                    selectionField.value = JSON.stringify(selectedItems);
+                }
+
+                return selectedItems;
+            }
+
+            function handleSelectedCheckout(event) {
+                var checkoutForm = document.getElementById('fashionstore-cart-options-form');
+                var checkoutIntentField = document.querySelector('[data-role="checkout-intent"]');
+                var selectedItems;
+
+                if (!checkoutForm || !checkoutIntentField) {
+                    return;
+                }
+
+                event.preventDefault();
+                selectedItems = collectSelectedCheckoutItems();
+
+                if (document.querySelector('[data-role="checkout-selection"]')) {
+                    document.querySelector('[data-role="checkout-selection"]').value = JSON.stringify(selectedItems);
+                }
+
+                if (!selectedItems.length) {
+                    window.alert('Vui long chon it nhat mot san pham de thanh toan.');
+                    return;
+                }
+
+                if (autoUpdateTimer) {
+                    window.clearTimeout(autoUpdateTimer);
+                }
+
+                window.fashionstoreCartSubmittingSelectedCheckout = true;
+                checkoutIntentField.value = '1';
+                checkoutForm.submit();
+            }
+
+            function bindCheckoutButton() {
+                var checkoutButton = document.querySelector('.checkout.methods.items .action.primary.checkout');
+                var replacementButton;
+                var replacementSpan;
+
+                if (!checkoutButton || checkoutButton.getAttribute('data-fashionstore-selected-checkout') === 'true') {
+                    return;
+                }
+
+                replacementButton = document.createElement('button');
+                replacementSpan = document.createElement('span');
+
+                replacementButton.className = 'action primary fashionstore-selected-checkout-trigger';
+                replacementButton.setAttribute('data-fashionstore-selected-checkout', 'true');
+                replacementButton.setAttribute('type', 'button');
+                replacementButton.setAttribute('title', checkoutButton.getAttribute('title') || 'Proceed to Checkout');
+                replacementButton.disabled = false;
+                replacementSpan.textContent = checkoutButton.textContent || 'Proceed to Checkout';
+                replacementButton.appendChild(replacementSpan);
+                checkoutButton.parentNode.replaceChild(replacementButton, checkoutButton);
+                replacementButton.addEventListener('click', handleSelectedCheckout);
+            }
+
+            function scheduleSelectedCheckoutRefresh() {
+                window.setTimeout(function () {
+                    bindCheckoutButton();
+                    syncSelectedCheckoutState();
+                }, 0);
+
+                window.setTimeout(function () {
+                    bindCheckoutButton();
+                    syncSelectedCheckoutState();
+                }, 180);
+            }
+
+            document.addEventListener('change', function (event) {
+                if (!event.target.closest('[data-role="fashionstore-cart-select"], .checkout-cart-index input.qty')) {
+                    return;
+                }
+
+                syncSelectedCheckoutState();
+            });
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', scheduleSelectedCheckoutRefresh, { once: true });
+            } else {
+                scheduleSelectedCheckoutRefresh();
+            }
+
+            if (!window.fashionstoreCartSelectionObserverInitialized) {
+                window.fashionstoreCartSelectionObserverInitialized = true;
+
+                new MutationObserver(function () {
+                    scheduleSelectedCheckoutRefresh();
+                }).observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+
+            bindCheckoutButton();
+            syncSelectedCheckoutState();
         }());
     }
     </script>

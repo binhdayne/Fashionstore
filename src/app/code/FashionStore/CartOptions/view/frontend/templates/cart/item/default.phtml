@@ -12,6 +12,17 @@ $qtyValue = (float) $block->getQty();
 <tbody class="cart item">
     <tr class="item-info">
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
+            <label class="fashionstore-cart-item-selector" for="fashionstore-cart-select-<?= $block->escapeHtmlAttr((string) $_item->getId()) ?>">
+                <input id="fashionstore-cart-select-<?= $block->escapeHtmlAttr((string) $_item->getId()) ?>"
+                       class="fashionstore-cart-item-selector__input"
+                       type="checkbox"
+                       value="<?= $block->escapeHtmlAttr((string) $_item->getId()) ?>"
+                       data-role="fashionstore-cart-select"
+                       data-item-id="<?= $block->escapeHtmlAttr((string) $_item->getId()) ?>"
+                       checked>
+                <span class="fashionstore-cart-item-selector__control" aria-hidden="true"></span>
+                <span class="fashionstore-cart-item-selector__label"><?= $block->escapeHtml(__('Chon san pham nay de thanh toan')) ?></span>
+            </label>
             <?php if ($block->hasProductUrl()): ?>
                 <a href="<?= $block->escapeUrl($block->getProductUrl()) ?>"
                    title="<?= $block->escapeHtml($block->getProductName()) ?>"

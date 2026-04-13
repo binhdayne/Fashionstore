@@ -5,7 +5,6 @@
         <css src="FashionStore_CartOptions::css/cart-options.css"/>
     </head>
     <body>
-        <referenceBlock name="checkout.cart.shipping" remove="true"/>
         <referenceBlock name="checkout.cart.coupon" remove="true"/>
         <referenceBlock name="checkout.cart.shortcut.buttons" remove="true"/>
         <referenceContainer name="cart.summary">
