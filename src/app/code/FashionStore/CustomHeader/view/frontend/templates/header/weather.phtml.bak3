@@ -1,0 +1,1460 @@
+<?php
+/** @var \FashionStore\CustomHeader\Block\Header $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$helper = $objectManager->get(\Magento\Search\Helper\Data::class);
+$escaper = $objectManager->get(\Magento\Framework\Escaper::class);
+$action = $helper->getResultUrl();
+$queryParam = $helper->getQueryParamName();
+$guestDisplayName = (string) __('Guest');
+$popularSearchTerms = $block->getPopularSearchTerms();
+$popularSearchTermsJson = json_encode(
+    array_values($popularSearchTerms),
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+$suggestProductsUrl = $block->getSuggestProductsUrl();
+$weatherUrl = $block->getWeatherUrl();
+$newsUrl = $block->getNewsUrl();
+$maxQueryLength = $block->getMaxQueryLength();
+$translationStringsJson = json_encode(
+    [
+        'guest' => (string) __('Guest'),
+        'welcome' => (string) __('Welcome, %1!'),
+        'searchPlaceholderFallback' => (string) __('products'),
+        'searchPlaceholderPattern' => (string) __('Search "%1"'),
+        'newsLoadFailed' => (string) __('Could not load news'),
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+?>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    .page-header {
+        background: transparent !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: relative !important;
+        z-index: auto !important;
+    }
+
+    .page-header .panel.wrapper {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    .page-header .header.panel {
+        max-width: 100% !important;
+        min-height: 52px !important;
+        padding: 0 20px !important;
+        background: transparent !important;
+        display: block !important;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .action.skip.contentarea {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .action.skip.contentarea:focus {
+        width: auto;
+        height: auto;
+        margin: 0;
+        clip: auto;
+        white-space: normal;
+        left: 16px;
+        top: 16px;
+        z-index: 10002;
+        padding: 10px 14px;
+        background: #fff;
+        color: #111;
+    }
+
+    .weather-icon[hidden] {
+        display: none !important;
+    }
+
+    .page-title .base,
+    .page-title span,
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+        font-weight: 300 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .page-title .base,
+    .page-title span {
+        font-size: 36px !important;
+        letter-spacing: 6px !important;
+        color: #1a1a1a !important;
+    }
+
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+    }
+
+    .header.content,
+    .nav-sections,
+    .nav-toggle,
+    .panel.header .welcome,
+    .panel.header .header.links {
+        display: none !important;
+    }
+
+    #header-info-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 52px;
+        width: 100%;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .left-section,
+    .right-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .left-section {
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+
+    .right-section {
+        justify-content: flex-end;
+    }
+
+    .center-section {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+    }
+
+    #custom-hamburger {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #custom-hamburger div {
+        width: 18px;
+        height: 1px;
+        background: #fff;
+    }
+
+    .weather-info,
+    #news-title,
+    #custom-welcome {
+        color: #fff;
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-location,
+    .news-label {
+        color: #c9a96e;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+    }
+
+
+
+    .weather-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 4px;
+    }
+
+    #news-section {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    #news-title {
+        color: #fff;
+        text-decoration: none;
+        opacity: 0.85;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .logo-text,
+    .logo-text:visited,
+    .logo-text:hover,
+    .logo-text:focus {
+        color: #fff !important;
+        text-decoration: none !important;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+    }
+
+    #custom-search-icon {
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+        display: none;
+    }
+
+    .inline-search-bar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 220px;
+        max-width: 100%;
+    }
+
+    .inline-search-bar input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        padding: 8px 40px 8px 18px;
+        font-size: 13px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+        background: transparent;
+        color: #fff;
+        outline: none;
+        transition: border-color 0.2s ease;
+        cursor: pointer;
+    }
+
+    .inline-search-bar input::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 300;
+    }
+
+    .inline-search-bar input:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .inline-search-bar .search-icon-right {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .inline-search-bar .search-icon-right svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    @media (max-width: 600px) {
+        .inline-search-bar {
+            width: 160px;
+        }
+
+        .inline-search-bar input {
+            padding: 7px 36px 7px 14px;
+            font-size: 12px;
+        }
+    }
+
+    #menu-overlay,
+    #search-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    #menu-overlay.show,
+    #search-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #menu-overlay {
+        z-index: 9998;
+    }
+
+    #search-overlay {
+        z-index: 10000;
+    }
+
+    #dior-side-menu {
+        position: fixed;
+        top: 0;
+        left: -380px;
+        width: 360px;
+        max-width: calc(100vw - 32px);
+        height: 100vh;
+        background: #f3f3f3;
+        z-index: 9999;
+        transition: left 0.35s ease;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #dior-side-menu.open {
+        left: 0;
+    }
+
+    .menu-header {
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        font-weight: 700;
+        color: #222;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    #close-btn {
+        cursor: pointer;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .auth-menu-item[hidden] {
+        display: none !important;
+    }
+
+    .menu-footer {
+        margin-top: auto;
+        padding: 24px;
+        background: #ececec;
+    }
+
+    .menu-footer a,
+    .menu-footer .switch-btn,
+    .menu-header,
+    .menu-item {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .menu-switcher {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-top: 14px;
+        border: 1px solid #d5d5d5;
+    }
+
+    .switch-btn {
+        padding: 12px 10px;
+        font-size: 12px;
+        text-align: center;
+        background: #d9d9d9;
+        color: #fff;
+        font-weight: 300;
+    }
+
+    .switch-btn.active {
+        background: #fff;
+        color: #222;
+    }
+
+    /* ═══ SEARCH OVERLAY ═══ */
+    #search-bar {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 10000;
+        background: #fff;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #search-bar.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .search-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px 24px;
+        border-bottom: 1px solid #eee;
+        flex-shrink: 0;
+    }
+
+    #search_form {
+        position: relative;
+        flex: 1;
+        max-width: 600px;
+    }
+
+    #search_form input {
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 999px;
+        padding: 12px 70px 12px 20px;
+        font-size: 16px;
+        outline: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 400;
+        color: #111;
+        background: #fff;
+        transition: border-color 0.2s ease;
+    }
+
+    #search_form input:focus {
+        border-color: #9ca3af;
+    }
+
+    #search_form input::placeholder {
+        color: #9ca3af;
+        font-weight: 300;
+    }
+
+    .search-input-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .search-input-clear {
+        position: absolute;
+        right: 42px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #9ca3af;
+        font-size: 18px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        transition: background 0.15s;
+    }
+
+    .search-input-clear:hover {
+        background: #e5e7eb;
+    }
+
+    .search-input-clear.visible {
+        display: flex;
+    }
+
+    #search-close {
+        font-size: 28px;
+        color: #6b7280;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        transition: color 0.15s;
+        flex-shrink: 0;
+    }
+
+    #search-close:hover {
+        color: #111;
+    }
+
+    .search-results-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+    }
+
+    .search-results-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 32px 40px;
+    }
+
+    @keyframes searchFadeSlideIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #search-bar.show .search-results-inner {
+        animation: searchFadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .search-suggestions-section {
+        margin-bottom: 28px;
+    }
+
+    .search-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 14px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .search-suggestion-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    @keyframes pillFadeIn {
+        from { opacity: 0; transform: scale(0.92); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .search-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 999px;
+        background: #f9fafb;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        white-space: nowrap;
+        text-decoration: none;
+        opacity: 0;
+        animation: pillFadeIn 0.25s ease forwards;
+    }
+
+    .search-pill:nth-child(1) { animation-delay: 0.02s; }
+    .search-pill:nth-child(2) { animation-delay: 0.06s; }
+    .search-pill:nth-child(3) { animation-delay: 0.1s; }
+    .search-pill:nth-child(4) { animation-delay: 0.14s; }
+    .search-pill:nth-child(5) { animation-delay: 0.18s; }
+    .search-pill:nth-child(6) { animation-delay: 0.22s; }
+    .search-pill:nth-child(7) { animation-delay: 0.26s; }
+    .search-pill:nth-child(8) { animation-delay: 0.30s; }
+    .search-pill:nth-child(9) { animation-delay: 0.34s; }
+    .search-pill:nth-child(10) { animation-delay: 0.38s; }
+
+    .search-pill:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+        color: #111;
+    }
+
+    .search-pill.active {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+    }
+
+    .search-products-section {
+        margin-bottom: 32px;
+    }
+
+    .search-products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    @keyframes cardFadeIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .search-product-card,
+    .search-product-card * {
+        text-decoration: none !important;
+    }
+
+    .search-product-card {
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s ease;
+        opacity: 0;
+        animation: cardFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .search-product-card:nth-child(1) { animation-delay: 0.05s; }
+    .search-product-card:nth-child(2) { animation-delay: 0.1s; }
+    .search-product-card:nth-child(3) { animation-delay: 0.15s; }
+    .search-product-card:nth-child(4) { animation-delay: 0.2s; }
+
+    .search-product-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .search-product-img-wrap {
+        aspect-ratio: 3 / 4;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 16px;
+        margin-bottom: 10px;
+        background: #f9fafb;
+        position: relative;
+    }
+
+    .search-product-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        transition: transform 0.5s ease;
+    }
+
+    .search-product-card:hover .search-product-img {
+        transform: scale(1.05);
+    }
+
+    .search-product-name {
+        font-size: 14px;
+        font-weight: 400;
+        color: #111;
+        margin-bottom: 2px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .search-product-sku {
+        font-size: 10px;
+        color: #9ca3af;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .search-product-price {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    .search-zero-result {
+        text-align: center;
+    }
+
+    .search-zero-msg {
+        padding: 24px 0 20px;
+        font-size: 15px;
+        color: #6b7280;
+        font-weight: 400;
+    }
+
+    .search-zero-result .search-section-title {
+        text-align: left;
+    }
+
+    .search-zero-result .search-products-grid {
+        text-align: left;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .search-loading-skeleton {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .search-skeleton-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-skeleton-img {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        border-radius: 16px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        margin-bottom: 10px;
+    }
+
+    .search-skeleton-text {
+        height: 14px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        margin-bottom: 6px;
+    }
+
+    .search-skeleton-text.w-60 { width: 60%; }
+    .search-skeleton-text.w-40 { width: 40%; }
+    .search-skeleton-text.w-30 { width: 30%; }
+
+    .search-view-all-wrap {
+        text-align: center;
+        padding-top: 8px;
+    }
+
+    .search-view-all-btn {
+        display: inline-block;
+        padding: 14px 48px;
+        background: #000;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .search-view-all-btn:hover {
+        background: #333;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .custom-search-autocomplete {
+        display: none !important;
+    }
+
+    body.csc-no-scroll {
+        overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+        .search-products-grid,
+        .search-loading-skeleton {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .search-results-inner {
+            padding: 20px 16px 32px;
+        }
+
+        .search-top-bar {
+            padding: 14px 16px;
+        }
+
+        .search-view-all-btn {
+            padding: 12px 36px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        #header-info-bar {
+            gap: 12px;
+        }
+
+        #news-section,
+        #custom-welcome {
+            display: none;
+        }
+
+        .logo-text,
+        .logo-text:visited,
+        .logo-text:hover,
+        .logo-text:focus {
+            font-size: 18px;
+            letter-spacing: 0.2em;
+        }
+    }
+</style>
+
+<div id="header-info-bar">
+    <div class="left-section">
+        <div id="custom-hamburger" aria-label="<?= $escaper->escapeHtmlAttr(__('Open menu')) ?>" role="button" tabindex="0">
+            <div></div><div></div><div></div>
+        </div>
+        <div class="weather-info"><strong class="weather-location"><?= $escaper->escapeHtml(__('Hanoi')) ?></strong> <img id="w-icon" class="weather-icon" src="" alt="<?= $escaper->escapeHtmlAttr(__('Weather icon')) ?>" hidden> <span id="w-temp">-- C</span></div>
+        <div id="news-section">
+            <span class="news-label"><?= $escaper->escapeHtml(__('News:')) ?></span>
+            <a href="#" id="news-title"><?= $escaper->escapeHtml(__('Loading news...')) ?></a>
+        </div>
+    </div>
+
+    <div class="center-section">
+        <a href="<?= $escaper->escapeUrl($block->getBaseUrl()) ?>" class="logo-text">FashionStore</a>
+    </div>
+
+    <div class="right-section">
+        <div id="custom-welcome"><?= $escaper->escapeHtml(__('Welcome, %1!', $guestDisplayName)) ?></div>
+        <div id="custom-search-icon" aria-label="<?= $escaper->escapeHtmlAttr(__('Open search')) ?>" role="button" tabindex="0">&#128269;&#65038;</div>
+        <div class="inline-search-bar">
+            <input
+                id="inline-search-trigger"
+                type="text"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>"
+                readonly
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>">
+            <span class="search-icon-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div id="menu-overlay"></div>
+<div id="dior-side-menu">
+    <div class="menu-header" id="close-btn"><?= $escaper->escapeHtml(__('Close')) ?></div>
+
+    <div class="menu-content">
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Account')) ?></div>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('My Account')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('Log Out')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Log In')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Register')) ?> <span>&gt;</span></a>
+
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Store')) ?></div>
+        <a href="/ao-nu.html" class="menu-item"><?= $escaper->escapeHtml(__('Women\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/ao-nam.html" class="menu-item"><?= $escaper->escapeHtml(__('Men\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/tui-xach.html" class="menu-item"><?= $escaper->escapeHtml(__('Bags')) ?> <span>&gt;</span></a>
+        <a href="/giay.html" class="menu-item"><?= $escaper->escapeHtml(__('Shoes')) ?> <span>&gt;</span></a>
+    </div>
+
+    <div class="menu-footer">
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;"><?= $escaper->escapeHtml(__('Contact us')) ?></a>
+        <div class="menu-switcher">
+            <div class="switch-btn active"><?= $escaper->escapeHtml(__('Fashion & Accessories')) ?></div>
+            <div class="switch-btn"><?= $escaper->escapeHtml(__('Fragrance & Beauty')) ?></div>
+        </div>
+    </div>
+</div>
+
+<div id="search-overlay"></div>
+<div id="search-bar">
+    <div class="search-top-bar">
+        <form id="search_form" action="<?= $escaper->escapeUrl($action) ?>" method="get">
+            <input
+                id="custom-search-input"
+                type="text"
+                name="<?= $escaper->escapeHtmlAttr($queryParam) ?>"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>"
+                autocomplete="off"
+                maxlength="<?= $escaper->escapeHtmlAttr($maxQueryLength) ?>">
+            <span id="search-input-clear" class="search-input-clear">&times;</span>
+            <span class="search-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+        </form>
+        <div id="search-close">&times;</div>
+    </div>
+    <div class="search-results-container">
+        <div class="search-results-inner">
+            <div id="search-pills-section" class="search-suggestions-section">
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Danh mục')) ?></div>
+                <div id="search-category-pills" class="search-suggestion-pills"></div>
+            </div>
+            <div id="search-products-section" class="search-products-section" hidden>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Kết quả tìm kiếm')) ?></div>
+                <div id="search-products-grid" class="search-products-grid"></div>
+            </div>
+            <div id="search-zero-result" class="search-zero-result" hidden>
+                <div class="search-zero-msg"></div>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Sản phẩm gợi ý cho bạn')) ?></div>
+                <div id="search-zero-grid" class="search-products-grid"></div>
+            </div>
+            <div id="search-view-all" class="search-view-all-wrap" hidden>
+                <a id="search-view-all-btn" class="search-view-all-btn" href="#"><?= $escaper->escapeHtml(__('XEM TẤT CẢ')) ?></a>
+            </div>
+            <div id="search-loading" class="search-products-section" hidden>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Kết quả tìm kiếm')) ?></div>
+                <div class="search-loading-skeleton">
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerData) {
+    var popularSearchTerms = <?= /* @noEscape */ $popularSearchTermsJson ?: '[]' ?>;
+    var translations = <?= /* @noEscape */ $translationStringsJson ?: '{}' ?>;
+    var suggestProductsUrl = '<?= $escaper->escapeJs($suggestProductsUrl) ?>';
+    var weatherUrl = '<?= $escaper->escapeJs($weatherUrl) ?>';
+    var newsUrl = '<?= $escaper->escapeJs($newsUrl) ?>';
+    var placeholderIndex = 0;
+    var placeholderIntervalId = null;
+    var suggestionTimerId = null;
+    var suggestionRequest = null;
+
+    /* ═══ PRODUCT DATABASE ═══ */
+    var PRODUCTS = [
+        /* Áo Nam */
+        { id: 1,  name: 'Áo Thun Nam Basic Trắng',    sku: 'ao-nam-001',   price: '199.000đ',     category: 'ao-nam',   image: '/media/import_master/ao-nam-001-1.png' },
+        { id: 2,  name: 'Áo Polo Nam Xanh',            sku: 'ao-nam-003',   price: '299.000đ',     category: 'ao-nam',   image: '/media/import_master/ao-nam-003-1.png' },
+        /* Áo Nữ */
+        { id: 3,  name: 'Áo Thun Nữ Trắng',            sku: 'ao-nu-001',    price: '179.000đ',     category: 'ao-nu',    image: '/media/import_master/ao-nu-001-1.png' },
+        { id: 4,  name: 'Áo Sơ Mi Nữ Trắng',           sku: 'ao-nu-003',    price: '349.000đ',     category: 'ao-nu',    image: '/media/import_master/ao-nu-003-1.png' },
+        /* Quần Nam */
+        { id: 5,  name: 'Quần Jeans Nam Xanh',          sku: 'quan-nam-001', price: '499.000đ',     category: 'quan-nam', image: '/media/import_master/quan-nam-001-1.png' },
+        { id: 6,  name: 'Quần Short Nam Thể Thao',      sku: 'quan-nam-005', price: '249.000đ',     category: 'quan-nam', image: '/media/import_master/quan-nam-005-1.png' },
+        /* Quần Nữ */
+        { id: 7,  name: 'Quần Jeans Nữ Skinny',         sku: 'quan-nu-001',  price: '479.000đ',     category: 'quan-nu',  image: '/media/import_master/quan-nu-001-1.png' },
+        { id: 8,  name: 'Quần Palazzo Nữ',              sku: 'quan-nu-004',  price: '419.000đ',     category: 'quan-nu',  image: '/media/import_master/quan-nu-004-1.png' },
+        /* Váy Đầm */
+        { id: 9,  name: 'Đầm Maxi Hoa Nhí',             sku: 'vay-dam-001',  price: '599.000đ',     category: 'vay-dam',  image: '/media/import_master/vay-dam-001-1.png' },
+        { id: 10, name: 'Váy Chữ A Kẻ Sọc',             sku: 'vay-dam-003',  price: '499.000đ',     category: 'vay-dam',  image: '/media/import_master/vay-dam-003-1.png' },
+        /* Giày Nam */
+        { id: 11, name: 'Giày Sneaker Nam Trắng',        sku: 'giay-nam-001', price: '799.000đ',     category: 'giay-nam', image: '/media/import_master/giay-nam-001-1.png' },
+        { id: 12, name: 'Giày Oxford Nam',                sku: 'giay-nam-003', price: '1.299.000đ',   category: 'giay-nam', image: '/media/import_master/giay-nam-003-1.png' },
+        /* Giày Nữ */
+        { id: 13, name: 'Giày Cao Gót Đen',              sku: 'giay-nu-001',  price: '899.000đ',     category: 'giay-nu',  image: '/media/import_master/giay-nu-001-1.png' },
+        { id: 14, name: 'Giày Sneaker Nữ Trắng',         sku: 'giay-nu-003',  price: '699.000đ',     category: 'giay-nu',  image: '/media/import_master/giay-nu-003-1.png' },
+        /* Túi Xách */
+        { id: 15, name: 'Túi Xách Nữ Da Đen',            sku: 'tui-xach-001', price: '1.299.000đ',   category: 'tui-xach', image: '/media/import_master/tui-xach-001-1.png' },
+        { id: 16, name: 'Balo Nữ Thời Trang',             sku: 'tui-xach-004', price: '499.000đ',     category: 'tui-xach', image: '/media/import_master/tui-xach-004-1.png' },
+        /* Phụ Kiện */
+        { id: 17, name: 'Thắt Lưng Nam Da',               sku: 'phu-kien-001', price: '399.000đ',     category: 'phu-kien', image: '/media/import_master/phu-kien-001-1.png' },
+        { id: 18, name: 'Kính Mát Nữ',                    sku: 'phu-kien-004', price: '499.000đ',     category: 'phu-kien', image: '/media/import_master/phu-kien-004-1.png' },
+        /* Sale */
+        { id: 19, name: 'Áo Thun Nam Sale 50%',           sku: 'sale-001',     price: '99.000đ',      category: 'sale',     image: '/media/import_master/sale-001-1.png' },
+        { id: 20, name: 'Giày Sneaker Sale',               sku: 'sale-003',     price: '399.000đ',     category: 'sale',     image: '/media/import_master/sale-003-1.png' }
+    ];
+
+    var CATEGORY_LABELS = {
+        'ao-nam': 'Áo Nam', 'ao-nu': 'Áo Nữ',
+        'quan-nam': 'Quần Nam', 'quan-nu': 'Quần Nữ',
+        'vay-dam': 'Váy Đầm', 'giay-nam': 'Giày Nam',
+        'giay-nu': 'Giày Nữ', 'tui-xach': 'Túi Xách',
+        'phu-kien': 'Phụ Kiện', 'sale': 'Sale'
+    };
+
+    var intentMap = {
+        'tui-xach': ['túi', 'balo', 'clutch', 'ví'],
+        'phu-kien': ['phụ kiện', 'thắt lưng', 'mũ', 'kính', 'vòng tay', 'dây chuyền', 'khăn', 'tất', 'vớ'],
+        'vay-dam': ['váy', 'đầm'],
+        'giay-nam': ['giày nam', 'dép nam', 'sneaker nam', 'boot nam'],
+        'giay-nu': ['giày nữ', 'dép nữ', 'cao gót', 'búp bê'],
+        'ao-nam': ['áo nam', 'áo thun nam', 'áo polo', 'sơ mi nam', 'hoodie', 'bomber'],
+        'quan-nam': ['quần nam', 'jeans nam', 'kaki nam', 'quần short nam'],
+        'ao-nu': ['áo nữ', 'áo thun nữ', 'sơ mi nữ', 'croptop', 'blazer'],
+        'quan-nu': ['quần nữ', 'jeans nữ', 'culottes', 'palazzo', 'legging'],
+        'sale': ['sale', 'giảm giá', 'rẻ']
+    };
+
+    function removeAccents(str) {
+        return (str || '').toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
+
+    function resolveIntentCategory(nQuery) {
+        var cats = Object.keys(intentMap);
+        var bestMatch = null;
+        var bestLen = 0;
+        for (var c = 0; c < cats.length; c++) {
+            var keywords = intentMap[cats[c]];
+            for (var k = 0; k < keywords.length; k++) {
+                var nKw = removeAccents(keywords[k]);
+                if (nQuery.indexOf(nKw) !== -1 && nKw.length > bestLen) {
+                    bestMatch = cats[c];
+                    bestLen = nKw.length;
+                }
+            }
+        }
+        return bestMatch;
+    }
+
+    function handleSearch(rawQuery) {
+        var query = $.trim(rawQuery).replace(/\s+/g, ' ').toLowerCase();
+        var nQuery = removeAccents(query);
+        if (!nQuery.replace(/\s+/g, '')) {
+            return { items: [], title: '', isFallback: false, query: query };
+        }
+
+        var nameMatches = [];
+        var skuMatches = [];
+        var intentMatches = [];
+        var intentCategory = resolveIntentCategory(nQuery);
+
+        for (var i = 0; i < PRODUCTS.length; i++) {
+            var p = PRODUCTS[i];
+            var nName = removeAccents(p.name);
+            var nSku = removeAccents(p.sku);
+            if (nName.indexOf(nQuery) !== -1) {
+                nameMatches.push({ product: p, matchType: 'name' });
+            } else if (nSku.indexOf(nQuery) !== -1) {
+                skuMatches.push({ product: p, matchType: 'sku' });
+            } else if (intentCategory && p.category === intentCategory) {
+                intentMatches.push({ product: p, matchType: 'intent' });
+            }
+        }
+
+        var results = nameMatches.concat(skuMatches).concat(intentMatches);
+
+        if (results.length === 0) {
+            var sales = PRODUCTS.filter(function (p) { return p.category === 'sale'; });
+            var shuffled = sales.slice();
+            for (var si = shuffled.length - 1; si > 0; si--) {
+                var sj = Math.floor(Math.random() * (si + 1));
+                var tmp = shuffled[si]; shuffled[si] = shuffled[sj]; shuffled[sj] = tmp;
+            }
+            var fallback = [];
+            for (var fi = 0; fi < Math.min(shuffled.length, 4); fi++) {
+                fallback.push({ product: shuffled[fi], matchType: 'sale' });
+            }
+            return { items: fallback, title: 'Sản phẩm gợi ý cho bạn', isFallback: true, query: query };
+        }
+
+        if (results.length < 4) {
+            results = padResults(results, 4);
+        } else {
+            results = results.slice(0, 4);
+        }
+
+        return { items: results, title: 'Kết quả tìm kiếm', isFallback: false, query: query };
+    }
+
+    function padResults(existing, target) {
+        if (existing.length >= target) return existing.slice(0, target);
+        var cat = existing[0].product.category;
+        var usedIds = {};
+        for (var i = 0; i < existing.length; i++) usedIds[existing[i].product.id] = true;
+
+        for (var j = 0; j < PRODUCTS.length && existing.length < target; j++) {
+            if (PRODUCTS[j].category === cat && !usedIds[PRODUCTS[j].id]) {
+                existing.push({ product: PRODUCTS[j], matchType: 'pad' });
+                usedIds[PRODUCTS[j].id] = true;
+            }
+        }
+
+        if (existing.length < target) {
+            var sales = PRODUCTS.filter(function (p) { return p.category === 'sale' && !usedIds[p.id]; });
+            for (var s = 0; s < sales.length && existing.length < target; s++) {
+                existing.push({ product: sales[s], matchType: 'sale' });
+            }
+        }
+
+        return existing.slice(0, target);
+    }
+
+    function getUniqueCategories() {
+        var seen = {};
+        var cats = [];
+        for (var i = 0; i < PRODUCTS.length; i++) {
+            var slug = PRODUCTS[i].category;
+            if (slug && !seen[slug]) {
+                seen[slug] = true;
+                cats.push({ slug: slug, label: CATEGORY_LABELS[slug] || slug });
+            }
+        }
+        return cats;
+    }
+
+    function getHighlightedText(text, query, matchType) {
+        var safe = escapeHtml(text);
+        if (!query || matchType !== 'name') return safe;
+        var nQuery = removeAccents(query);
+        var nText = removeAccents(text);
+        var idx = nText.indexOf(nQuery);
+        if (idx === -1) return safe;
+        var before = escapeHtml(text.substring(0, idx));
+        var match = escapeHtml(text.substring(idx, idx + query.length));
+        var after = escapeHtml(text.substring(idx + query.length));
+        return before + '<strong class="text-black font-extrabold">' + match + '</strong>' + after;
+    }
+
+    function getCustomerDisplayName(customer) {
+        if (!customer) {
+            return translations.guest || 'Guest';
+        }
+
+        return customer.fullname || customer.firstname || translations.guest || 'Guest';
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function getSearchInput() {
+        return $('#custom-search-input');
+    }
+
+    function hideSearchResults() {
+        $('#search-products-section').prop('hidden', true);
+        $('#search-zero-result').prop('hidden', true);
+        $('#search-view-all').prop('hidden', true);
+        $('#search-loading').prop('hidden', true);
+        $('#search-products-grid').empty();
+        $('#search-zero-grid').empty();
+        $('#search-input-clear').removeClass('visible');
+    }
+
+    function buildProductCard(item, query, matchType) {
+        var nameHtml = getHighlightedText(item.name, query, matchType);
+        return '<a class="search-product-card" href="/' + escapeHtml(item.sku) + '.html">' +
+            '<div class="search-product-img-wrap">' +
+            '<img class="search-product-img" src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
+            '</div>' +
+            '<div class="search-product-name">' + nameHtml + '</div>' +
+            '<div class="search-product-sku">' + escapeHtml(item.sku) + '</div>' +
+            '<div class="search-product-price">' + escapeHtml(item.price) + '</div>' +
+            '</a>';
+    }
+
+    function showDefaultState() {
+        $('#search-products-section').prop('hidden', true);
+        $('#search-zero-result').prop('hidden', true);
+        $('#search-view-all').prop('hidden', true);
+        $('#search-loading').prop('hidden', true);
+
+        var cats = getUniqueCategories();
+        var pillsHtml = '';
+        $.each(cats, function (i, cat) {
+            pillsHtml += '<a class="search-pill" href="#" data-category="' + escapeHtml(cat.label) + '">' +
+                '<span>' + escapeHtml(cat.label) + '</span></a>';
+        });
+        $('#search-category-pills').html(pillsHtml);
+        $('#search-pills-section').prop('hidden', false);
+    }
+
+    function renderSearchResults(query) {
+        var result = handleSearch(query);
+        var gridHtml = '';
+        var searchUrl = $('#search_form').attr('action');
+        var queryParamName = '<?= $escaper->escapeJs($queryParam) ?>';
+
+        $('#search-loading').prop('hidden', true);
+
+        if ($.trim(query)) {
+            $('#search-input-clear').addClass('visible');
+        } else {
+            $('#search-input-clear').removeClass('visible');
+        }
+
+        if (result.items.length === 0 && !result.isFallback) {
+            $('#search-products-section').prop('hidden', true);
+            $('#search-zero-result').prop('hidden', true);
+            return;
+        }
+
+        if (result.isFallback) {
+            $('#search-products-section').prop('hidden', true);
+            var zeroHtml = '';
+            $.each(result.items, function (i, entry) {
+                zeroHtml += buildProductCard(entry.product, null, 'sale');
+            });
+            $('#search-zero-result .search-zero-msg').text(
+                'Không tìm thấy sản phẩm phù hợp với "' + query + '"'
+            );
+            $('#search-zero-grid').html(zeroHtml);
+            $('#search-zero-result').prop('hidden', false);
+
+            var viewAllUrl0 = searchUrl + '?' + encodeURIComponent(queryParamName) + '=' + encodeURIComponent(query);
+            $('#search-view-all-btn').attr('href', viewAllUrl0);
+            $('#search-view-all').prop('hidden', false);
+            return;
+        }
+
+        $('#search-zero-result').prop('hidden', true);
+        $('#search-products-section .search-section-title').text(result.title);
+        $.each(result.items, function (i, entry) {
+            gridHtml += buildProductCard(entry.product, query, entry.matchType);
+        });
+        $('#search-products-grid').html(gridHtml);
+        $('#search-products-section').prop('hidden', false);
+
+        var viewAllUrl = searchUrl + '?' + encodeURIComponent(queryParamName) + '=' + encodeURIComponent(query);
+        $('#search-view-all-btn').attr('href', viewAllUrl);
+        $('#search-view-all').prop('hidden', false);
+    }
+
+    function updateSearchPlaceholder() {
+        var $searchInput = getSearchInput();
+        var currentTerm;
+
+        if (!$searchInput.length || ($searchInput.is(':focus') && $.trim($searchInput.val()))) {
+            return;
+        }
+
+        currentTerm = popularSearchTerms.length
+            ? popularSearchTerms[placeholderIndex % popularSearchTerms.length]
+            : (translations.searchPlaceholderFallback || 'products');
+
+        $searchInput.attr(
+            'placeholder',
+            (translations.searchPlaceholderPattern || 'Search "%1"').replace('%1', currentTerm)
+        );
+    }
+
+    function startPlaceholderRotation() {
+        updateSearchPlaceholder();
+
+        if (placeholderIntervalId || popularSearchTerms.length <= 1) {
+            return;
+        }
+
+        placeholderIntervalId = window.setInterval(function () {
+            var $searchInput = getSearchInput();
+
+            if (!$searchInput.length || $searchInput.is(':focus') || $.trim($searchInput.val())) {
+                return;
+            }
+
+            placeholderIndex = (placeholderIndex + 1) % popularSearchTerms.length;
+            updateSearchPlaceholder();
+        }, 3000);
+    }
+
+    function fetchSearchSuggestions() {
+        var query = $.trim(getSearchInput().val());
+
+        if (!query.length) {
+            hideSearchResults();
+            showDefaultState();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        /* ─── Instant client-side results via intent engine ─── */
+        renderSearchResults(query);
+
+        /* Fire-and-forget API call (results already shown from local DB) */
+        suggestionRequest = $.ajax({
+            url: suggestProductsUrl,
+            data: { q: query },
+            dataType: 'json',
+            cache: false
+        }).done(function () {
+            /* API results ignored — local intent engine handles display */
+        }).fail(function () {
+            /* Local results already showing, nothing to do */
+        });
+    }
+
+    function isCustomerLoggedIn(customer) {
+        return !!(customer && (customer.fullname || customer.firstname));
+    }
+
+    function renderCustomerState(customer) {
+        var loggedIn = isCustomerLoggedIn(customer);
+
+        $('#custom-welcome').text((translations.welcome || 'Welcome, %1!').replace('%1', getCustomerDisplayName(customer)));
+        $('.auth-menu-item[data-auth-state="logged-in"]').prop('hidden', !loggedIn);
+        $('.auth-menu-item[data-auth-state="guest"]').prop('hidden', loggedIn);
+    }
+
+    function toggleMenu(show) {
+        $('#dior-side-menu').toggleClass('open', show);
+        $('#menu-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#search-overlay').hasClass('show'));
+    }
+
+    function toggleSearch(show) {
+        $('#search-bar').toggleClass('show', show);
+        $('#search-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#menu-overlay').hasClass('show'));
+
+        if (show) {
+            window.setTimeout(function () {
+                getSearchInput().trigger('focus');
+                updateSearchPlaceholder();
+                /* Show default state with mock products and suggestions immediately */
+                if (!$.trim(getSearchInput().val())) {
+                    showDefaultState();
+                }
+            }, 180);
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        window.clearTimeout(suggestionTimerId);
+        getSearchInput().val('');
+        hideSearchResults();
+        updateSearchPlaceholder();
+    }
+
+    $(document).on('click', '#custom-hamburger', function () { toggleMenu(true); });
+    $(document).on('click', '#close-btn, #menu-overlay', function () { toggleMenu(false); });
+    $(document).on('click', '#custom-search-icon', function () { toggleSearch(true); });
+    $(document).on('click focus', '#inline-search-trigger', function () { toggleSearch(true); });
+    $(document).on('click', '#search-close, #search-overlay', function () { toggleSearch(false); });
+
+    /* Clicking a category pill */
+    $(document).on('click', '.search-pill[data-category]', function (e) {
+        e.preventDefault();
+        $('.search-pill').removeClass('active');
+        $(this).addClass('active');
+        var pillText = $(this).attr('data-category');
+        getSearchInput().val(pillText);
+        $('#search-input-clear').addClass('visible');
+        fetchSearchSuggestions();
+    });
+
+    renderCustomerState(customerData.get('customer')());
+    customerData.get('customer').subscribe(renderCustomerState);
+    startPlaceholderRotation();
+
+    $(document).on('input propertychange', '#custom-search-input', function () {
+        window.clearTimeout(suggestionTimerId);
+
+        var val = $.trim(this.value);
+        if (val) {
+            $('#search-input-clear').addClass('visible');
+        } else {
+            $('#search-input-clear').removeClass('visible');
+        }
+
+        if (!val) {
+            hideSearchResults();
+            showDefaultState();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        suggestionTimerId = window.setTimeout(fetchSearchSuggestions, 220);
+    });
+
+    $(document).on('click', '#search-input-clear', function () {
+        getSearchInput().val('').trigger('focus');
+        hideSearchResults();
+        showDefaultState();
+        updateSearchPlaceholder();
+    });
+
+    $(document).on('focus', '#custom-search-input', function () {
+        updateSearchPlaceholder();
+
+        if ($.trim(this.value).length) {
+            fetchSearchSuggestions();
+        }
+    });
+
+    $(document).on('keydown', '#custom-search-input', function (event) {
+        if (event.key === 'Escape') {
+            toggleSearch(false);
+        }
+    });
+
+    $(document).on('submit', '#search_form', function (event) {
+        if (!$.trim(getSearchInput().val())) {
+            event.preventDefault();
+        }
+    });
+
+    $.getJSON(weatherUrl)
+        .done(function (data) {
+            if (data && typeof data.temp !== 'undefined' && data.temp !== null) {
+                $('#w-temp').text(data.temp + ' C');
+            }
+
+            if (data && data.icon) {
+                $('#w-icon').attr('src', data.icon).prop('hidden', false);
+                return;
+            }
+
+            $('#w-icon').attr('src', '').prop('hidden', true);
+        })
+        .fail(function () {
+        $('#w-temp').text('-- C');
+        $('#w-icon').attr('src', '').prop('hidden', true);
+    });
+
+    $.getJSON(newsUrl)
+        .done(function (response) {
+            if (response && response.title && response.link) {
+                $('#news-title').text(response.title).attr('href', response.link);
+            }
+        })
+        .fail(function () {
+            $('#news-title').text(translations.newsLoadFailed || 'Could not load news');
+        });
+});
+</script>
