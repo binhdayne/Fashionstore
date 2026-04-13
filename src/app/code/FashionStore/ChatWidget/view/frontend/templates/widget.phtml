@@ -99,6 +99,12 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
     </button>
     <div id="fs-bubble-label">Chat</div>
   </div>
+  <!-- icons -->
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <a href="tel:1234567890" title="Hotline">Hotline</a>
+    <a href="https://m.me/yourpage" title="Messenger">Messenger</a>
+    <a href="https://zalo.me/123456789" title="Zalo">Zalo</a>
+  </div>
 </div>
 <script>
 (function(){
@@ -120,4 +126,4 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
   function rmTyping(){var t=document.getElementById('fs-typing');if(t)t.remove();}
   function send(){var t=inp.value.trim();if(!t)return;inp.value='';sugg.style.display='none';addMsg('user',t);showTyping();fetch(RAG_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,use_pdf_context:true,use_mysql_context:true})}).then(function(r){return r.json();}).then(function(d){rmTyping();addMsg('bot',d.answer||'Xin loi, toi chua the tra loi.');}).catch(function(){rmTyping();addMsg('bot','Ket noi that bai. Vui long thu lai.');});}
 }());
-</script>
+</script></script>
