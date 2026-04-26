@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="quote" resource="checkout">
+        <column xsi:type="varchar" name="fs_delivery_method" nullable="true" length="32" comment="FS Delivery Method"/>
+        <column xsi:type="decimal" name="fs_delivery_fee" nullable="false" precision="12" scale="4" default="0.0000" comment="FS Delivery Fee"/>
+    </table>
+    <table name="sales_order" resource="sales">
+        <column xsi:type="varchar" name="fs_delivery_method" nullable="true" length="32" comment="FS Delivery Method"/>
+        <column xsi:type="decimal" name="fs_delivery_fee" nullable="false" precision="12" scale="4" default="0.0000" comment="FS Delivery Fee"/>
+    </table>
+</schema>

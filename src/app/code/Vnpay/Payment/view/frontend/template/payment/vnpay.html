@@ -1,0 +1,21 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isSelected())}">
+    <div class="payment-method-title field">
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <input type="radio"
+                   name="payment[method]"
+                   class="radio"
+                   data-bind="attr: {'id': getCode(), 'value': getCode()}, checked: isChecked, click: selectPaymentMethod"
+                   value="vnpay" />
+            <span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <!-- Additional content can be added here if needed -->
+    </div>
+</div>

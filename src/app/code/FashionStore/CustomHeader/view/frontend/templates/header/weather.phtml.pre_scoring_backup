@@ -1,0 +1,1757 @@
+<?php
+/** @var \FashionStore\CustomHeader\Block\Header $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$helper = $objectManager->get(\Magento\Search\Helper\Data::class);
+$escaper = $objectManager->get(\Magento\Framework\Escaper::class);
+$action = $helper->getResultUrl();
+$queryParam = $helper->getQueryParamName();
+$guestDisplayName = (string) __('Guest');
+$popularSearchTerms = $block->getPopularSearchTerms();
+$popularSearchTermsJson = json_encode(
+    array_values($popularSearchTerms),
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+$suggestProductsUrl = $block->getSuggestProductsUrl();
+$weatherUrl = $block->getWeatherUrl();
+$newsUrl = $block->getNewsUrl();
+$maxQueryLength = $block->getMaxQueryLength();
+$translationStringsJson = json_encode(
+    [
+        'guest' => (string) __('Guest'),
+        'welcome' => (string) __('Welcome, %1!'),
+        'searchPlaceholderFallback' => (string) __('products'),
+        'searchPlaceholderPattern' => (string) __('Search "%1"'),
+        'newsLoadFailed' => (string) __('Could not load news'),
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+?>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    .page-header {
+        background: transparent !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: relative !important;
+        z-index: auto !important;
+    }
+
+    .page-header .panel.wrapper {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    .page-header .header.panel {
+        max-width: 100% !important;
+        min-height: 52px !important;
+        padding: 0 20px !important;
+        background: transparent !important;
+        display: block !important;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+
+    .action.skip.contentarea {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .action.skip.contentarea:focus {
+        width: auto;
+        height: auto;
+        margin: 0;
+        clip: auto;
+        white-space: normal;
+        left: 16px;
+        top: 16px;
+        z-index: 10002;
+        padding: 10px 14px;
+        background: #fff;
+        color: #111;
+    }
+
+    .weather-icon[hidden] {
+        display: none !important;
+    }
+
+    .page-title .base,
+    .page-title span,
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+        font-weight: 300 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .page-title .base,
+    .page-title span {
+        font-size: 36px !important;
+        letter-spacing: 6px !important;
+        color: #1a1a1a !important;
+    }
+
+    .sidebar .block-title strong,
+    .sidebar-additional .block-title strong {
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+    }
+
+    .header.content,
+    .nav-sections,
+    .nav-toggle,
+    .panel.header .welcome,
+    .panel.header .header.links {
+        display: none !important;
+    }
+
+    #header-info-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 52px;
+        width: 100%;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .left-section,
+    .right-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .left-section {
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+
+    .right-section {
+        justify-content: flex-end;
+    }
+
+    .center-section {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+    }
+
+    #custom-hamburger {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #custom-hamburger div {
+        width: 18px;
+        height: 1px;
+        background: #fff;
+    }
+
+    .weather-info,
+    #news-title,
+    #custom-welcome {
+        color: #fff;
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-location,
+    .news-label {
+        color: #c9a96e;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+    }
+
+
+
+    .weather-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 4px;
+    }
+
+    #news-section {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    #news-title {
+        color: #fff;
+        text-decoration: none;
+        opacity: 0.85;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .logo-text,
+    .logo-text:visited,
+    .logo-text:hover,
+    .logo-text:focus {
+        color: #fff !important;
+        text-decoration: none !important;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+    }
+
+    #custom-search-icon {
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+        display: none;
+    }
+
+    .inline-search-bar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 220px;
+        max-width: 100%;
+    }
+
+    .inline-search-bar input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        padding: 8px 40px 8px 18px;
+        font-size: 13px;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 300;
+        background: transparent;
+        color: #fff;
+        outline: none;
+        transition: border-color 0.2s ease;
+        cursor: pointer;
+    }
+
+    .inline-search-bar input::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 300;
+    }
+
+    .inline-search-bar input:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .inline-search-bar .search-icon-right {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .inline-search-bar .search-icon-right svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    @media (max-width: 600px) {
+        .inline-search-bar {
+            width: 160px;
+        }
+
+        .inline-search-bar input {
+            padding: 7px 36px 7px 14px;
+            font-size: 12px;
+        }
+    }
+
+    #menu-overlay,
+    #search-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    #menu-overlay.show,
+    #search-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #menu-overlay {
+        z-index: 9998;
+    }
+
+    #search-overlay {
+        z-index: 10000;
+    }
+
+    #dior-side-menu {
+        position: fixed;
+        top: 0;
+        left: -380px;
+        width: 360px;
+        max-width: calc(100vw - 32px);
+        height: 100vh;
+        background: #f3f3f3;
+        z-index: 9999;
+        transition: left 0.35s ease;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #dior-side-menu.open {
+        left: 0;
+    }
+
+    .menu-header {
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        font-weight: 700;
+        color: #222;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    #close-btn {
+        cursor: pointer;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .auth-menu-item[hidden] {
+        display: none !important;
+    }
+
+    .menu-footer {
+        margin-top: auto;
+        padding: 24px;
+        background: #ececec;
+    }
+
+    .menu-footer a,
+    .menu-footer .switch-btn,
+    .menu-header,
+    .menu-item {
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    .menu-switcher {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-top: 14px;
+        border: 1px solid #d5d5d5;
+    }
+
+    .switch-btn {
+        padding: 12px 10px;
+        font-size: 12px;
+        text-align: center;
+        background: #d9d9d9;
+        color: #fff;
+        font-weight: 300;
+    }
+
+    .switch-btn.active {
+        background: #fff;
+        color: #222;
+    }
+
+    #search-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #fff;
+        z-index: 10001;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #search-bar.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Search top bar */
+    .search-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px 24px;
+        border-bottom: 1px solid #eee;
+        flex-shrink: 0;
+    }
+
+    #search_form {
+        position: relative;
+        flex: 1;
+        max-width: 600px;
+    }
+
+    #search_form input {
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 999px;
+        padding: 12px 80px 12px 44px;
+        font-size: 16px;
+        outline: none;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        font-weight: 400;
+        color: #111;
+        background: #fff;
+        transition: border-color 0.2s ease;
+    }
+
+    #search_form input:focus {
+        border-color: #9ca3af;
+    }
+
+    #search_form input::placeholder {
+        color: #9ca3af;
+        font-weight: 300;
+    }
+
+    .search-input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .search-input-clear {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #9ca3af;
+        font-size: 18px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        transition: background 0.15s;
+    }
+
+    .search-input-clear:hover {
+        background: #e5e7eb;
+    }
+
+    .search-input-clear.visible {
+        display: flex;
+    }
+
+    #search-close {
+        font-size: 28px;
+        color: #6b7280;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        transition: color 0.15s;
+        flex-shrink: 0;
+    }
+
+    #search-close:hover {
+        color: #111;
+    }
+
+    /* Search results container */
+    .search-results-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+    }
+
+    .search-results-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 32px 40px;
+    }
+
+    /* Suggestion pills section */
+    .search-suggestions-section {
+        margin-bottom: 32px;
+    }
+
+    .search-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 14px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .search-suggestion-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Framer Motion-like fade-in + slide-down for the whole content */
+    @keyframes searchFadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    #search-bar.show .search-results-inner {
+        animation: searchFadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Staggered card animation */
+    @keyframes cardFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .search-product-card {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s ease;
+        opacity: 0;
+        animation: cardFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .search-product-card:nth-child(1) { animation-delay: 0.05s; }
+    .search-product-card:nth-child(2) { animation-delay: 0.1s; }
+    .search-product-card:nth-child(3) { animation-delay: 0.15s; }
+    .search-product-card:nth-child(4) { animation-delay: 0.2s; }
+
+    /* Pills staggered animation */
+    @keyframes pillFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.92);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .search-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 999px;
+        background: #f9fafb;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        white-space: nowrap;
+        opacity: 0;
+        animation: pillFadeIn 0.25s ease forwards;
+    }
+
+    .search-pill:nth-child(1) { animation-delay: 0.02s; }
+    .search-pill:nth-child(2) { animation-delay: 0.06s; }
+    .search-pill:nth-child(3) { animation-delay: 0.1s; }
+    .search-pill:nth-child(4) { animation-delay: 0.14s; }
+    .search-pill:nth-child(5) { animation-delay: 0.18s; }
+
+    .search-pill:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+        color: #111;
+    }
+
+    .search-pill svg {
+        width: 14px;
+        height: 14px;
+        color: #9ca3af;
+        flex-shrink: 0;
+    }
+
+    /* Product results grid */
+    .search-products-section {
+        margin-bottom: 32px;
+    }
+
+    .search-products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .search-product-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .search-product-img-wrap {
+        aspect-ratio: 3 / 4;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        background: #f9fafb;
+        position: relative;
+    }
+
+    .search-product-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        transition: transform 0.5s ease;
+    }
+
+    .search-product-card:hover .search-product-img {
+        transform: scale(1.05);
+    }
+
+    .search-product-name {
+        font-size: 14px;
+        font-weight: 400;
+        color: #111;
+        margin-bottom: 2px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .search-product-name .highlight {
+        font-weight: 800;
+        color: #000;
+    }
+
+    .search-product-sku {
+        font-size: 10px;
+        color: #9ca3af;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .search-product-price {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    /* Loading skeleton */
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .search-loading-skeleton {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .search-skeleton-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-skeleton-img {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        margin-bottom: 10px;
+    }
+
+    .search-skeleton-text {
+        height: 14px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        margin-bottom: 6px;
+    }
+
+    .search-skeleton-text.w-60 { width: 60%; }
+    .search-skeleton-text.w-40 { width: 40%; }
+    .search-skeleton-text.w-30 { width: 30%; }
+
+    /* View all button */
+    .search-view-all-wrap {
+        text-align: center;
+        padding-top: 8px;
+    }
+
+    .search-view-all-btn {
+        display: inline-block;
+        padding: 14px 48px;
+        background: #000;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .search-view-all-btn:hover {
+        background: #333;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    /* Empty / initial state */
+    .search-empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #9ca3af;
+        font-size: 15px;
+    }
+
+    /* Hide old autocomplete */
+    .custom-search-autocomplete {
+        display: none !important;
+    }
+
+    body.csc-no-scroll {
+        overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+        .search-products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .search-results-inner {
+            padding: 20px 16px 32px;
+        }
+
+        .search-top-bar {
+            padding: 14px 16px;
+        }
+
+        .search-view-all-btn {
+            padding: 12px 36px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        #header-info-bar {
+            gap: 12px;
+        }
+
+        #news-section,
+        #custom-welcome {
+            display: none;
+        }
+
+        .logo-text,
+        .logo-text:visited,
+        .logo-text:hover,
+        .logo-text:focus {
+            font-size: 18px;
+            letter-spacing: 0.2em;
+        }
+    }
+</style>
+
+<div id="header-info-bar">
+    <div class="left-section">
+        <div id="custom-hamburger" aria-label="<?= $escaper->escapeHtmlAttr(__('Open menu')) ?>" role="button" tabindex="0">
+            <div></div><div></div><div></div>
+        </div>
+        <div class="weather-info"><strong class="weather-location"><?= $escaper->escapeHtml(__('Hanoi')) ?></strong> <img id="w-icon" class="weather-icon" src="" alt="<?= $escaper->escapeHtmlAttr(__('Weather icon')) ?>" hidden> <span id="w-temp">-- C</span></div>
+        <div id="news-section">
+            <span class="news-label"><?= $escaper->escapeHtml(__('News:')) ?></span>
+            <a href="#" id="news-title"><?= $escaper->escapeHtml(__('Loading news...')) ?></a>
+        </div>
+    </div>
+
+    <div class="center-section">
+        <a href="<?= $escaper->escapeUrl($block->getBaseUrl()) ?>" class="logo-text">FashionStore</a>
+    </div>
+
+    <div class="right-section">
+        <div id="custom-welcome"><?= $escaper->escapeHtml(__('Welcome, %1!', $guestDisplayName)) ?></div>
+        <div id="custom-search-icon" aria-label="<?= $escaper->escapeHtmlAttr(__('Open search')) ?>" role="button" tabindex="0">&#128269;&#65038;</div>
+        <div class="inline-search-bar">
+            <input
+                id="inline-search-trigger"
+                type="text"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>"
+                readonly
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>">
+            <span class="search-icon-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div id="menu-overlay"></div>
+<div id="dior-side-menu">
+    <div class="menu-header" id="close-btn"><?= $escaper->escapeHtml(__('Close')) ?></div>
+
+    <div class="menu-content">
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Account')) ?></div>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('My Account')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>" class="menu-item auth-menu-item" data-auth-state="logged-in" hidden><?= $escaper->escapeHtml(__('Log Out')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Log In')) ?> <span>&gt;</span></a>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>" class="menu-item auth-menu-item" data-auth-state="guest"><?= $escaper->escapeHtml(__('Register')) ?> <span>&gt;</span></a>
+
+        <div class="menu-header"><?= $escaper->escapeHtml(__('Store')) ?></div>
+        <a href="/ao-nu.html" class="menu-item"><?= $escaper->escapeHtml(__('Women\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/ao-nam.html" class="menu-item"><?= $escaper->escapeHtml(__('Men\'s Fashion')) ?> <span>&gt;</span></a>
+        <a href="/tui-xach.html" class="menu-item"><?= $escaper->escapeHtml(__('Bags')) ?> <span>&gt;</span></a>
+        <a href="/giay.html" class="menu-item"><?= $escaper->escapeHtml(__('Shoes')) ?> <span>&gt;</span></a>
+    </div>
+
+    <div class="menu-footer">
+        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;"><?= $escaper->escapeHtml(__('Contact us')) ?></a>
+        <div class="menu-switcher">
+            <div class="switch-btn active"><?= $escaper->escapeHtml(__('Fashion & Accessories')) ?></div>
+            <div class="switch-btn"><?= $escaper->escapeHtml(__('Fragrance & Beauty')) ?></div>
+        </div>
+    </div>
+</div>
+
+<div id="search-overlay"></div>
+<div id="search-bar">
+    <div class="search-top-bar">
+        <form id="search_form" action="<?= $escaper->escapeUrl($action) ?>" method="get">
+            <span class="search-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input
+                id="custom-search-input"
+                type="text"
+                name="<?= $escaper->escapeHtmlAttr($queryParam) ?>"
+                placeholder="<?= $escaper->escapeHtmlAttr(__('Tìm kiếm sản phẩm...')) ?>"
+                autocomplete="off"
+                maxlength="<?= $escaper->escapeHtmlAttr($maxQueryLength) ?>">
+            <span id="search-input-clear" class="search-input-clear">&times;</span>
+        </form>
+        <div id="search-close">&times;</div>
+    </div>
+    <div class="search-results-container">
+        <div class="search-results-inner">
+            <div id="search-suggestions-section" class="search-suggestions-section" hidden>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Gợi ý tìm kiếm')) ?></div>
+                <div id="search-suggestion-pills" class="search-suggestion-pills"></div>
+            </div>
+            <div id="search-products-section" class="search-products-section" hidden>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Kết quả tìm kiếm')) ?></div>
+                <div id="search-products-grid" class="search-products-grid"></div>
+            </div>
+            <div id="search-loading" class="search-products-section" hidden>
+                <div class="search-section-title"><?= $escaper->escapeHtml(__('Kết quả tìm kiếm')) ?></div>
+                <div class="search-loading-skeleton">
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                    <div class="search-skeleton-card"><div class="search-skeleton-img"></div><div class="search-skeleton-text w-60"></div><div class="search-skeleton-text w-30"></div><div class="search-skeleton-text w-40"></div></div>
+                </div>
+            </div>
+            <div id="search-view-all" class="search-view-all-wrap" hidden>
+                <a id="search-view-all-btn" class="search-view-all-btn" href="#"><?= $escaper->escapeHtml(__('XEM TẤT CẢ')) ?></a>
+            </div>
+            <div id="search-empty-state" class="search-empty-state"><?= $escaper->escapeHtml(__('Nhập từ khóa để tìm kiếm sản phẩm')) ?></div>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerData) {
+    var popularSearchTerms = <?= /* @noEscape */ $popularSearchTermsJson ?: '[]' ?>;
+    var translations = <?= /* @noEscape */ $translationStringsJson ?: '{}' ?>;
+    var suggestProductsUrl = '<?= $escaper->escapeJs($suggestProductsUrl) ?>';
+    var weatherUrl = '<?= $escaper->escapeJs($weatherUrl) ?>';
+    var newsUrl = '<?= $escaper->escapeJs($newsUrl) ?>';
+    var placeholderIndex = 0;
+    var placeholderIntervalId = null;
+    var suggestionTimerId = null;
+    var suggestionRequest = null;
+
+    /* ═══════════════════════════════════════════════════════════════════
+     *  PRODUCT DATABASE — 100 SKUs across 10 categories
+     *  category = slug (matches SKU prefix for intent mapping)
+     * ═══════════════════════════════════════════════════════════════════ */
+    var PRODUCTS = [
+        /* ── Áo Nam (10) ── */
+        { id: 2,  name: 'Áo Thun Nam Basic Trắng',       sku: 'ao-nam-001', price: '199.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-001-1.png' },
+        { id: 3,  name: 'Áo Thun Nam Basic Đen',         sku: 'ao-nam-002', price: '199.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-002-1.png' },
+        { id: 4,  name: 'Áo Polo Nam Xanh',              sku: 'ao-nam-003', price: '299.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-003-1.png' },
+        { id: 5,  name: 'Áo Polo Nam Đỏ',                sku: 'ao-nam-004', price: '299.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-004-1.png' },
+        { id: 6,  name: 'Áo Sơ Mi Nam Trắng',            sku: 'ao-nam-005', price: '399.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-005-1.png' },
+        { id: 7,  name: 'Áo Sơ Mi Nam Kẻ Sọc',           sku: 'ao-nam-006', price: '399.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-006-1.png' },
+        { id: 8,  name: 'Áo Khoác Nam Hoodie',            sku: 'ao-nam-007', price: '499.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-007-1.png' },
+        { id: 9,  name: 'Áo Khoác Nam Bomber',            sku: 'ao-nam-008', price: '599.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-008-1.png' },
+        { id: 10, name: 'Áo Len Nam Cổ Tròn',             sku: 'ao-nam-009', price: '449.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-009-1.png' },
+        { id: 11, name: 'Áo Tank Top Nam',                 sku: 'ao-nam-010', price: '149.000đ',    category: 'ao-nam', image: '/media/import_master/ao-nam-010-1.png' },
+        /* ── Quần Nam (10) ── */
+        { id: 12, name: 'Quần Jeans Nam Xanh',             sku: 'quan-nam-001', price: '499.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-001-1.png' },
+        { id: 13, name: 'Quần Jeans Nam Đen',              sku: 'quan-nam-002', price: '499.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-002-1.png' },
+        { id: 14, name: 'Quần Kaki Nam Be',                sku: 'quan-nam-003', price: '399.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-003-1.png' },
+        { id: 15, name: 'Quần Kaki Nam Xanh Rêu',         sku: 'quan-nam-004', price: '399.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-004-1.png' },
+        { id: 16, name: 'Quần Short Nam Thể Thao',        sku: 'quan-nam-005', price: '249.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-005-1.png' },
+        { id: 17, name: 'Quần Short Nam Kaki',             sku: 'quan-nam-006', price: '299.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-006-1.png' },
+        { id: 18, name: 'Quần Tây Nam Đen',                sku: 'quan-nam-007', price: '599.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-007-1.png' },
+        { id: 19, name: 'Quần Tây Nam Xám',                sku: 'quan-nam-008', price: '599.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-008-1.png' },
+        { id: 20, name: 'Quần Jogger Nam',                 sku: 'quan-nam-009', price: '349.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-009-1.png' },
+        { id: 21, name: 'Quần Lửng Nam',                   sku: 'quan-nam-010', price: '299.000đ',  category: 'quan-nam', image: '/media/import_master/quan-nam-010-1.png' },
+        /* ── Áo Nữ (10) ── */
+        { id: 22, name: 'Áo Thun Nữ Trắng',               sku: 'ao-nu-001', price: '179.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-001-1.png' },
+        { id: 23, name: 'Áo Thun Nữ Hồng',                sku: 'ao-nu-002', price: '179.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-002-1.png' },
+        { id: 24, name: 'Áo Sơ Mi Nữ Trắng',              sku: 'ao-nu-003', price: '349.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-003-1.png' },
+        { id: 25, name: 'Áo Sơ Mi Nữ Hoa',                sku: 'ao-nu-004', price: '349.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-004-1.png' },
+        { id: 26, name: 'Áo Croptop Nữ',                   sku: 'ao-nu-005', price: '229.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-005-1.png' },
+        { id: 27, name: 'Áo Kiểu Nữ Tay Bồng',            sku: 'ao-nu-006', price: '399.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-006-1.png' },
+        { id: 28, name: 'Áo Len Nữ Cổ Lọ',                sku: 'ao-nu-007', price: '429.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-007-1.png' },
+        { id: 29, name: 'Áo Khoác Nữ Denim',              sku: 'ao-nu-008', price: '549.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-008-1.png' },
+        { id: 30, name: 'Áo Blazer Nữ Đen',               sku: 'ao-nu-009', price: '699.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-009-1.png' },
+        { id: 31, name: 'Áo Thun Nữ Oversize',            sku: 'ao-nu-010', price: '249.000đ',     category: 'ao-nu', image: '/media/import_master/ao-nu-010-1.png' },
+        /* ── Quần Nữ (10) ── */
+        { id: 32, name: 'Quần Jeans Nữ Skinny',            sku: 'quan-nu-001', price: '479.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-001-1.png' },
+        { id: 33, name: 'Quần Jeans Nữ Ống Rộng',         sku: 'quan-nu-002', price: '499.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-002-1.png' },
+        { id: 34, name: 'Quần Culottes Nữ',                sku: 'quan-nu-003', price: '399.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-003-1.png' },
+        { id: 35, name: 'Quần Palazzo Nữ',                 sku: 'quan-nu-004', price: '419.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-004-1.png' },
+        { id: 36, name: 'Quần Short Nữ Jeans',             sku: 'quan-nu-005', price: '279.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-005-1.png' },
+        { id: 37, name: 'Quần Short Nữ Thể Thao',         sku: 'quan-nu-006', price: '229.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-006-1.png' },
+        { id: 38, name: 'Quần Legging Nữ',                 sku: 'quan-nu-007', price: '199.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-007-1.png' },
+        { id: 39, name: 'Quần Tây Nữ Đen',                 sku: 'quan-nu-008', price: '549.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-008-1.png' },
+        { id: 40, name: 'Quần Jogger Nữ',                  sku: 'quan-nu-009', price: '319.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-009-1.png' },
+        { id: 41, name: 'Quần Lửng Nữ Kaki',               sku: 'quan-nu-010', price: '299.000đ',   category: 'quan-nu', image: '/media/import_master/quan-nu-010-1.png' },
+        /* ── Váy Đầm (10) ── */
+        { id: 42, name: 'Đầm Maxi Hoa Nhí',                sku: 'vay-dam-001', price: '599.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-001-1.png' },
+        { id: 43, name: 'Đầm Công Sở Đen',                 sku: 'vay-dam-002', price: '699.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-002-1.png' },
+        { id: 44, name: 'Váy Chữ A Kẻ Sọc',               sku: 'vay-dam-003', price: '499.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-003-1.png' },
+        { id: 45, name: 'Váy Mini Jean',                    sku: 'vay-dam-004', price: '349.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-004-1.png' },
+        { id: 46, name: 'Đầm Dự Tiệc Đỏ',                 sku: 'vay-dam-005', price: '899.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-005-1.png' },
+        { id: 47, name: 'Váy Xòe Hoa',                     sku: 'vay-dam-006', price: '449.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-006-1.png' },
+        { id: 48, name: 'Đầm Wrap Nữ',                     sku: 'vay-dam-007', price: '549.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-007-1.png' },
+        { id: 49, name: 'Váy Midi Trơn',                    sku: 'vay-dam-008', price: '399.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-008-1.png' },
+        { id: 50, name: 'Đầm Suông Linen',                 sku: 'vay-dam-009', price: '649.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-009-1.png' },
+        { id: 51, name: 'Váy Thể Thao Nữ',                 sku: 'vay-dam-010', price: '299.000đ',   category: 'vay-dam', image: '/media/import_master/vay-dam-010-1.png' },
+        /* ── Giày Nam (10) ── */
+        { id: 52, name: 'Giày Sneaker Nam Trắng',           sku: 'giay-nam-001', price: '799.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-001-1.png' },
+        { id: 53, name: 'Giày Sneaker Nam Đen',             sku: 'giay-nam-002', price: '799.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-002-1.png' },
+        { id: 54, name: 'Giày Oxford Nam',                  sku: 'giay-nam-003', price: '1.299.000đ',category: 'giay-nam', image: '/media/import_master/giay-nam-003-1.png' },
+        { id: 55, name: 'Giày Loafer Nam',                  sku: 'giay-nam-004', price: '999.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-004-1.png' },
+        { id: 56, name: 'Dép Sandal Nam',                   sku: 'giay-nam-005', price: '399.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-005-1.png' },
+        { id: 57, name: 'Giày Boot Nam Da',                 sku: 'giay-nam-006', price: '1.599.000đ',category: 'giay-nam', image: '/media/import_master/giay-nam-006-1.png' },
+        { id: 58, name: 'Giày Thể Thao Nam',               sku: 'giay-nam-007', price: '899.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-007-1.png' },
+        { id: 59, name: 'Giày Slip On Nam',                 sku: 'giay-nam-008', price: '699.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-008-1.png' },
+        { id: 60, name: 'Dép Quai Hậu Nam',                sku: 'giay-nam-009', price: '299.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-009-1.png' },
+        { id: 61, name: 'Giày Moccasin Nam',               sku: 'giay-nam-010', price: '849.000đ',  category: 'giay-nam', image: '/media/import_master/giay-nam-010-1.png' },
+        /* ── Giày Nữ (10) ── */
+        { id: 62, name: 'Giày Cao Gót Đen',                sku: 'giay-nu-001', price: '899.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-001-1.png' },
+        { id: 63, name: 'Giày Cao Gót Đỏ',                 sku: 'giay-nu-002', price: '899.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-002-1.png' },
+        { id: 64, name: 'Giày Sneaker Nữ Trắng',           sku: 'giay-nu-003', price: '699.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-003-1.png' },
+        { id: 65, name: 'Giày Búp Bê Nữ',                  sku: 'giay-nu-004', price: '599.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-004-1.png' },
+        { id: 66, name: 'Dép Sandal Nữ',                   sku: 'giay-nu-005', price: '449.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-005-1.png' },
+        { id: 67, name: 'Giày Boot Nữ Cổ Cao',             sku: 'giay-nu-006', price: '1.199.000đ',category: 'giay-nu', image: '/media/import_master/giay-nu-006-1.png' },
+        { id: 68, name: 'Giày Wedge Nữ',                   sku: 'giay-nu-007', price: '799.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-007-1.png' },
+        { id: 69, name: 'Giày Mule Nữ',                    sku: 'giay-nu-008', price: '649.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-008-1.png' },
+        { id: 70, name: 'Dép Lê Nữ',                       sku: 'giay-nu-009', price: '199.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-009-1.png' },
+        { id: 71, name: 'Giày Thể Thao Nữ',                sku: 'giay-nu-010', price: '749.000đ',   category: 'giay-nu', image: '/media/import_master/giay-nu-010-1.png' },
+        /* ── Túi Xách (10) ── */
+        { id: 72, name: 'Túi Xách Nữ Da Đen',              sku: 'tui-xach-001', price: '1.299.000đ',category: 'tui-xach', image: '/media/import_master/tui-xach-001-1.png' },
+        { id: 73, name: 'Túi Xách Nữ Da Nâu',              sku: 'tui-xach-002', price: '1.299.000đ',category: 'tui-xach', image: '/media/import_master/tui-xach-002-1.png' },
+        { id: 74, name: 'Túi Tote Canvas',                  sku: 'tui-xach-003', price: '299.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-003-1.png' },
+        { id: 75, name: 'Balo Nữ Thời Trang',               sku: 'tui-xach-004', price: '499.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-004-1.png' },
+        { id: 76, name: 'Clutch Nữ Dạ Tiệc',               sku: 'tui-xach-005', price: '599.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-005-1.png' },
+        { id: 77, name: 'Túi Đeo Chéo Nữ',                 sku: 'tui-xach-006', price: '399.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-006-1.png' },
+        { id: 78, name: 'Túi Xách Nam Da',                  sku: 'tui-xach-007', price: '999.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-007-1.png' },
+        { id: 79, name: 'Balo Nam Laptop',                   sku: 'tui-xach-008', price: '699.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-008-1.png' },
+        { id: 80, name: 'Túi Bucket Nữ',                    sku: 'tui-xach-009', price: '549.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-009-1.png' },
+        { id: 81, name: 'Ví Da Nữ',                         sku: 'tui-xach-010', price: '349.000đ',  category: 'tui-xach', image: '/media/import_master/tui-xach-010-1.png' },
+        /* ── Phụ Kiện (10) ── */
+        { id: 82, name: 'Thắt Lưng Nam Da',                 sku: 'phu-kien-001', price: '399.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-001-1.png' },
+        { id: 83, name: 'Mũ Cap Nam',                       sku: 'phu-kien-002', price: '199.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-002-1.png' },
+        { id: 84, name: 'Kính Mát Nam',                     sku: 'phu-kien-003', price: '499.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-003-1.png' },
+        { id: 85, name: 'Kính Mát Nữ',                      sku: 'phu-kien-004', price: '499.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-004-1.png' },
+        { id: 86, name: 'Vòng Tay Nữ Bạc',                  sku: 'phu-kien-005', price: '299.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-005-1.png' },
+        { id: 87, name: 'Dây Chuyền Nữ',                    sku: 'phu-kien-006', price: '599.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-006-1.png' },
+        { id: 88, name: 'Khăn Quàng Nữ',                    sku: 'phu-kien-007', price: '349.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-007-1.png' },
+        { id: 89, name: 'Mũ Rộng Vành Nữ',                  sku: 'phu-kien-008', price: '249.000đ',  category: 'phu-kien', image: '/media/import_master/phu-kien-008-1.png' },
+        { id: 90, name: 'Tất Vớ Nam',                        sku: 'phu-kien-009', price: '99.000đ',   category: 'phu-kien', image: '/media/import_master/phu-kien-009-1.png' },
+        { id: 91, name: 'Tất Vớ Nữ',                        sku: 'phu-kien-010', price: '99.000đ',   category: 'phu-kien', image: '/media/import_master/phu-kien-010-1.png' },
+        /* ── Sale (10) ── */
+        { id: 92,  name: 'Áo Thun Nam Sale 50%',             sku: 'sale-001', price: '99.000đ',      category: 'sale', image: '/media/import_master/sale-001-1.png' },
+        { id: 93,  name: 'Quần Jeans Nữ Sale',              sku: 'sale-002', price: '249.000đ',     category: 'sale', image: '/media/import_master/sale-002-1.png' },
+        { id: 94,  name: 'Giày Sneaker Sale',               sku: 'sale-003', price: '399.000đ',     category: 'sale', image: '/media/import_master/sale-003-1.png' },
+        { id: 95,  name: 'Váy Đầm Sale 40%',                sku: 'sale-004', price: '299.000đ',     category: 'sale', image: '/media/import_master/sale-004-1.png' },
+        { id: 96,  name: 'Túi Xách Sale',                   sku: 'sale-005', price: '499.000đ',     category: 'sale', image: '/media/import_master/sale-005-1.png' },
+        { id: 97,  name: 'Áo Khoác Sale 30%',               sku: 'sale-006', price: '349.000đ',     category: 'sale', image: '/media/import_master/sale-006-1.png' },
+        { id: 98,  name: 'Phụ Kiện Sale',                    sku: 'sale-007', price: '149.000đ',     category: 'sale', image: '/media/import_master/sale-007-1.png' },
+        { id: 99,  name: 'Quần Nam Sale',                    sku: 'sale-008', price: '199.000đ',     category: 'sale', image: '/media/import_master/sale-008-1.png' },
+        { id: 100, name: 'Giày Nữ Sale 50%',                sku: 'sale-009', price: '349.000đ',     category: 'sale', image: '/media/import_master/sale-009-1.png' },
+        { id: 101, name: 'Áo Nữ Sale Cuối Mùa',             sku: 'sale-010', price: '89.000đ',      category: 'sale', image: '/media/import_master/sale-010-1.png' }
+    ];
+
+    /* Category slug → Display name mapping for pills/UI */
+    var CATEGORY_LABELS = {
+        'ao-nam': 'Áo Nam', 'ao-nu': 'Áo Nữ',
+        'quan-nam': 'Quần Nam', 'quan-nu': 'Quần Nữ',
+        'vay-dam': 'Váy Đầm', 'giay-nam': 'Giày Nam',
+        'giay-nu': 'Giày Nữ', 'tui-xach': 'Túi Xách',
+        'phu-kien': 'Phụ Kiện', 'sale': 'Sale'
+    };
+
+    /* ═══════════════════════════════════════════════════════════════════
+     *  SEARCH ENGINE — Intent-based search with Strict Magic 4 Rule
+     * ═══════════════════════════════════════════════════════════════════ */
+
+    /* Remove Vietnamese diacritics (Lowercase + Bỏ dấu) */
+    function removeAccents(str) {
+        return (str || '').toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
+
+    /* Sanitize query: trim, lowercase, strip special chars */
+    function sanitizeQuery(raw) {
+        var trimmed = $.trim(raw).toLowerCase();
+        return trimmed.replace(/[^a-zA-ZÀ-ỹà-ỹĐđ0-9\s\-]/g, '');
+    }
+
+    /* Intent Map: Vietnamese keywords → SKU slug patterns
+     * Sorted by specificity — longer phrases first in resolveIntent */
+    var INTENT_MAP = {
+        /* ── Túi Xách ── */
+        'túi': 'tui-xach', 'tui': 'tui-xach', 'xách': 'tui-xach', 'xach': 'tui-xach',
+        'balo': 'tui-xach', 'ba lo': 'tui-xach',
+        'clutch': 'tui-xach', 'ví': 'tui-xach', 'vi': 'tui-xach',
+        /* ── Phụ Kiện ── */
+        'phụ kiện': 'phu-kien', 'phu kien': 'phu-kien',
+        'thắt lưng': 'phu-kien', 'that lung': 'phu-kien',
+        'mũ': 'phu-kien', 'mu': 'phu-kien', 'nón': 'phu-kien', 'non': 'phu-kien',
+        'kính': 'phu-kien', 'kinh': 'phu-kien',
+        'vòng tay': 'phu-kien', 'vong tay': 'phu-kien',
+        'dây chuyền': 'phu-kien', 'day chuyen': 'phu-kien',
+        'khăn': 'phu-kien', 'khan': 'phu-kien',
+        'tất': 'phu-kien', 'tat': 'phu-kien', 'vớ': 'phu-kien', 'vo': 'phu-kien',
+        /* ── Váy Đầm ── */
+        'váy': 'vay-dam', 'vay': 'vay-dam', 'đầm': 'vay-dam', 'dam': 'vay-dam',
+        /* ── Giày Nam (specific phrases first) ── */
+        'giày nam': 'giay-nam', 'giay nam': 'giay-nam',
+        'dép nam': 'giay-nam', 'dep nam': 'giay-nam',
+        'sneaker nam': 'giay-nam', 'boot nam': 'giay-nam',
+        'oxford': 'giay-nam', 'loafer': 'giay-nam',
+        'sandal nam': 'giay-nam', 'moccasin': 'giay-nam',
+        /* ── Giày Nữ (specific phrases first) ── */
+        'giày nữ': 'giay-nu', 'giay nu': 'giay-nu',
+        'dép nữ': 'giay-nu', 'dep nu': 'giay-nu',
+        'sneaker nữ': 'giay-nu', 'sneaker nu': 'giay-nu',
+        'cao gót': 'giay-nu', 'cao got': 'giay-nu',
+        'búp bê': 'giay-nu', 'bup be': 'giay-nu',
+        'boot nữ': 'giay-nu', 'boot nu': 'giay-nu',
+        'wedge': 'giay-nu', 'mule': 'giay-nu', 'dép lê': 'giay-nu', 'dep le': 'giay-nu',
+        /* ── Áo Nam ── */
+        'áo nam': 'ao-nam', 'ao nam': 'ao-nam',
+        'áo thun nam': 'ao-nam', 'ao thun nam': 'ao-nam',
+        'áo polo': 'ao-nam', 'ao polo': 'ao-nam',
+        'sơ mi nam': 'ao-nam', 'so mi nam': 'ao-nam',
+        'áo khoác nam': 'ao-nam', 'ao khoac nam': 'ao-nam',
+        'hoodie': 'ao-nam', 'bomber': 'ao-nam',
+        'áo len nam': 'ao-nam', 'ao len nam': 'ao-nam',
+        'tank top': 'ao-nam',
+        /* ── Quần Nam ── */
+        'quần nam': 'quan-nam', 'quan nam': 'quan-nam',
+        'jeans nam': 'quan-nam',
+        'kaki nam': 'quan-nam',
+        'quần short nam': 'quan-nam', 'quan short nam': 'quan-nam',
+        'quần tây nam': 'quan-nam', 'quan tay nam': 'quan-nam',
+        'jogger nam': 'quan-nam',
+        'quần lửng nam': 'quan-nam', 'quan lung nam': 'quan-nam',
+        /* ── Áo Nữ ── */
+        'áo nữ': 'ao-nu', 'ao nu': 'ao-nu',
+        'áo thun nữ': 'ao-nu', 'ao thun nu': 'ao-nu',
+        'sơ mi nữ': 'ao-nu', 'so mi nu': 'ao-nu',
+        'croptop': 'ao-nu', 'áo kiểu': 'ao-nu', 'ao kieu': 'ao-nu',
+        'áo len nữ': 'ao-nu', 'ao len nu': 'ao-nu',
+        'áo khoác nữ': 'ao-nu', 'ao khoac nu': 'ao-nu',
+        'blazer': 'ao-nu',
+        /* ── Quần Nữ ── */
+        'quần nữ': 'quan-nu', 'quan nu': 'quan-nu',
+        'jeans nữ': 'quan-nu', 'jeans nu': 'quan-nu',
+        'culottes': 'quan-nu', 'palazzo': 'quan-nu',
+        'quần short nữ': 'quan-nu', 'quan short nu': 'quan-nu',
+        'legging': 'quan-nu',
+        'quần tây nữ': 'quan-nu', 'quan tay nu': 'quan-nu',
+        'jogger nữ': 'quan-nu', 'jogger nu': 'quan-nu',
+        /* ── Sale ── */
+        'sale': 'sale', 'giảm giá': 'sale', 'giam gia': 'sale', 'rẻ': 'sale', 're': 'sale',
+        /* ── Generic category / gender ── */
+        'áo': 'ao-', 'ao': 'ao-',
+        'quần': 'quan-', 'quan': 'quan-',
+        'giày': 'giay-', 'giay': 'giay-', 'dép': 'giay-', 'dep': 'giay-',
+        'đồ nam': '-nam', 'do nam': '-nam', 'đồ nữ': '-nu', 'do nu': '-nu'
+    };
+
+    /* ── handleSearch: The Brain ── */
+    function handleSearch(rawQuery) {
+        var query = sanitizeQuery(rawQuery);
+        var nQuery = normalizeVN(query);
+
+        /* Empty / garbage → show sale fallback */
+        if (!nQuery || !nQuery.replace(/\s+/g, '')) {
+            return { items: getSaleProducts(4), title: 'Có thể bạn sẽ thích', matchType: 'sale' };
+        }
+
+        var results = [];
+        var matchType = 'name';
+
+        /* ── Step 1: Name + SKU + Category full scan ── */
+        results = PRODUCTS.filter(function (p) {
+            var nName = normalizeVN(p.name);
+            var nSku  = normalizeVN(p.sku);
+            var nCat  = normalizeVN(p.category);
+            return nName.indexOf(nQuery) !== -1
+                || nSku.indexOf(nQuery) !== -1
+                || nCat.indexOf(nQuery) !== -1;
+        });
+
+        /* ── Step 2: Intent Mapping (hidden SKU mapping) ── */
+        if (!results.length) {
+            matchType = 'category';
+            var intentSlug = resolveIntent(query, nQuery);
+            if (intentSlug) {
+                results = PRODUCTS.filter(function (p) {
+                    return p.sku.indexOf(intentSlug) !== -1;
+                });
+            }
+        }
+
+        /* ── Step 3: Alias fallback (similarity) ── */
+        if (!results.length) {
+            var aliased = findAlias(nQuery);
+            if (aliased) {
+                matchType = 'alias';
+                results = PRODUCTS.filter(function (p) {
+                    return p.sku.indexOf(aliased) !== -1;
+                });
+            }
+        }
+
+        /* ── Step 4: Strict Magic 4 Rule ── */
+        if (results.length === 0) {
+            return { items: getSaleProducts(4), title: 'Không tìm thấy kết quả. Gợi ý cho bạn:', matchType: 'sale' };
+        }
+
+        if (results.length >= 4) {
+            /* STRICT: only show matched products, NO padding with unrelated items */
+            results = results.slice(0, 4);
+        } else {
+            /* < 4: pad with same-category first, then phu-kien */
+            results = padResults(results, 4);
+        }
+
+        return { items: results, title: 'Kết quả tìm kiếm', matchType: matchType };
+    }
+
+    /* Resolve intent: maps Vietnamese keywords → SKU slug pattern */
+    function resolveIntent(query, nQuery) {
+        /* Sort by key length DESC so longer phrases match first */
+        var keys = Object.keys(INTENT_MAP).sort(function (a, b) { return b.length - a.length; });
+        var slugParts = [];
+        var consumed = {};
+
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var nKey = normalizeVN(key);
+            if (nQuery.indexOf(nKey) !== -1 && !consumed[INTENT_MAP[key]]) {
+                slugParts.push(INTENT_MAP[key]);
+                consumed[INTENT_MAP[key]] = true;
+            }
+        }
+
+        if (!slugParts.length) return null;
+
+        /* Separate category slugs from gender modifiers */
+        var cats = slugParts.filter(function (s) { return s !== '-nam' && s !== '-nu'; });
+        var genders = slugParts.filter(function (s) { return s === '-nam' || s === '-nu'; });
+
+        if (cats.length) {
+            var primary = cats[0];
+            /* Combine category + gender when category supports gendered variants */
+            if (genders.length && (primary === 'ao-' || primary === 'quan-' || primary === 'giay-')) {
+                return primary + genders[0].replace('-', '');
+            }
+            return primary;
+        }
+
+        /* Gender-only query: "đồ nam" → match SKUs containing -nam */
+        if (genders.length) return genders[0];
+
+        return null;
+    }
+
+    /* Alias fallback: fuzzy word-level match against INTENT_MAP keys */
+    function findAlias(nQuery) {
+        var words = nQuery.split(/\s+/);
+        var keys = Object.keys(INTENT_MAP).sort(function (a, b) { return b.length - a.length; });
+        for (var w = 0; w < words.length; w++) {
+            for (var i = 0; i < keys.length; i++) {
+                var nKey = normalizeVN(keys[i]);
+                if (nKey.indexOf(words[w]) !== -1 || words[w].indexOf(nKey) !== -1) {
+                    return INTENT_MAP[keys[i]];
+                }
+            }
+        }
+        return null;
+    }
+
+    /* Get N random sale products */
+    function getSaleProducts(n) {
+        var sales = PRODUCTS.filter(function (p) { return p.category === 'sale'; });
+        for (var i = sales.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = sales[i]; sales[i] = sales[j]; sales[j] = tmp;
+        }
+        return sales.slice(0, n);
+    }
+
+    /* Pad results to target count: same-category → phu-kien fallback */
+    function padResults(existing, target) {
+        if (existing.length >= target) return existing;
+
+        var cat = existing[0].category;
+        var usedIds = {};
+        for (var i = 0; i < existing.length; i++) usedIds[existing[i].id] = true;
+
+        /* Same category first */
+        var sameCat = PRODUCTS.filter(function (p) { return p.category === cat && !usedIds[p.id]; });
+        var padded = existing.concat(sameCat);
+
+        /* Still short? Fill with random phu-kien */
+        if (padded.length < target) {
+            var paddedIds = {};
+            for (var k = 0; k < padded.length; k++) paddedIds[padded[k].id] = true;
+            var pk = PRODUCTS.filter(function (p) { return p.category === 'phu-kien' && !paddedIds[p.id]; });
+            for (var s = pk.length - 1; s > 0; s--) {
+                var r = Math.floor(Math.random() * (s + 1));
+                var t = pk[s]; pk[s] = pk[r]; pk[r] = t;
+            }
+            padded = padded.concat(pk);
+        }
+
+        return padded.slice(0, target);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+     *  DYNAMIC CATEGORIES — auto-extracted with display labels
+     * ═══════════════════════════════════════════════════════════════════ */
+    function getUniqueCategories() {
+        var seen = {};
+        var cats = [];
+        for (var i = 0; i < PRODUCTS.length; i++) {
+            var slug = PRODUCTS[i].category;
+            if (slug && !seen[slug]) {
+                seen[slug] = true;
+                cats.push(CATEGORY_LABELS[slug] || slug);
+            }
+        }
+        return cats;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+     *  HIGHLIGHT ENGINE — Smart substring highlighting (Anti-Blur)
+     *  CHỈ in đậm khi query thực sự tồn tại trong tên sản phẩm.
+     *  Nếu sản phẩm tìm ra nhờ Intent hoặc SKU → KHÔNG in đậm.
+     * ═══════════════════════════════════════════════════════════════════ */
+    function getHighlightedText(text, query, matchType) {
+        var safe = escapeHtml(text);
+        if (!query) return safe;
+
+        /* Intent / SKU / sale match → NO highlighting, display normally */
+        if (matchType !== 'name') {
+            return safe;
+        }
+
+        /* Name match → bold ONLY the matching substring (Vietnamese-aware) */
+        var nQuery = removeAccents(query);
+        var nText = removeAccents(text);
+        var idx = nText.indexOf(nQuery);
+
+        if (idx !== -1) {
+            var before = escapeHtml(text.substring(0, idx));
+            var match  = escapeHtml(text.substring(idx, idx + nQuery.length));
+            var after  = escapeHtml(text.substring(idx + nQuery.length));
+            return before + '<strong class="highlight">' + match + '</strong>' + after;
+        }
+
+        return safe;
+    }
+
+    function getCustomerDisplayName(customer) {
+        if (!customer) {
+            return translations.guest || 'Guest';
+        }
+
+        return customer.fullname || customer.firstname || translations.guest || 'Guest';
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function getSearchInput() {
+        return $('#custom-search-input');
+    }
+
+    function hideSearchResults() {
+        $('#search-suggestions-section').prop('hidden', true);
+        $('#search-products-section').prop('hidden', true);
+        $('#search-view-all').prop('hidden', true);
+        $('#search-loading').prop('hidden', true);
+        $('#search-empty-state').show();
+        $('#search-suggestion-pills').empty();
+        $('#search-products-grid').empty();
+        $('#search-input-clear').removeClass('visible');
+    }
+
+    function showLoading() {
+        $('#search-empty-state').hide();
+        $('#search-products-section').prop('hidden', true);
+        $('#search-loading').prop('hidden', false);
+    }
+
+    function hideLoading() {
+        $('#search-loading').prop('hidden', true);
+    }
+
+    function generateSuggestionPills(query) {
+        var q = $.trim(query);
+        var cats = getUniqueCategories();
+        if (!q) return cats;
+
+        /* Start with the typed query itself */
+        var pills = [q];
+        /* Add categories that fuzzy-match the query */
+        for (var i = 0; i < cats.length; i++) {
+            if (removeAccents(cats[i]).indexOf(removeAccents(q)) !== -1 && pills.indexOf(cats[i]) === -1) {
+                pills.push(cats[i]);
+            }
+        }
+        /* Pad with remaining categories up to 6 */
+        for (var j = 0; j < cats.length && pills.length < 6; j++) {
+            if (pills.indexOf(cats[j]) === -1) pills.push(cats[j]);
+        }
+        return pills;
+    }
+
+    function showDefaultState() {
+        var searchUrl = $('#search_form').attr('action');
+        var queryParamName = '<?= $escaper->escapeJs($queryParam) ?>';
+        var pillsHtml = '';
+        var gridHtml = '';
+
+        /* Dynamic suggestion pills from categories */
+        var categories = getUniqueCategories();
+        $.each(categories, function (i, pill) {
+            var pillUrl = searchUrl + '?' + encodeURIComponent(queryParamName) + '=' + encodeURIComponent(pill);
+            pillsHtml += '<a class="search-pill" href="' + escapeHtml(pillUrl) + '">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+                '<span>' + escapeHtml(pill) + '</span></a>';
+        });
+        $('#search-suggestion-pills').html(pillsHtml);
+        $('#search-suggestions-section').prop('hidden', false);
+
+        /* Show 4 random sale products when search box is empty */
+        var defaults = getSaleProducts(4);
+        $.each(defaults, function (i, item) {
+            gridHtml += '<a class="search-product-card" href="/' + escapeHtml(item.sku) + '.html">' +
+                '<div class="search-product-img-wrap">' +
+                '<img class="search-product-img" src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
+                '</div>' +
+                '<div class="search-product-name">' + escapeHtml(item.name) + '</div>' +
+                '<div class="search-product-sku">' + escapeHtml(item.sku) + '</div>' +
+                '<div class="search-product-price">' + escapeHtml(item.price) + '</div>' +
+                '</a>';
+        });
+        $('#search-products-grid').html(gridHtml);
+        $('#search-products-section .search-section-title').text('Có thể bạn sẽ thích');
+        $('#search-products-section').prop('hidden', false);
+
+        /* View all */
+        $('#search-view-all-btn').attr('href', searchUrl);
+        $('#search-view-all').prop('hidden', false);
+        $('#search-empty-state').hide();
+    }
+
+    function renderSearchResults(query) {
+        var $pills = $('#search-suggestion-pills');
+        var $grid = $('#search-products-grid');
+        var pillsHtml = '';
+        var gridHtml = '';
+        var pillItems = generateSuggestionPills(query);
+        var searchUrl = $('#search_form').attr('action');
+        var queryParamName = '<?= $escaper->escapeJs($queryParam) ?>';
+
+        hideLoading();
+
+        /* Clear input indicator */
+        if ($.trim(query)) {
+            $('#search-input-clear').addClass('visible');
+        } else {
+            $('#search-input-clear').removeClass('visible');
+        }
+
+        /* Suggestion pills */
+        $.each(pillItems, function (i, pill) {
+            var pillUrl = searchUrl + '?' + encodeURIComponent(queryParamName) + '=' + encodeURIComponent(pill);
+            pillsHtml += '<a class="search-pill" href="' + escapeHtml(pillUrl) + '">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+                '<span>' + escapeHtml(pill) + '</span></a>';
+        });
+
+        $pills.html(pillsHtml);
+        $('#search-suggestions-section').prop('hidden', !pillsHtml);
+
+        /* ─── Intent-based search with Magic 4 Rule ─── */
+        var result = handleSearch(query);
+        var displayItems = result.items;
+        var matchType = result.matchType;
+
+        /* Update section title dynamically */
+        $('#search-products-section .search-section-title').text(result.title);
+
+        $.each(displayItems, function (i, item) {
+            if (!item || !item.name) return;
+            var href = '/' + escapeHtml(item.sku) + '.html';
+            gridHtml += '<a class="search-product-card" href="' + href + '">' +
+                '<div class="search-product-img-wrap">' +
+                '<img class="search-product-img" src="' + escapeHtml(item.image || '') + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
+                '</div>' +
+                '<div class="search-product-name">' + getHighlightedText(item.name, query, matchType) + '</div>' +
+                '<div class="search-product-sku">' + escapeHtml(item.sku || '') + '</div>' +
+                '<div class="search-product-price">' + escapeHtml(item.price || '') + '</div>' +
+                '</a>';
+        });
+
+        $grid.html(gridHtml);
+        $('#search-products-section').prop('hidden', !gridHtml);
+
+        /* View all button */
+        var viewAllUrl = searchUrl + '?' + encodeURIComponent(queryParamName) + '=' + encodeURIComponent(query);
+        $('#search-view-all-btn').attr('href', viewAllUrl);
+        $('#search-view-all').prop('hidden', false);
+
+        /* Hide empty state */
+        $('#search-empty-state').hide();
+    }
+
+    function updateSearchPlaceholder() {
+        var $searchInput = getSearchInput();
+        var currentTerm;
+
+        if (!$searchInput.length || ($searchInput.is(':focus') && $.trim($searchInput.val()))) {
+            return;
+        }
+
+        currentTerm = popularSearchTerms.length
+            ? popularSearchTerms[placeholderIndex % popularSearchTerms.length]
+            : (translations.searchPlaceholderFallback || 'products');
+
+        $searchInput.attr(
+            'placeholder',
+            (translations.searchPlaceholderPattern || 'Search "%1"').replace('%1', currentTerm)
+        );
+    }
+
+    function startPlaceholderRotation() {
+        updateSearchPlaceholder();
+
+        if (placeholderIntervalId || popularSearchTerms.length <= 1) {
+            return;
+        }
+
+        placeholderIntervalId = window.setInterval(function () {
+            var $searchInput = getSearchInput();
+
+            if (!$searchInput.length || $searchInput.is(':focus') || $.trim($searchInput.val())) {
+                return;
+            }
+
+            placeholderIndex = (placeholderIndex + 1) % popularSearchTerms.length;
+            updateSearchPlaceholder();
+        }, 3000);
+    }
+
+    function fetchSearchSuggestions() {
+        var query = $.trim(getSearchInput().val());
+
+        if (!query.length) {
+            hideSearchResults();
+            showDefaultState();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        /* ─── Instant client-side results via intent engine ─── */
+        renderSearchResults(query);
+
+        /* Fire-and-forget API call (results already shown from local DB) */
+        suggestionRequest = $.ajax({
+            url: suggestProductsUrl,
+            data: { q: query },
+            dataType: 'json',
+            cache: false
+        }).done(function () {
+            /* API results ignored — local intent engine handles display */
+        }).fail(function () {
+            /* Local results already showing, nothing to do */
+        });
+    }
+
+    function isCustomerLoggedIn(customer) {
+        return !!(customer && (customer.fullname || customer.firstname));
+    }
+
+    function renderCustomerState(customer) {
+        var loggedIn = isCustomerLoggedIn(customer);
+
+        $('#custom-welcome').text((translations.welcome || 'Welcome, %1!').replace('%1', getCustomerDisplayName(customer)));
+        $('.auth-menu-item[data-auth-state="logged-in"]').prop('hidden', !loggedIn);
+        $('.auth-menu-item[data-auth-state="guest"]').prop('hidden', loggedIn);
+    }
+
+    function toggleMenu(show) {
+        $('#dior-side-menu').toggleClass('open', show);
+        $('#menu-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#search-overlay').hasClass('show'));
+    }
+
+    function toggleSearch(show) {
+        $('#search-bar').toggleClass('show', show);
+        $('#search-overlay').toggleClass('show', show);
+        $('body').toggleClass('csc-no-scroll', show || $('#menu-overlay').hasClass('show'));
+
+        if (show) {
+            window.setTimeout(function () {
+                getSearchInput().trigger('focus');
+                updateSearchPlaceholder();
+                /* Show default state with mock products and suggestions immediately */
+                if (!$.trim(getSearchInput().val())) {
+                    showDefaultState();
+                }
+            }, 180);
+            return;
+        }
+
+        if (suggestionRequest && suggestionRequest.readyState !== 4) {
+            suggestionRequest.abort();
+        }
+
+        window.clearTimeout(suggestionTimerId);
+        getSearchInput().val('');
+        hideSearchResults();
+        updateSearchPlaceholder();
+    }
+
+    $(document).on('click', '#custom-hamburger', function () { toggleMenu(true); });
+    $(document).on('click', '#close-btn, #menu-overlay', function () { toggleMenu(false); });
+    $(document).on('click', '#custom-search-icon', function () { toggleSearch(true); });
+    $(document).on('click focus', '#inline-search-trigger', function () { toggleSearch(true); });
+    $(document).on('click', '#search-close, #search-overlay', function () { toggleSearch(false); });
+
+    /* Clicking a suggestion pill triggers in-overlay search instead of navigating */
+    $(document).on('click', '.search-pill', function (e) {
+        e.preventDefault();
+        var pillText = $(this).find('span').text();
+        getSearchInput().val(pillText);
+        $('#search-input-clear').addClass('visible');
+        fetchSearchSuggestions();
+    });
+
+    renderCustomerState(customerData.get('customer')());
+    customerData.get('customer').subscribe(renderCustomerState);
+    startPlaceholderRotation();
+
+    $(document).on('input propertychange', '#custom-search-input', function () {
+        window.clearTimeout(suggestionTimerId);
+
+        var val = $.trim(this.value);
+        if (val) {
+            $('#search-input-clear').addClass('visible');
+        } else {
+            $('#search-input-clear').removeClass('visible');
+        }
+
+        if (!val) {
+            hideSearchResults();
+            showDefaultState();
+            updateSearchPlaceholder();
+            return;
+        }
+
+        suggestionTimerId = window.setTimeout(fetchSearchSuggestions, 220);
+    });
+
+    $(document).on('click', '#search-input-clear', function () {
+        getSearchInput().val('').trigger('focus');
+        hideSearchResults();
+        showDefaultState();
+        updateSearchPlaceholder();
+    });
+
+    $(document).on('focus', '#custom-search-input', function () {
+        updateSearchPlaceholder();
+
+        if ($.trim(this.value).length) {
+            fetchSearchSuggestions();
+        }
+    });
+
+    $(document).on('keydown', '#custom-search-input', function (event) {
+        if (event.key === 'Escape') {
+            toggleSearch(false);
+        }
+    });
+
+    $(document).on('submit', '#search_form', function (event) {
+        if (!$.trim(getSearchInput().val())) {
+            event.preventDefault();
+        }
+    });
+
+    $.getJSON(weatherUrl)
+        .done(function (data) {
+            if (data && typeof data.temp !== 'undefined' && data.temp !== null) {
+                $('#w-temp').text(data.temp + ' C');
+            }
+
+            if (data && data.icon) {
+                $('#w-icon').attr('src', data.icon).prop('hidden', false);
+                return;
+            }
+
+            $('#w-icon').attr('src', '').prop('hidden', true);
+        })
+        .fail(function () {
+        $('#w-temp').text('-- C');
+        $('#w-icon').attr('src', '').prop('hidden', true);
+    });
+
+    $.getJSON(newsUrl)
+        .done(function (response) {
+            if (response && response.title && response.link) {
+                $('#news-title').text(response.title).attr('href', response.link);
+            }
+        })
+        .fail(function () {
+            $('#news-title').text(translations.newsLoadFailed || 'Could not load news');
+        });
+});
+</script>

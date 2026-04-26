@@ -11,9 +11,17 @@
 <?php $buyNowTitle = __('Mua ngay'); ?>
 <?php
 $productUrl = $_product ? (string) $_product->getProductUrl() : '';
+$productName = $_product ? (string) $_product->getName() : '';
 $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($productUrl);
-$instagramShareUrl = 'https://www.instagram.com/';
-$loginUrl = $block->getUrl('customer/account/login');
+$instagramShareUrl = 'https://www.instagram.com/?url=' . rawurlencode($productUrl);
+$xShareUrl = 'https://twitter.com/intent/tweet?url=' . rawurlencode($productUrl) . '&text=' . rawurlencode($productName);
+$mediaBaseUrl = rtrim((string) $block->getBaseUrl(), '/') . '/media/';
+$facebookIconUrl = $mediaBaseUrl . 'share-icons/facebook.png';
+$instagramIconUrl = $mediaBaseUrl . 'share-icons/instagram.png';
+$xIconUrl = $mediaBaseUrl . 'share-icons/x.png';
+$loginReferer = $productUrl !== '' ? base64_encode($productUrl) : '';
+$loginParams = $loginReferer !== '' ? ['referer' => $loginReferer] : [];
+$loginUrl = $block->getUrl('customer/account/login', $loginParams);
 ?>
 <?php if ($_product->isSaleable()) :?>
 <div class="box-tocart fashionstore-pdp-buybox">
@@ -71,20 +79,40 @@ $loginUrl = $block->getUrl('customer/account/login');
 		<div class="fashionstore-buy-now-size-required" data-role="buy-now-size-required" hidden>
 			<?= $block->escapeHtml(__('Vui lòng chọn size trước khi mua ngay.')) ?>
 		</div>
-		<div class="fashionstore-share-actions" aria-label="<?= $block->escapeHtmlAttr(__('Chia sẻ sản phẩm')) ?>">
-			<a class="fashionstore-share-link facebook"
-			   href="<?= $block->escapeUrl($facebookShareUrl) ?>"
-			   target="_blank"
-			   rel="noopener noreferrer">
-				<span><?= $block->escapeHtml(__('Chia sẻ Facebook')) ?></span>
-			</a>
-			<a class="fashionstore-share-link instagram"
-			   href="<?= $block->escapeUrl($instagramShareUrl) ?>"
-			   target="_blank"
-			   rel="noopener noreferrer"
-			   title="<?= $block->escapeHtmlAttr(__('Mở Instagram để chia sẻ link sản phẩm')) ?>">
-				<span><?= $block->escapeHtml(__('Chia sẻ Instagram')) ?></span>
-			</a>
+		<div class="fashionstore-share" data-role="share-wrap">
+			<button type="button"
+					class="fashionstore-share-toggle"
+					data-role="share-toggle"
+					aria-label="<?= $block->escapeHtmlAttr(__('Chia sẻ sản phẩm')) ?>"
+					aria-expanded="false">
+				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+					<path d="M12 3l4.5 4.5-1.4 1.4-2.1-2.1V15h-2V6.8L8.9 8.9 7.5 7.5 12 3zm-6 12h12v6H6v-6zm2 2v2h8v-2H8z"></path>
+				</svg>
+			</button>
+			<div class="fashionstore-share-modal" data-role="share-modal" hidden>
+				<div class="fashionstore-share-modal__backdrop" data-role="share-close"></div>
+				<div class="fashionstore-share-modal__dialog" data-role="share-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="fashionstore-share-title">
+					<h3 id="fashionstore-share-title"><?= $block->escapeHtml(__('Chia sẻ')) ?></h3>
+					<p><?= $block->escapeHtml(__('Hãy chia sẻ nội dung này lên tài khoản xã hội của bạn.')) ?></p>
+					<div class="fashionstore-share-modal__actions">
+						<a class="fashionstore-share-link fashionstore-share-link-x"
+						   href="<?= $block->escapeUrl($xShareUrl) ?>"
+						   target="_blank"
+						   rel="noopener noreferrer"
+						   aria-label="<?= $block->escapeHtmlAttr(__('Share on X')) ?>">
+							<img src="<?= $block->escapeUrl($xIconUrl) ?>" alt="<?= $block->escapeHtmlAttr(__('X')) ?>">
+						</a>
+						<a class="fashionstore-share-link fashionstore-share-link-facebook"
+						   href="<?= $block->escapeUrl($facebookShareUrl) ?>"
+						   target="_blank"
+						   rel="noopener noreferrer"
+						   aria-label="<?= $block->escapeHtmlAttr(__('Share on Facebook')) ?>">
+							<img src="<?= $block->escapeUrl($facebookIconUrl) ?>" alt="<?= $block->escapeHtmlAttr(__('Facebook')) ?>">
+						</a>
+					</div>
+					<button type="button" class="fashionstore-share-cancel" data-role="share-close-btn"><?= $block->escapeHtml(__('HUỶ')) ?></button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -228,11 +256,9 @@ $loginUrl = $block->getUrl('customer/account/login');
 		display: none !important;
 	}
 
-	.catalog-product-view .fashionstore-share-actions {
-		display: flex;
-		gap: 10px;
+	.catalog-product-view .fashionstore-share {
 		margin-top: 14px;
-		flex-wrap: wrap;
+		position: relative;
 	}
 
 	.catalog-product-view .fashionstore-buy-now-login-required {
@@ -255,27 +281,113 @@ $loginUrl = $block->getUrl('customer/account/login');
 		font-weight: 600;
 	}
 
-	.catalog-product-view .fashionstore-share-link {
+	.catalog-product-view .fashionstore-share-toggle {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 40px;
-		padding: 0 14px;
-		border-radius: 999px;
-		font-size: 13px;
+		width: 38px;
+		height: 38px;
+		border: 1px solid #8fa8bf;
+		border-radius: 50%;
+		background: #fff;
+		padding: 0;
+	}
+
+	.catalog-product-view .fashionstore-share-toggle svg {
+		width: 17px;
+		height: 17px;
+		fill: #1f2e3d;
+	}
+
+	.catalog-product-view .fashionstore-share-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 9998;
+		display: none;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.catalog-product-view .fashionstore-share-modal[hidden] {
+		display: none;
+	}
+
+	.catalog-product-view .fashionstore-share-modal.is-open {
+		display: flex;
+	}
+
+	.catalog-product-view .fashionstore-share-modal__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.46);
+	}
+
+	.catalog-product-view .fashionstore-share-modal__dialog {
+		position: relative;
+		width: min(720px, calc(100% - 30px));
+		background: #fff;
+		border-radius: 4px;
+		padding: 26px 20px 20px;
+		z-index: 2;
+		text-align: left;
+	}
+
+	.catalog-product-view .fashionstore-share-modal__dialog h3 {
+		margin: 0 0 8px;
+		font-size: 18px;
+		line-height: 1.1;
 		font-weight: 500;
+		color: #000;
+	}
+
+	.catalog-product-view .fashionstore-share-modal__dialog p {
+		margin: 0 0 22px;
+		font-size: 14px;
+		line-height: 1.32;
+		color: #111;
+	}
+
+	.catalog-product-view .fashionstore-share-modal__actions {
+		display: flex;
+		justify-content: center;
+		gap: 12px;
+		margin-bottom: 22px;
+	}
+
+	.catalog-product-view .fashionstore-share-link {
+		width: 46px;
+		height: 46px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		text-decoration: none;
-		border: 1px solid #d5d5d5;
+		border-radius: 10px;
+		overflow: hidden;
 	}
 
-	.catalog-product-view .fashionstore-share-link.facebook {
-		color: #1877f2;
-		border-color: #1877f2;
+	.catalog-product-view .fashionstore-share-link img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
 	}
 
-	.catalog-product-view .fashionstore-share-link.instagram {
-		color: #c13584;
-		border-color: #c13584;
+	.catalog-product-view .fashionstore-share-cancel {
+		display: block;
+		width: min(290px, 100%);
+		height: 44px;
+		margin: 0 auto;
+		border: 1px solid #333;
+		border-radius: 999px;
+		background: #fff;
+		color: #222;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: .08em;
+	}
+
+	body.fashionstore-share-open {
+		overflow: hidden;
 	}
 
 	@media (max-width: 767px) {
@@ -287,6 +399,18 @@ $loginUrl = $block->getUrl('customer/account/login');
 		.catalog-product-view .fashionstore-pdp-buybox .actions.fashionstore-product-actions .action {
 			width: 100%;
 			font-size: 15px;
+		}
+
+		.catalog-product-view .fashionstore-share-modal__dialog h3 {
+			font-size: 16px;
+		}
+
+		.catalog-product-view .fashionstore-share-modal__dialog p {
+			font-size: 13px;
+		}
+
+		.catalog-product-view .fashionstore-share-cancel {
+			font-size: 12px;
 		}
 	}
 </style>

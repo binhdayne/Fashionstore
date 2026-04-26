@@ -198,6 +198,38 @@ $checkoutStyle = <<<'STYLE'
     font-weight: var(--font-weight-medium) !important;
 }
 
+.checkout-index-index .fs-checkout-step-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+}
+
+.checkout-index-index .fs-checkout-action {
+    min-height: 40px !important;
+    padding: 0 16px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 999px !important;
+    background: var(--secondary) !important;
+    color: var(--foreground) !important;
+    font-size: 14px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+}
+
+.checkout-index-index .fs-checkout-action:hover {
+    border-color: var(--ring) !important;
+}
+
+.checkout-index-index .fs-checkout-action.is-active,
+.checkout-index-index .fs-checkout-step-actions[data-mode='address'] .fs-checkout-action-address,
+.checkout-index-index .fs-checkout-step-actions[data-mode='payment'] .fs-checkout-action-payment {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+}
+
 .checkout-index-index .checkout-container {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) 340px !important;
@@ -301,9 +333,7 @@ $checkoutStyle = <<<'STYLE'
 }
 
 .checkout-index-index #opc-shipping_method {
-    margin-top: 28px !important;
-    padding-top: 28px !important;
-    border-top: 1px solid var(--border) !important;
+    display: none !important;
 }
 
 .checkout-index-index #opc-shipping_method .step-title:after {
@@ -312,6 +342,36 @@ $checkoutStyle = <<<'STYLE'
     font-size: 1.375rem !important;
     font-weight: var(--font-weight-medium) !important;
     line-height: 1.4 !important;
+}
+
+.checkout-index-index #shipping,
+.checkout-index-index #opc-payment {
+    display: block !important;
+}
+
+.checkout-index-index #opc-payment {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+}
+
+.checkout-index-index #opc-payment .step-title {
+    margin: 0 0 20px !important;
+    font-size: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index #opc-payment .step-title:after {
+    content: 'Phương thức thanh toán';
+    color: var(--foreground) !important;
+    font-size: 1.375rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.4 !important;
+}
+
+.checkout-index-index .fs-checkout-breadcrumb[data-step='payment'] {
+    color: var(--foreground) !important;
+    font-weight: var(--font-weight-medium) !important;
 }
 
 .checkout-index-index .fieldset,
@@ -638,10 +698,7 @@ STYLE;
         <span class="fs-checkout-breadcrumb" data-step="cart">
             <a class="fs-checkout-breadcrumb-link" href="<?= $block->escapeUrl($block->getUrl('checkout/cart')) ?>">Giỏ hàng</a>
         </span>
-        <span class="fs-checkout-breadcrumb is-active" data-step="shipping">
-            <button class="fs-checkout-breadcrumb-button" type="button">Thông tin giao hàng</button>
-        </span>
-        <span class="fs-checkout-breadcrumb" data-step="payment">
+        <span class="fs-checkout-breadcrumb is-active" data-step="payment">
             <button class="fs-checkout-breadcrumb-button" type="button">Phương thức thanh toán</button>
         </span>
     </nav>
@@ -688,83 +745,200 @@ script;
         require([
             'jquery',
             'Magento_Checkout/js/model/step-navigator',
-            'uiRegistry'
-        ], function ($, stepNavigator, registry) {
-            var breadcrumbSelector = '.fs-checkout-breadcrumb',
-                activeClass = 'is-active',
-                disabledClass = 'is-disabled',
-                shippingComponent;
+            'uiRegistry',
+            'Magento_Checkout/js/model/quote',
+            'Magento_Checkout/js/model/shipping-rate-service',
+            'Magento_Checkout/js/action/select-shipping-method'
+        ], function ($, stepNavigator, registry, quote, shippingRateService, selectShippingMethodAction) {
+            var shippingComponent,
+                billingComponent;
 
-            function getCurrentStep() {
-                var hash = window.location.hash.replace('#', '');
+            function ensurePaymentStepVisible() {
+                if (billingComponent && typeof billingComponent.isVisible === 'function') {
+                    billingComponent.isVisible(true);
+                }
 
-                return hash || 'shipping';
+                $('.fs-checkout-breadcrumb[data-step="payment"]')
+                    .addClass('is-active')
+                    .removeClass('is-disabled');
             }
 
-            function canOpenPayment() {
-                return getCurrentStep() === 'payment' || stepNavigator.isProcessed('payment');
-            }
+            function setCheckoutActionMode(mode) {
+                var stepActions = $('.fs-checkout-step-actions');
 
-            function updateBreadcrumbState() {
-                var currentStep = getCurrentStep();
-
-                $(breadcrumbSelector).each(function () {
-                    var element = $(this),
-                        step = element.data('step'),
-                        isPaymentLocked = step === 'payment' && !canOpenPayment();
-
-                    element.toggleClass(activeClass, step === currentStep);
-                    element.toggleClass(disabledClass, isPaymentLocked);
-                });
-            }
-
-            function navigateToShipping() {
-                if (getCurrentStep() === 'shipping') {
+                if (!stepActions.length) {
                     return;
                 }
 
-                stepNavigator.navigateTo('shipping');
-                updateBreadcrumbState();
+                stepActions.attr('data-mode', mode);
+                stepActions.find('.fs-checkout-action').removeClass('is-active');
+
+                if (mode === 'address') {
+                    stepActions.find('.fs-checkout-action-address').addClass('is-active');
+                    return;
+                }
+
+                stepActions.find('.fs-checkout-action-payment').addClass('is-active');
             }
 
-            function navigateToPayment() {
-                if (canOpenPayment()) {
-                    stepNavigator.navigateTo('payment');
-                    updateBreadcrumbState();
+            function toggleAddressEditor(isEnabled) {
+                $('#shipping, #opc-shipping_method')
+                    .find('input, select, textarea, button')
+                    .prop('disabled', !isEnabled);
 
+                $('#shipping, #opc-shipping_method')[isEnabled ? 'show' : 'hide']();
+
+                $('.billing-address-same-as-shipping-block input[type="checkbox"]')
+                    .prop('checked', true)
+                    .prop('disabled', !isEnabled)
+                    .trigger('change');
+
+                $('.billing-address-form, .form-billing-address, .billing-address-same-as-shipping-block, .billing-address-details .action-edit, .action-update')
+                    .find('input, select, textarea, button')
+                    .prop('disabled', !isEnabled);
+
+                $('.billing-address-form, .form-billing-address, .billing-address-same-as-shipping-block, .billing-address-details .action-edit, .action-update')[isEnabled ? 'show' : 'hide']();
+
+                setCheckoutActionMode(isEnabled ? 'address' : 'payment');
+            }
+
+            function navigateToPaymentStep() {
+                if (shippingComponent && typeof shippingComponent.validateShippingInformation === 'function') {
+                    if (shippingComponent.validateShippingInformation()) {
+                        shippingComponent.setShippingInformation();
+                    }
+                }
+
+                syncShippingInformationForTotals();
+
+                ensurePaymentStepVisible();
+                stepNavigator.navigateTo('payment');
+                if (window.location.hash !== '#payment') {
+                    if (window.history && typeof window.history.replaceState === 'function') {
+                        window.history.replaceState(null, '', window.location.pathname + window.location.search + '#payment');
+                    } else {
+                        window.location.hash = '#payment';
+                    }
+                }
+                toggleAddressEditor(false);
+                scrollToStep('#opc-payment');
+            }
+
+            function openAddressEditor() {
+                ensurePaymentStepVisible();
+                toggleAddressEditor(true);
+                scrollToStep('#shipping');
+            }
+
+            function syncShippingInformationForTotals() {
+                var ratesObservable,
+                    availableRates,
+                    firstRate;
+
+                if (!shippingComponent || typeof shippingComponent.setShippingInformation !== 'function') {
                     return;
                 }
 
-                if (!shippingComponent) {
+                if (typeof quote.isVirtual === 'function' && quote.isVirtual()) {
                     return;
                 }
 
-                if (shippingComponent.validateShippingInformation()) {
-                    shippingComponent.setShippingInformation();
-                } else if ($('#shipping').length) {
-                    $('html, body').animate({
-                        scrollTop: $('#shipping').offset().top
-                    }, 0);
+                if (!quote.shippingMethod || !quote.shippingMethod()) {
+                    ratesObservable = shippingRateService.getShippingRates();
+                    availableRates = ratesObservable && typeof ratesObservable === 'function' ? ratesObservable() : [];
+
+                    if (!availableRates || !availableRates.length) {
+                        return;
+                    }
+
+                    firstRate = availableRates[0];
+                    if (firstRate) {
+                        selectShippingMethodAction(firstRate);
+                    }
                 }
 
-                updateBreadcrumbState();
+                shippingComponent.setShippingInformation();
+            }
+
+            function scrollToStep(stepSelector) {
+                var stepElement = $(stepSelector);
+
+                if (!stepElement.length) {
+                    return;
+                }
+
+                $('html, body').animate({
+                    scrollTop: Math.max(stepElement.offset().top - 16, 0)
+                }, 180);
             }
 
             registry.async('checkout.steps.shipping-step')(function (component) {
                 shippingComponent = component;
-                updateBreadcrumbState();
+                syncShippingInformationForTotals();
             });
 
-            $(document).on('click', '.fs-checkout-breadcrumb[data-step="shipping"] .fs-checkout-breadcrumb-button', function () {
-                navigateToShipping();
+            registry.async('checkout.steps.billing-step')(function (component) {
+                billingComponent = component;
+                ensurePaymentStepVisible();
             });
+
+            if (quote.shippingMethod && typeof quote.shippingMethod.subscribe === 'function') {
+                quote.shippingMethod.subscribe(function () {
+                    syncShippingInformationForTotals();
+                });
+            }
+
+            if (shippingRateService && typeof shippingRateService.getShippingRates === 'function') {
+                (function () {
+                    var ratesObservable = shippingRateService.getShippingRates();
+                    if (ratesObservable && typeof ratesObservable.subscribe === 'function') {
+                        ratesObservable.subscribe(function () {
+                            syncShippingInformationForTotals();
+                        });
+                    }
+                })();
+            }
 
             $(document).on('click', '.fs-checkout-breadcrumb[data-step="payment"] .fs-checkout-breadcrumb-button', function () {
-                navigateToPayment();
+                navigateToPaymentStep();
             });
 
-            $(window).on('hashchange', updateBreadcrumbState);
-            $(document).ready(updateBreadcrumbState);
+            $(document).on('click', '.fs-checkout-action-address', function () {
+                openAddressEditor();
+            });
+
+            $(document).on('click', '.fs-checkout-action-payment', function () {
+                navigateToPaymentStep();
+            });
+
+            $(document).on('click', 'a[href="#shipping"], a[href$="#shipping"]', function (event) {
+                event.preventDefault();
+                openAddressEditor();
+            });
+
+            $(window).on('hashchange', function () {
+                if (window.location.hash !== '#payment') {
+                    navigateToPaymentStep();
+                    return;
+                }
+
+                toggleAddressEditor(false);
+                window.setTimeout(ensurePaymentStepVisible, 0);
+            });
+
+            $(document).ready(function () {
+                navigateToPaymentStep();
+                toggleAddressEditor(false);
+
+                window.setTimeout(function () {
+                    toggleAddressEditor(false);
+                }, 200);
+                window.setTimeout(function () {
+                    toggleAddressEditor(false);
+                }, 800);
+                window.setTimeout(ensurePaymentStepVisible, 400);
+                window.setTimeout(ensurePaymentStepVisible, 1200);
+            });
         });
 script;
     ?>

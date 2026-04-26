@@ -16,12 +16,17 @@
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
+                                                                <item name="vnpay" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Vnpay_Payment/js/view/payment/vnpay</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="vnpay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
                                                                 <item name="fashionstore-local-payments" xsi:type="array">
                                                                     <item name="component" xsi:type="string">FashionStore_CartOptions/js/view/payment/fashionstore-payments-v2</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="fashionstore_vnpay" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
                                                                         <item name="fashionstore_momo" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>

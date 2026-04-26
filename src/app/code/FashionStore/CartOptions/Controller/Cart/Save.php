@@ -94,7 +94,11 @@ class Save extends Action
                 $checkoutQuote = $this->buildCheckoutQuoteFromSelection($quote, $selectedItems);
 
                 if (!$checkoutQuote->isVirtual()) {
-                    $this->updateShippingAddress($checkoutQuote);
+                    if ($this->hasShippingAddressInput()) {
+                        $this->updateShippingAddress($checkoutQuote);
+                    } else {
+                        $this->retainExistingShippingMethod($checkoutQuote);
+                    }
                 }
 
                 $this->applyPaymentMethod($checkoutQuote);
@@ -175,8 +179,10 @@ class Save extends Action
     {
         $checkoutQuote = $this->quoteFactory->create();
         $checkoutQuote->setStoreId((int) $sourceQuote->getStoreId());
+        $checkoutQuote->setStore($sourceQuote->getStore());
         $checkoutQuote->setIsActive(true);
         $checkoutQuote->setInventoryProcessed(false);
+        $this->applyCurrencyContextFromSourceQuote($checkoutQuote, $sourceQuote);
 
         if ($this->customerSession->isLoggedIn()) {
             $customer = $this->customerRepository->getById((int) $this->customerSession->getCustomerId());
@@ -207,7 +213,54 @@ class Save extends Action
             throw new LocalizedException(__('Vui long chon it nhat mot san pham de thanh toan.'));
         }
 
+        $this->copyAddressFromSourceQuote($checkoutQuote, $sourceQuote);
+
         return $checkoutQuote;
+    }
+
+    private function copyAddressFromSourceQuote(Quote $targetQuote, Quote $sourceQuote): void
+    {
+        $targetShippingAddress = $targetQuote->getShippingAddress();
+        $sourceShippingAddress = $sourceQuote->getShippingAddress();
+
+        if ($sourceShippingAddress && $sourceShippingAddress->getId()) {
+            $targetShippingAddress->addData($sourceShippingAddress->getData());
+            $targetShippingAddress->setId(null);
+            $targetShippingAddress->setQuoteId(null);
+            $targetShippingAddress->setCustomerAddressId($sourceShippingAddress->getCustomerAddressId());
+
+            if ($sourceShippingAddress->getShippingMethod()) {
+                $targetShippingAddress->setShippingMethod((string) $sourceShippingAddress->getShippingMethod());
+            }
+        }
+
+        $targetBillingAddress = $targetQuote->getBillingAddress();
+        $sourceBillingAddress = $sourceQuote->getBillingAddress();
+
+        if ($sourceBillingAddress && $sourceBillingAddress->getId()) {
+            $targetBillingAddress->addData($sourceBillingAddress->getData());
+            $targetBillingAddress->setId(null);
+            $targetBillingAddress->setQuoteId(null);
+            $targetBillingAddress->setCustomerAddressId($sourceBillingAddress->getCustomerAddressId());
+        }
+    }
+
+    private function applyCurrencyContextFromSourceQuote(Quote $targetQuote, Quote $sourceQuote): void
+    {
+        $targetQuote->setGlobalCurrencyCode((string) $sourceQuote->getGlobalCurrencyCode());
+        $targetQuote->setBaseCurrencyCode((string) $sourceQuote->getBaseCurrencyCode());
+        $targetQuote->setStoreCurrencyCode((string) $sourceQuote->getStoreCurrencyCode());
+        $targetQuote->setQuoteCurrencyCode((string) $sourceQuote->getQuoteCurrencyCode());
+
+        $targetQuote->setStoreToBaseRate($this->normalizeRate((float) $sourceQuote->getStoreToBaseRate()));
+        $targetQuote->setStoreToQuoteRate($this->normalizeRate((float) $sourceQuote->getStoreToQuoteRate()));
+        $targetQuote->setBaseToGlobalRate($this->normalizeRate((float) $sourceQuote->getBaseToGlobalRate()));
+        $targetQuote->setBaseToQuoteRate($this->normalizeRate((float) $sourceQuote->getBaseToQuoteRate()));
+    }
+
+    private function normalizeRate(float $rate): float
+    {
+        return $rate > 0 ? $rate : 1.0;
     }
 
     private function applyPaymentMethod(Quote $quote): void
@@ -310,6 +363,45 @@ class Save extends Action
         if ($currentShippingMethod !== '') {
             $shippingAddress->setShippingMethod($currentShippingMethod);
         }
+    }
+
+    private function retainExistingShippingMethod(Quote $quote): void
+    {
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true);
+
+        if ((string) $shippingAddress->getShippingMethod() === '') {
+            return;
+        }
+
+        $shippingAddress->setShippingMethod((string) $shippingAddress->getShippingMethod());
+    }
+
+    private function hasShippingAddressInput(): bool
+    {
+        if ((int) $this->getRequest()->getParam('selected_customer_address_id', 0) > 0) {
+            return true;
+        }
+
+        $addressKeys = [
+            'shipping_firstname',
+            'shipping_lastname',
+            'shipping_telephone',
+            'shipping_street_1',
+            'shipping_street_2',
+            'shipping_city',
+            'shipping_region',
+            'shipping_postcode',
+            'shipping_country_id',
+        ];
+
+        foreach ($addressKeys as $key) {
+            if ($this->getTrimmedRequestValue($key) !== '') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getAvailablePaymentMethodCodes(Quote $quote): array

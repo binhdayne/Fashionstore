@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="empty"/>
+
+    <referenceContainer name="page.wrapper">
+        <container name="header.container" label="Page Header Container" htmlTag="header" htmlClass="page-header" before="main.content"/>
+    </referenceContainer>
+
+    <referenceContainer name="header.container">
+        <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
+            <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel header"/>
+        </container>
+        <container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="header content">
+            <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+                <arguments>
+                    <argument name="logoPathResolver" xsi:type="object">Magento\Theme\ViewModel\Block\Html\Header\LogoPathResolver</argument>
+                    <argument name="logo_size_resolver" xsi:type="object">Magento\Theme\ViewModel\Block\Html\Header\LogoSizeResolver</argument>
+                </arguments>
+            </block>
+        </container>
+    </referenceContainer>
+</layout>

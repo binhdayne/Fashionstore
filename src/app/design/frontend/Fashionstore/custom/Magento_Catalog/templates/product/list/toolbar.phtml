@@ -1,0 +1,438 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @var $block \Magento\Catalog\Block\Product\ProductList\Toolbar
+ */
+?>
+<?php if ($block->getCollection()->getSize()) :?>
+    <?php
+    $widget = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonDecode($block->getWidgetOptionsJson());
+    $widgetOptions = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($widget['productListToolbarForm']);
+    $sliderId = 'fs-slider-' . uniqid();
+    $collectionMaxPrice = (float)$block->getCollection()->getMaxPrice();
+    $sliderMax = (int)max(100000, ceil($collectionMaxPrice / 100000) * 100000);
+    ?>
+    <style>
+        /* ── Hide "Did you mean" & "Related search terms" ─────────── */
+        .catalogsearch-result-index .search.results dl.block,
+        .catalogsearch-result-index #search-result-additional,
+        .catalogsearch-result-index .block.related-terms {
+            display: none !important;
+        }
+
+        /* ── Hide sidebar, full-width column ─────────────────────────── */
+        .catalog-category-view.page-layout-2columns-left .sidebar.sidebar-main,
+        .catalog-category-view.page-layout-2columns-left .sidebar.sidebar-additional,
+        .catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-main,
+        .catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-additional {
+            display: none !important;
+        }
+        .catalog-category-view.page-layout-2columns-left .column.main,
+        .catalogsearch-result-index.page-layout-2columns-left .column.main {
+            width: 100% !important;
+            float: none !important;
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* ── Toolbar wrapper ─────────────────────────────────────────── */
+        .catalog-category-view .toolbar.toolbar-products,
+        .catalogsearch-result-index .toolbar.toolbar-products {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+            padding: 16px 0 !important;
+            border-top: 1px solid #e0e0e0 !important;
+            border-bottom: 1px solid #e0e0e0 !important;
+            margin-bottom: 28px !important;
+        }
+        .catalog-category-view .toolbar.toolbar-products .toolbar-amount,
+        .catalogsearch-result-index .toolbar.toolbar-products .toolbar-amount {
+            display: none !important;
+        }
+
+        /* ── Price filter box ────────────────────────────────────────── */
+        .fs-price-box {
+            border: 1px solid #c6c6c6 !important;
+            padding: 10px 18px 12px !important;
+            min-width: 220px !important;
+            width: 250px !important;
+            background: #fff !important;
+            flex-shrink: 0 !important;
+        }
+        .fs-price-box-label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.14em !important;
+            color: #1a1a1a !important;
+            text-transform: uppercase !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* Dual-range slider track */
+        .fs-slider-track-wrap {
+            position: relative !important;
+            height: 18px !important;
+        }
+        .fs-slider-track {
+            position: absolute !important;
+            left: 8px !important;
+            right: 8px !important;
+            top: 50% !important;
+            height: 3px !important;
+            transform: translateY(-50%) !important;
+            background: #d8d8d8 !important;
+            border-radius: 2px !important;
+        }
+        .fs-slider-fill {
+            position: absolute !important;
+            height: 100% !important;
+            background: #1a1a1a !important;
+            border-radius: 2px !important;
+        }
+        .fs-range {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            outline: none !important;
+        }
+        .fs-range::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 50% !important;
+            background: #1a1a1a !important;
+            cursor: pointer !important;
+            pointer-events: all !important;
+            position: relative !important;
+            z-index: 3 !important;
+        }
+        .fs-range::-moz-range-thumb {
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 50% !important;
+            background: #1a1a1a !important;
+            cursor: pointer !important;
+            pointer-events: all !important;
+            border: none !important;
+        }
+        /* price value labels */
+        .fs-price-vals {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin-top: 6px !important;
+        }
+        .fs-price-val {
+            font-size: 12px !important;
+            color: #1a1a1a !important;
+            font-weight: 400 !important;
+        }
+
+        /* ── Right meta: viewmode + sorter ──────────────────────────── */
+        .fs-toolbar-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+
+        /* View-mode toggle buttons */
+        .catalog-category-view .modes,
+        .catalogsearch-result-index .modes {
+            display: inline-flex !important;
+            gap: 4px !important;
+            margin: 0 !important;
+        }
+        .catalog-category-view .modes strong.modes-mode,
+        .catalog-category-view .modes a.modes-mode,
+        .catalogsearch-result-index .modes strong.modes-mode,
+        .catalogsearch-result-index .modes a.modes-mode {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            color: #888 !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .catalog-category-view .modes strong.modes-mode,
+        .catalogsearch-result-index .modes strong.modes-mode {
+            background: #1a1a1a !important;
+            border-color: #1a1a1a !important;
+            color: #fff !important;
+        }
+        .catalog-category-view .modes .modes-mode > span,
+        .catalogsearch-result-index .modes .modes-mode > span {
+            clip: auto !important;
+            overflow: visible !important;
+            height: auto !important;
+            width: auto !important;
+            position: static !important;
+            display: none !important;
+        }
+        .catalog-category-view .modes .modes-mode::before,
+        .catalogsearch-result-index .modes .modes-mode::before {
+            display: inline-block !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+        }
+
+        /* Sorter */
+        .catalog-category-view .toolbar-sorter,
+        .catalogsearch-result-index .toolbar-sorter {
+            display: flex !important;
+            align-items: center !important;
+            margin: 0 !important;
+        }
+        .catalog-category-view .toolbar-sorter label,
+        .catalogsearch-result-index .toolbar-sorter label {
+            display: none !important;
+        }
+        .catalog-category-view .toolbar-sorter select,
+        .catalogsearch-result-index .toolbar-sorter select {
+            height: 36px !important;
+            min-width: 150px !important;
+            padding: 0 30px 0 10px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            font-size: 13px !important;
+            color: #1a1a1a !important;
+            cursor: pointer !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: linear-gradient(45deg, transparent 50%, #666 50%), linear-gradient(135deg, #666 50%, transparent 50%);
+            background-position: calc(100% - 14px) calc(50% - 2px), calc(100% - 9px) calc(50% - 2px);
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            margin-left: 6px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            color: #222 !important;
+            text-decoration: none !important;
+            border-radius: 2px !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action > span,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action > span {
+            display: none !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action:before {
+            font-size: 14px !important;
+            line-height: 1 !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action.sort-desc:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action.sort-desc:before {
+            content: '\2193' !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action.sort-asc:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action.sort-asc:before {
+            content: '\2191' !important;
+        }
+
+        /* ── 5-column product grid ───────────────────────────────────── */
+        .catalogsearch-result-index .products-grid .product-items,
+        .catalog-category-view .products-grid .product-items {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            margin: 0 -8px !important;
+        }
+        .catalogsearch-result-index .products-grid .product-item,
+        .catalog-category-view .products-grid .product-item {
+            width: 20% !important;
+            flex: 0 0 20% !important;
+            max-width: 20% !important;
+            padding: 0 8px !important;
+            margin-bottom: 22px !important;
+            margin-left: 0 !important;
+            clear: none !important;
+            box-sizing: border-box !important;
+        }
+        @media (max-width: 1200px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 25% !important;
+                flex: 0 0 25% !important;
+                max-width: 25% !important;
+            }
+        }
+        @media (max-width: 860px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 33.3333% !important;
+                flex: 0 0 33.3333% !important;
+                max-width: 33.3333% !important;
+            }
+            .fs-price-box {
+                width: 100% !important;
+            }
+            .fs-toolbar-right {
+                margin-left: auto !important;
+            }
+        }
+        @media (max-width: 560px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 50% !important;
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+            }
+        }
+    </style>
+
+    <div class="toolbar toolbar-products" data-mage-init='{"productListToolbarForm":<?= /* @noEscape */ $widgetOptions ?>}'>
+        <?php if ($block->getIsBottom()): ?>
+            <?= $block->getPagerHtml() ?>
+            <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
+        <?php else: ?>
+            <?php if ($block->isExpanded()): ?>
+
+                <!-- Price filter slider -->
+                <div class="fs-price-box" id="<?= $block->escapeHtmlAttr($sliderId) ?>-box">
+                    <div class="fs-price-box-label">GIÁ</div>
+                    <div class="fs-slider-track-wrap">
+                        <div class="fs-slider-track">
+                            <div class="fs-slider-fill" id="<?= $block->escapeHtmlAttr($sliderId) ?>-fill"></div>
+                        </div>
+                        <input type="range" class="fs-range" id="<?= $block->escapeHtmlAttr($sliderId) ?>-min"
+                               min="0" max="<?= (int)$sliderMax ?>" value="0" step="10000">
+                        <input type="range" class="fs-range" id="<?= $block->escapeHtmlAttr($sliderId) ?>-max"
+                               min="0" max="<?= (int)$sliderMax ?>" value="<?= (int)$sliderMax ?>" step="10000">
+                    </div>
+                    <div class="fs-price-vals">
+                        <span class="fs-price-val" id="<?= $block->escapeHtmlAttr($sliderId) ?>-min-lbl">0đ</span>
+                           <span class="fs-price-val" id="<?= $block->escapeHtmlAttr($sliderId) ?>-max-lbl"><?= $block->escapeHtml(number_format((int)$sliderMax, 0, ',', '.')) ?>đ</span>
+                    </div>
+                </div>
+
+                <!-- View mode + sorter -->
+                <div class="fs-toolbar-right">
+                    <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
+                    <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+                </div>
+
+                <script>
+                    require(['jquery'], function ($) {
+                        var sid       = '<?= $block->escapeJs($sliderId) ?>',
+                            $box      = $('#' + sid + '-box'),
+                            $minInput = $('#' + sid + '-min'),
+                            $maxInput = $('#' + sid + '-max'),
+                            $fill     = $('#' + sid + '-fill'),
+                            $minLbl   = $('#' + sid + '-min-lbl'),
+                            $maxLbl   = $('#' + sid + '-max-lbl'),
+                            rangeMin  = 0,
+                            rangeMax  = <?= (int)$sliderMax ?>,
+                            applyTimer;
+
+                        function formatVnd(n) {
+                            return Number(n).toLocaleString('vi-VN') + 'đ';
+                        }
+
+                        function toPct(val) {
+                            if (rangeMax === rangeMin) { return 0; }
+                            return (val - rangeMin) / (rangeMax - rangeMin) * 100;
+                        }
+
+                        function updateTrack() {
+                            var lo = Math.min(parseInt($minInput.val(), 10), parseInt($maxInput.val(), 10)),
+                                hi = Math.max(parseInt($minInput.val(), 10), parseInt($maxInput.val(), 10));
+                            $fill.css({ left: toPct(lo) + '%', width: (toPct(hi) - toPct(lo)) + '%' });
+                            $minLbl.text(formatVnd(lo));
+                            $maxLbl.text(formatVnd(hi));
+                        }
+
+                        /* ── Z-index swap so the nearest thumb is always on top ── */
+                        function updateZIndex() {
+                            var minPct = toPct(parseInt($minInput.val(), 10)),
+                                maxPct = toPct(parseInt($maxInput.val(), 10));
+                            if (maxPct - minPct < 5) {
+                                /* handles very close: put max on top to allow dragging it right */
+                                $minInput.css('z-index', 3);
+                                $maxInput.css('z-index', 4);
+                            } else {
+                                $minInput.css('z-index', 3);
+                                $maxInput.css('z-index', 3);
+                            }
+                        }
+
+                        /* Dynamic z-index on pointerdown: bring the clicked handle to front */
+                        $box.on('pointerdown', '.fs-range', function () {
+                            $minInput.add($maxInput).css('z-index', 3);
+                            $(this).css('z-index', 5);
+                        });
+
+                        function applyFilter() {
+                            var lo  = Math.min(parseInt($minInput.val(), 10), parseInt($maxInput.val(), 10)),
+                                hi  = Math.max(parseInt($minInput.val(), 10), parseInt($maxInput.val(), 10)),
+                                url = new URL(window.location.href, window.location.origin);
+
+                            if (lo <= rangeMin && hi >= rangeMax) {
+                                url.searchParams.delete('price');
+                            } else {
+                                url.searchParams.set('price', lo + '-' + hi);
+                            }
+                            window.location.href = url.toString();
+                        }
+
+                        $minInput.attr({ min: rangeMin, max: rangeMax });
+                        $maxInput.attr({ min: rangeMin, max: rangeMax });
+
+                        /* ── Pre-fill from URL ?price=lo-hi ── */
+                        (function () {
+                            var m = window.location.search.match(/[?&]price=(\d+)-(\d+)/);
+                            if (m) {
+                                $minInput.val(Math.max(rangeMin, +m[1]));
+                                $maxInput.val(Math.min(rangeMax, +m[2]));
+                            } else {
+                                $minInput.val(rangeMin);
+                                $maxInput.val(rangeMax);
+                            }
+                        }());
+
+                        updateTrack();
+                        updateZIndex();
+
+                        $minInput.add($maxInput).on('input', function () {
+                            updateTrack();
+                            updateZIndex();
+                            clearTimeout(applyTimer);
+                            applyTimer = setTimeout(applyFilter, 400);
+                        });
+                    });
+                </script>
+
+            <?php else: ?>
+                <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
+            <?php endif ?>
+        <?php endif ?>
+    </div>
+<?php endif ?>

@@ -1,0 +1,53 @@
+<!-- ko foreach: getRegion('estimation') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<section class="fr-ec-layout-wrapper fr-ec-template-checkout__wrapper">
+    <section class="fr-ec-layout fr-ec-layout--gutter-md fr-ec-layout--gutter-lg fr-ec-layout--span-4-sm fr-ec-layout--span-12-md fr-ec-layout--span-12-lg">
+        <div class="fr-ec-layout fr-ec-layout--gutter-sm fr-ec-layout--gutter-md fr-ec-layout--gutter-lg fr-ec-layout--span-4-sm fr-ec-layout--span-12-md fr-ec-layout--span-12-lg">
+            <h1 class="fr-ec-display fr-ec-display--color-primary-dark fr-ec-display--display3 fr-ec-text-align-left fr-ec-text-transform-normal shared-global-ec-uikit-mt-spacing-05 shared-global-ec-uikit-mb-spacing-04" aria-disabled="false">Thanh toán</h1>
+            <p class="fr-ec-body fr-ec-body--color-primary-dark fr-ec-body--standard fr-ec-text-align-left fr-ec-text-transform-normal fr-ec-mb-spacing-04" aria-disabled="false">Đủ điều kiện áp dụng miễn phí vận chuyển.</p>
+        </div>
+        <hr class="fr-ec-keyline fr-ec-keyline-bottom shared-global-ec-uikit-mb-spacing-05">
+    </section>
+
+    <div class="fr-ec-layout fr-ec-layout--gutter-sm fr-ec-layout--gutter-md fr-ec-layout--gutter-lg fr-ec-layout--span-4-sm fr-ec-layout--span-12-md fr-ec-layout--span-8-lg fr-ec-layout--inset-right-lg fr-ec-template-checkout-details-container fr-ec-template-checkout__left">
+        <div class="fr-ec-content-alignment fr-ec-content-alignment--direction-column fr-ec-content-alignment--content-flex-start fr-ec-content-alignment--alignment-stretch shared-global-ec-uikit-mb-spacing-06">
+            <div class="fr-ec-content-alignment fr-ec-content-alignment--direction-row fr-ec-content-alignment--content-space-between fr-ec-content-alignment--alignment-center fr-ec-mb-spacing-04">
+                <span class="fr-ec-content-alignment fr-ec-content-alignment--direction-row fr-ec-content-alignment--content-flex-start fr-ec-content-alignment--alignment-flex-start">
+                    <div>
+                        <h1 class="fr-ec-display fr-ec-display--color-primary-dark fr-ec-display--display3 fr-ec-text-align-left fr-ec-text-transform-normal" aria-disabled="false">1.Tùy chọn giao hàng</h1>
+                    </div>
+                </span>
+                <button class="fr-ec-link-text fr-ec-link-text--standalone-secondary fr-ec-cursor-pointer fr-ec-button-reset" type="button" aria-label="Thay đổi">
+                    <span class="fr-ec-body fr-ec-body--color-primary-dark fr-ec-body--standard fr-ec-text-align-left fr-ec-text-transform-normal" aria-disabled="false">Thay đổi</span>
+                </button>
+            </div>
+            <hr class="fr-ec-keyline fr-ec-keyline-bottom">
+        </div>
+
+        <div class="opc-wrapper">
+            <div class="fs-checkout-auth">
+                <!-- ko foreach: getRegion('authentication') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
+
+            <ol class="opc" id="checkoutSteps">
+            <!-- ko foreach: getRegion('steps') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+            </ol>
+        </div>
+    </div>
+
+    <div class="fr-ec-layout fr-ec-layout--gutter-md fr-ec-layout--gutter-lg fr-ec-layout--span-4-sm fr-ec-layout--span-12-md fr-ec-layout--span-4-lg fr-ec-template-checkout-fixed-container fr-ec-template-checkout__right">
+        <!-- ko foreach: getRegion('sidebar') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    </div>
+</section>

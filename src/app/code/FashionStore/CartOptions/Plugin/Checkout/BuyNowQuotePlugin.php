@@ -20,16 +20,18 @@ class BuyNowQuotePlugin
 
     public function aroundLoadCustomerQuote(CheckoutSession $subject, callable $proceed): CheckoutSession
     {
+        $result = $proceed();
+
         if (!$subject->getData(self::SESSION_KEY_ACTIVE)) {
-            return $proceed();
+            return $result;
         }
 
         if (!$this->customerSession->getCustomerId()) {
-            return $proceed();
+            return $result;
         }
 
         if ((int) $subject->getQuoteId() !== (int) $subject->getData(self::SESSION_KEY_QUOTE_ID)) {
-            return $proceed();
+            return $result;
         }
 
         $quote = $subject->getQuote();
@@ -43,6 +45,6 @@ class BuyNowQuotePlugin
         $quote->save();
         $subject->setQuoteId($quote->getId());
 
-        return $subject;
+        return $result;
     }
 }

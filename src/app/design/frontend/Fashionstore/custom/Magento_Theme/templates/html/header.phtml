@@ -16,3 +16,68 @@
         </div>
     </div>
 </header>
+<script>
+require(['jquery'], function ($) {
+    'use strict';
+
+    function normalizeText(value) {
+        return (value || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/[^a-z0-9\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    $(document).on('click', '.search-product-card, .search-product-card .search-product-img', function (event) {
+        var $card = $(event.target).closest('.search-product-card');
+        var href = String($card.attr('href') || '');
+        var productName = $.trim($card.find('.search-product-name').text());
+        var normalizedName = normalizeText(productName);
+
+        if (!$card.length || !href) {
+            return;
+        }
+
+        // Keep behavior unchanged for absolute links or non-product-like links.
+        if (/^https?:\/\//i.test(href) || href.indexOf('catalogsearch/result') !== -1 || href.charAt(0) !== '/') {
+            return;
+        }
+
+        event.preventDefault();
+
+        $.ajax({
+            url: '/customheader/search/suggest',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            data: { q: productName }
+        }).done(function (items) {
+            var targetUrl = href;
+
+            if ($.isArray(items) && items.length) {
+                $.each(items, function (_, item) {
+                    if (!item || !item.url || !item.name) {
+                        return;
+                    }
+
+                    if (normalizeText(item.name) === normalizedName) {
+                        targetUrl = item.url;
+                        return false;
+                    }
+                });
+
+                if (targetUrl === href && items[0] && items[0].url) {
+                    targetUrl = items[0].url;
+                }
+            }
+
+            window.location.href = targetUrl;
+        }).fail(function () {
+            window.location.href = href;
+        });
+    });
+});
+</script>

@@ -15,16 +15,18 @@
     <?php
     $widget = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonDecode($block->getWidgetOptionsJson());
     $widgetOptions = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($widget['productListToolbarForm']);
-    $priceSelectId = 'fashionstore-price-filter-' . uniqid();
+    $sliderId = 'fs-slider-' . uniqid();
+    $collectionMaxPrice = (float)$block->getCollection()->getMaxPrice();
+    $sliderMax = (int)max(100000, ceil($collectionMaxPrice / 100000) * 100000);
     ?>
     <style>
+        /* ── Hide sidebar, full-width column ─────────────────────────── */
         .catalog-category-view.page-layout-2columns-left .sidebar.sidebar-main,
         .catalog-category-view.page-layout-2columns-left .sidebar.sidebar-additional,
         .catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-main,
         .catalogsearch-result-index.page-layout-2columns-left .sidebar.sidebar-additional {
             display: none !important;
         }
-
         .catalog-category-view.page-layout-2columns-left .column.main,
         .catalogsearch-result-index.page-layout-2columns-left .column.main {
             width: 100% !important;
@@ -33,6 +35,7 @@
             margin-left: 0 !important;
         }
 
+        /* ── Toolbar wrapper ─────────────────────────────────────────── */
         .catalog-category-view .toolbar.toolbar-products,
         .catalogsearch-result-index .toolbar.toolbar-products {
             display: flex !important;
@@ -40,271 +43,377 @@
             justify-content: space-between !important;
             flex-wrap: wrap !important;
             gap: 12px !important;
+            padding: 16px 0 !important;
+            border-top: 1px solid #e0e0e0 !important;
+            border-bottom: 1px solid #e0e0e0 !important;
+            margin-bottom: 28px !important;
+        }
+        .catalog-category-view .toolbar.toolbar-products .toolbar-amount,
+        .catalogsearch-result-index .toolbar.toolbar-products .toolbar-amount {
+            display: none !important;
         }
 
-        .catalog-category-view .toolbar.toolbar-products .fashionstore-toolbar-meta,
-        .catalogsearch-result-index .toolbar.toolbar-products .fashionstore-toolbar-meta {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: flex-end !important;
-            gap: 14px !important;
-            margin-left: auto !important;
-        }
-
-        .catalog-category-view .fashionstore-price-filter-wrap,
-        .catalogsearch-result-index .fashionstore-price-filter-wrap {
-            display: inline-flex !important;
-            align-items: center !important;
-            flex-wrap: wrap !important;
-            gap: 8px !important;
-        }
-
-        .catalog-category-view .fashionstore-price-filter-label,
-        .catalogsearch-result-index .fashionstore-price-filter-label {
-            margin: 0 !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
-            color: #3a3a3a !important;
-            white-space: nowrap !important;
-        }
-
-        .catalog-category-view .fashionstore-price-filter-select,
-        .catalogsearch-result-index .fashionstore-price-filter-select {
-            min-width: 180px !important;
-            height: 38px !important;
-            padding: 0 12px !important;
-            border: 1px solid #d4d4d4 !important;
-            border-radius: 2px !important;
+        /* ── Price filter box ────────────────────────────────────────── */
+        .fs-price-box {
+            border: 1px solid #c6c6c6 !important;
+            padding: 10px 18px 12px !important;
+            min-width: 220px !important;
+            width: 250px !important;
             background: #fff !important;
-            font-size: 14px !important;
-            color: #1f1f1f !important;
+            flex-shrink: 0 !important;
+        }
+        .fs-price-box-label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.14em !important;
+            color: #1a1a1a !important;
+            text-transform: uppercase !important;
+            margin-bottom: 10px !important;
         }
 
-        .catalog-category-view .fashionstore-price-custom,
-        .catalogsearch-result-index .fashionstore-price-custom {
-            display: inline-flex !important;
+        /* Dual-range slider track */
+        .fs-slider-track-wrap {
+            position: relative !important;
+            height: 18px !important;
+        }
+        .fs-slider-track {
+            position: absolute !important;
+            left: 8px !important;
+            right: 8px !important;
+            top: 50% !important;
+            height: 3px !important;
+            transform: translateY(-50%) !important;
+            background: #d8d8d8 !important;
+            border-radius: 2px !important;
+        }
+        .fs-slider-fill {
+            position: absolute !important;
+            height: 100% !important;
+            background: #1a1a1a !important;
+            border-radius: 2px !important;
+        }
+        .fs-range {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            outline: none !important;
+        }
+        .fs-range::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 50% !important;
+            background: #1a1a1a !important;
+            cursor: pointer !important;
+            pointer-events: all !important;
+            position: relative !important;
+            z-index: 3 !important;
+        }
+        .fs-range::-moz-range-thumb {
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 50% !important;
+            background: #1a1a1a !important;
+            cursor: pointer !important;
+            pointer-events: all !important;
+            border: none !important;
+        }
+        /* price value labels */
+        .fs-price-vals {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin-top: 6px !important;
+        }
+        .fs-price-val {
+            font-size: 12px !important;
+            color: #1a1a1a !important;
+            font-weight: 400 !important;
+        }
+
+        /* ── Right meta: viewmode + sorter ──────────────────────────── */
+        .fs-toolbar-right {
+            display: flex !important;
             align-items: center !important;
             gap: 6px !important;
         }
 
-        .catalog-category-view .fashionstore-price-input,
-        .catalogsearch-result-index .fashionstore-price-input {
-            width: 94px !important;
-            height: 38px !important;
-            padding: 0 10px !important;
-            border: 1px solid #d4d4d4 !important;
-            border-radius: 2px !important;
-            background: #fff !important;
-            font-size: 14px !important;
-            color: #1f1f1f !important;
-        }
-
-        .catalog-category-view .fashionstore-price-separator,
-        .catalogsearch-result-index .fashionstore-price-separator {
-            color: #7a7a7a !important;
-            font-size: 14px !important;
-        }
-
-        .catalog-category-view .fashionstore-price-apply,
-        .catalogsearch-result-index .fashionstore-price-apply {
-            height: 38px !important;
-            padding: 0 12px !important;
-            border: 1px solid #202020 !important;
-            background: #202020 !important;
-            color: #fff !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            border-radius: 2px !important;
-            cursor: pointer !important;
-        }
-
-        .catalog-category-view .toolbar-sorter,
-        .catalogsearch-result-index .toolbar-sorter {
+        /* View-mode toggle buttons */
+        .catalog-category-view .modes,
+        .catalogsearch-result-index .modes {
+            display: inline-flex !important;
+            gap: 4px !important;
             margin: 0 !important;
         }
+        .catalog-category-view .modes strong.modes-mode,
+        .catalog-category-view .modes a.modes-mode,
+        .catalogsearch-result-index .modes strong.modes-mode,
+        .catalogsearch-result-index .modes a.modes-mode {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            color: #888 !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .catalog-category-view .modes strong.modes-mode,
+        .catalogsearch-result-index .modes strong.modes-mode {
+            background: #1a1a1a !important;
+            border-color: #1a1a1a !important;
+            color: #fff !important;
+        }
+        .catalog-category-view .modes .modes-mode > span,
+        .catalogsearch-result-index .modes .modes-mode > span {
+            clip: auto !important;
+            overflow: visible !important;
+            height: auto !important;
+            width: auto !important;
+            position: static !important;
+            display: none !important;
+        }
+        .catalog-category-view .modes .modes-mode::before,
+        .catalogsearch-result-index .modes .modes-mode::before {
+            display: inline-block !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+        }
 
-        @media (max-width: 992px) {
-            .catalog-category-view .toolbar.toolbar-products .fashionstore-toolbar-meta,
-            .catalogsearch-result-index .toolbar.toolbar-products .fashionstore-toolbar-meta {
+        /* Sorter */
+        .catalog-category-view .toolbar-sorter,
+        .catalogsearch-result-index .toolbar-sorter {
+            display: flex !important;
+            align-items: center !important;
+            margin: 0 !important;
+        }
+        .catalog-category-view .toolbar-sorter label,
+        .catalogsearch-result-index .toolbar-sorter label {
+            display: none !important;
+        }
+        .catalog-category-view .toolbar-sorter select,
+        .catalogsearch-result-index .toolbar-sorter select {
+            height: 36px !important;
+            min-width: 150px !important;
+            padding: 0 30px 0 10px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            font-size: 13px !important;
+            color: #1a1a1a !important;
+            cursor: pointer !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: linear-gradient(45deg, transparent 50%, #666 50%), linear-gradient(135deg, #666 50%, transparent 50%);
+            background-position: calc(100% - 14px) calc(50% - 2px), calc(100% - 9px) calc(50% - 2px);
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            margin-left: 6px !important;
+            border: 1px solid #c6c6c6 !important;
+            background: #fff !important;
+            color: #222 !important;
+            text-decoration: none !important;
+            border-radius: 2px !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action > span,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action > span {
+            display: none !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action:before {
+            font-size: 14px !important;
+            line-height: 1 !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action.sort-desc:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action.sort-desc:before {
+            content: '\2193' !important;
+        }
+        .catalog-category-view .toolbar-sorter .sorter-action.sort-asc:before,
+        .catalogsearch-result-index .toolbar-sorter .sorter-action.sort-asc:before {
+            content: '\2191' !important;
+        }
+
+        /* ── 5-column product grid ───────────────────────────────────── */
+        .catalogsearch-result-index .products-grid .product-items,
+        .catalog-category-view .products-grid .product-items {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            margin: 0 -8px !important;
+        }
+        .catalogsearch-result-index .products-grid .product-item,
+        .catalog-category-view .products-grid .product-item {
+            width: 20% !important;
+            flex: 0 0 20% !important;
+            max-width: 20% !important;
+            padding: 0 8px !important;
+            margin-bottom: 22px !important;
+            margin-left: 0 !important;
+            clear: none !important;
+            box-sizing: border-box !important;
+        }
+        @media (max-width: 1200px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 25% !important;
+                flex: 0 0 25% !important;
+                max-width: 25% !important;
+            }
+        }
+        @media (max-width: 860px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 33.3333% !important;
+                flex: 0 0 33.3333% !important;
+                max-width: 33.3333% !important;
+            }
+            .fs-price-box {
                 width: 100% !important;
-                justify-content: space-between !important;
-                margin-left: 0 !important;
+            }
+            .fs-toolbar-right {
+                margin-left: auto !important;
+            }
+        }
+        @media (max-width: 560px) {
+            .catalogsearch-result-index .products-grid .product-item,
+            .catalog-category-view .products-grid .product-item {
+                width: 50% !important;
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
             }
         }
     </style>
+
     <div class="toolbar toolbar-products" data-mage-init='{"productListToolbarForm":<?= /* @noEscape */ $widgetOptions ?>}'>
         <?php if ($block->getIsBottom()): ?>
             <?= $block->getPagerHtml() ?>
             <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
         <?php else: ?>
             <?php if ($block->isExpanded()): ?>
-                <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
-            <?php endif ?>
 
-            <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
-
-            <?php if ($block->isExpanded()): ?>
-                <div class="fashionstore-toolbar-meta">
-                    <div class="fashionstore-price-filter-wrap" data-role="fashionstore-price-filter-wrap">
-                        <label for="<?= $block->escapeHtmlAttr($priceSelectId) ?>" class="fashionstore-price-filter-label">
-                            <?= $block->escapeHtml(__('Khoảng giá')) ?>
-                        </label>
-                        <select id="<?= $block->escapeHtmlAttr($priceSelectId) ?>"
-                                class="fashionstore-price-filter-select"
-                                data-role="fashionstore-price-filter-select">
-                            <option value=""><?= $block->escapeHtml(__('Tất cả mức giá')) ?></option>
-                        </select>
-                        <div class="fashionstore-price-custom">
-                            <input type="number"
-                                   min="0"
-                                   step="1000"
-                                   class="fashionstore-price-input"
-                                   placeholder="<?= $block->escapeHtmlAttr(__('Từ')) ?>"
-                                   data-role="fashionstore-price-min">
-                            <span class="fashionstore-price-separator">-</span>
-                            <input type="number"
-                                   min="0"
-                                   step="1000"
-                                   class="fashionstore-price-input"
-                                   placeholder="<?= $block->escapeHtmlAttr(__('Đến')) ?>"
-                                   data-role="fashionstore-price-max">
-                            <button type="button" class="fashionstore-price-apply" data-role="fashionstore-price-apply">
-                                <?= $block->escapeHtml(__('Áp dụng')) ?>
-                            </button>
+                <!-- Price filter slider -->
+                <div class="fs-price-box" id="<?= $block->escapeHtmlAttr($sliderId) ?>-box">
+                    <div class="fs-price-box-label">GIÁ</div>
+                    <div class="fs-slider-track-wrap">
+                        <div class="fs-slider-track">
+                            <div class="fs-slider-fill" id="<?= $block->escapeHtmlAttr($sliderId) ?>-fill"></div>
                         </div>
+                        <input type="range" class="fs-range" id="<?= $block->escapeHtmlAttr($sliderId) ?>-min"
+                               min="0" max="<?= (int)$sliderMax ?>" value="0" step="10000">
+                        <input type="range" class="fs-range" id="<?= $block->escapeHtmlAttr($sliderId) ?>-max"
+                               min="0" max="<?= (int)$sliderMax ?>" value="<?= (int)$sliderMax ?>" step="10000">
                     </div>
+                    <div class="fs-price-vals">
+                        <span class="fs-price-val" id="<?= $block->escapeHtmlAttr($sliderId) ?>-min-lbl">0đ</span>
+                           <span class="fs-price-val" id="<?= $block->escapeHtmlAttr($sliderId) ?>-max-lbl"><?= $block->escapeHtml(number_format((int)$sliderMax, 0, ',', '.')) ?>đ</span>
+                    </div>
+                </div>
 
+                <!-- View mode + sorter -->
+                <div class="fs-toolbar-right">
+                    <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
                     <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
                 </div>
 
                 <script>
                     require(['jquery'], function ($) {
-                        var $toolbar = $('#<?= $block->escapeJs($priceSelectId) ?>').closest('.toolbar-products'),
-                            $wrap = $toolbar.find('[data-role="fashionstore-price-filter-wrap"]'),
-                            $select = $toolbar.find('[data-role="fashionstore-price-filter-select"]'),
-                            $minInput = $toolbar.find('[data-role="fashionstore-price-min"]'),
-                            $maxInput = $toolbar.find('[data-role="fashionstore-price-max"]'),
-                            $applyBtn = $toolbar.find('[data-role="fashionstore-price-apply"]'),
-                            currentUrl = window.location.href.split('#')[0],
-                            $priceFilterItem,
-                            $links;
+                        var sid       = '<?= $block->escapeJs($sliderId) ?>',
+                            $minInput = $('#' + sid + '-min'),
+                            $maxInput = $('#' + sid + '-max'),
+                            $fill     = $('#' + sid + '-fill'),
+                            $minLbl   = $('#' + sid + '-min-lbl'),
+                            $maxLbl   = $('#' + sid + '-max-lbl'),
+                            rangeMin  = 0,
+                            rangeMax  = <?= (int)$sliderMax ?>,
+                            applyTimer;
 
-                        function parsePriceValue(raw) {
-                            var text = (raw || '').toString().trim();
-                            if (!text) {
-                                return '';
-                            }
-                            text = text.replace(/[^0-9]/g, '');
-                            return text;
+                        function formatVnd(n) {
+                            return Number(n).toLocaleString('vi-VN') + 'đ';
                         }
 
-                        function getPriceFromUrl(url) {
-                            var u,
-                                value,
-                                parts;
-
-                            try {
-                                u = new URL(url, window.location.origin);
-                                value = u.searchParams.get('price') || '';
-                                if (!value) {
-                                    return {min: '', max: ''};
-                                }
-                                parts = value.split('-');
-                                return {
-                                    min: parsePriceValue(parts[0] || ''),
-                                    max: parsePriceValue(parts[1] || '')
-                                };
-                            } catch (e) {
-                                return {min: '', max: ''};
-                            }
+                        function toPct(val) {
+                            if (rangeMax === rangeMin) { return 0; }
+                            return (val - rangeMin) / (rangeMax - rangeMin) * 100;
                         }
 
-                        function applyCustomPrice() {
-                            var min = parsePriceValue($minInput.val()),
-                                max = parsePriceValue($maxInput.val()),
-                                url = new URL(window.location.href, window.location.origin),
-                                priceValue;
+                        function updateTrack() {
+                            var minVal = parseInt($minInput.val(), 10),
+                                maxVal = parseInt($maxInput.val(), 10),
+                                lo, hi;
+                            if (minVal > maxVal) {
+                                lo = maxVal; hi = minVal;
+                            } else {
+                                lo = minVal; hi = maxVal;
+                            }
+                            $fill.css({ left: toPct(lo) + '%', width: (toPct(hi) - toPct(lo)) + '%' });
+                            $minLbl.text(formatVnd(lo));
+                            $maxLbl.text(formatVnd(hi));
+                        }
 
-                            if (!min && !max) {
+                        function applyFilter() {
+                            var minVal = parseInt($minInput.val(), 10),
+                                maxVal = parseInt($maxInput.val(), 10),
+                                lo     = Math.min(minVal, maxVal),
+                                hi     = Math.max(minVal, maxVal),
+                                url    = new URL(window.location.href, window.location.origin);
+
+                            if (lo <= rangeMin && hi >= rangeMax) {
                                 url.searchParams.delete('price');
-                                window.location.href = url.toString();
-                                return;
+                            } else {
+                                url.searchParams.set('price', lo + '-' + hi);
                             }
-
-                            if (min && max && Number(min) > Number(max)) {
-                                return;
-                            }
-
-                            priceValue = (min || '0') + '-' + (max || '');
-                            url.searchParams.set('price', priceValue);
                             window.location.href = url.toString();
                         }
 
-                        $priceFilterItem = $('.block.filter .filter-options-item').filter(function () {
-                            var title = $(this).find('.filter-options-title').first().text().trim().toLowerCase();
-                            return title.indexOf('giá') !== -1 || title.indexOf('gia') !== -1 || title.indexOf('price') !== -1;
-                        }).first();
+                        $minInput.attr({ min: rangeMin, max: rangeMax });
+                        $maxInput.attr({ min: rangeMin, max: rangeMax });
 
-                        if (!$priceFilterItem.length) {
-                            $wrap.hide();
-                            return;
-                        }
-
-                        $links = $priceFilterItem.find('.filter-options-content a');
-                        if (!$links.length) {
-                            $wrap.hide();
-                            return;
-                        }
-
-                        $links.each(function () {
-                            var $link = $(this),
-                                href = $link.attr('href'),
-                                label = $link.text().trim();
-
-                            if (!href || !label) {
-                                return;
+                        /* ── Pre-fill from URL ?price=lo-hi ── */
+                        (function () {
+                            var m = window.location.search.match(/[?&]price=(\d+)-(\d+)/);
+                            if (m) {
+                                $minInput.val(Math.max(rangeMin, +m[1]));
+                                $maxInput.val(Math.min(rangeMax, +m[2]));
+                            } else {
+                                $minInput.val(rangeMin);
+                                $maxInput.val(rangeMax);
                             }
+                        }());
 
-                            $('<option></option>').val(href).text(label).appendTo($select);
+                        updateTrack();
+
+                        $minInput.add($maxInput).on('input', function () {
+                            updateTrack();
+                            clearTimeout(applyTimer);
                         });
 
-                        $select.find('option').each(function () {
-                            var value = ($(this).val() || '').split('#')[0];
-                            if (value && currentUrl.indexOf(value) === 0) {
-                                $(this).prop('selected', true);
-                            }
-                        });
-
-                        (function presetPriceInputsFromCurrentUrl() {
-                            var current = getPriceFromUrl(window.location.href);
-                            $minInput.val(current.min);
-                            $maxInput.val(current.max);
-                        })();
-
-                        $select.on('change', function () {
-                            var value = $(this).val(),
-                                selectedPrice = getPriceFromUrl(value);
-
-                            $minInput.val(selectedPrice.min);
-                            $maxInput.val(selectedPrice.max);
-
-                            if (!value) {
-                                applyCustomPrice();
-                                return;
-                            }
-                            window.location.href = value;
-                        });
-
-                        $applyBtn.on('click', applyCustomPrice);
-
-                        $minInput.add($maxInput).on('keydown', function (event) {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                applyCustomPrice();
-                            }
+                        $minInput.add($maxInput).on('change', function () {
+                            clearTimeout(applyTimer);
+                            applyTimer = setTimeout(applyFilter, 600);
                         });
                     });
                 </script>
+
+            <?php else: ?>
+                <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
             <?php endif ?>
         <?php endif ?>
     </div>

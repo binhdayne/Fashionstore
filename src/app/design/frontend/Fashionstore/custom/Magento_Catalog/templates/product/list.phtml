@@ -1,0 +1,264 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+<?php
+$_productCollection = $block->getLoadedProductCollection();
+/** @var \Magento\Catalog\Helper\Output $_helper */
+$_helper = $block->getData('outputHelper');
+?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></div>
+    </div>
+<?php else: ?>
+    <?= $block->getToolbarHtml() ?>
+    <?= $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() === 'grid') {
+        $viewMode = 'grid';
+        $imageDisplayArea = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $imageDisplayArea = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    $pos = $block->getPositioned();
+    ?>
+    <div class="products wrapper <?= /* @noEscape */ $viewMode ?> products-<?= /* @noEscape */ $viewMode ?>" data-mage-init='{"js/product-card-enhancements":{}}'>
+        <ol class="products list items product-items">
+            <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($_productCollection as $_product): ?>
+            <li class="item product product-item">
+                <div class="product-item-info"
+                     id="product-item-info_<?= /* @noEscape */ $_product->getId() ?>"
+                     data-container="product-<?= /* @noEscape */ $viewMode ?>">
+                    <?php
+                    $productImage = $block->getImage($_product, $imageDisplayArea);
+                    if ($pos != null) {
+                        $position = 'left:' . $productImage->getWidth() . 'px;'
+                            . 'top:' . $productImage->getHeight() . 'px;';
+                    }
+                    $galleryUrls = [];
+                    $galleryImages = $_product->getMediaGalleryImages();
+                    if ($galleryImages) {
+                        foreach ($galleryImages as $galleryImage) {
+                            $url = (string) $galleryImage->getUrl();
+                            if ($url) {
+                                $galleryUrls[] = $url;
+                            }
+                        }
+                    }
+                    $galleryUrls = array_values(array_unique($galleryUrls));
+                    ?>
+                    <?php // Product Image ?>
+                    <div class="product-photo-slider" data-gallery='<?= $escaper->escapeHtmlAttr((string) json_encode($galleryUrls, JSON_UNESCAPED_SLASHES)) ?>' data-gallery-index="0" data-product-sku="<?= $escaper->escapeHtmlAttr((string) $_product->getSku()) ?>">
+                        <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>"
+                           class="product photo product-item-photo"
+                           tabindex="-1">
+                            <?= $productImage->toHtml() ?>
+                        </a>
+                        <button type="button" class="product-photo-nav nav-prev" aria-label="<?= $escaper->escapeHtmlAttr(__('Previous image')) ?>">
+                            <span aria-hidden="true">&#10094;</span>
+                        </button>
+                        <button type="button" class="product-photo-nav nav-next" aria-label="<?= $escaper->escapeHtmlAttr(__('Next image')) ?>">
+                            <span aria-hidden="true">&#10095;</span>
+                        </button>
+                    </div>
+                    <div class="product details product-item-details">
+                        <?php $_productNameStripped = $block->stripTags($_product->getName(), null, true); ?>
+                        <strong class="product name product-item-name">
+                            <a class="product-item-link"
+                               href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>">
+                                <?=/* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name')?>
+                            </a>
+                        </strong>
+                        <?= $block->getReviewsSummaryHtml($_product, $templateType) ?>
+                        <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+
+                        <?= $block->getProductDetailsHtml($_product) ?>
+
+                        <div class="product-item-inner">
+                            <div class="product actions product-item-actions">
+                                <div class="actions-primary">
+                                    <?php if ($_product->isSaleable()):?>
+                                        <?php $postParams = $block->getAddToCartPostParams($_product); ?>
+                                        <form data-role="tocart-form"
+                                              data-product-sku="<?= $escaper->escapeHtml($_product->getSku()) ?>"
+                                              action="<?= $escaper->escapeUrl($postParams['action']) ?>"
+                                              data-mage-init='{"catalogAddToCart": {}}'
+                                              method="post">
+                                            <?php $options = $block->getData('viewModel')->getOptionsData($_product); ?>
+                                            <?php foreach ($options as $optionItem): ?>
+                                                <input type="hidden"
+                                                       name="<?= $escaper->escapeHtml($optionItem['name']) ?>"
+                                                       value="<?= $escaper->escapeHtml($optionItem['value']) ?>">
+                                            <?php endforeach; ?>
+                                            <input type="hidden"
+                                                   name="product"
+                                                   value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
+                                            <input type="hidden"
+                                                   name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
+                                                   value="<?=
+                                                   /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED]
+                                                    ?>">
+                                            <?= $block->getBlockHtml('formkey') ?>
+                                            <button type="submit"
+                                                    title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                                    class="action tocart primary"
+                                                    disabled>
+                                                <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                                            </button>
+                                        </form>
+                                    <?php else:?>
+                                        <?php if ($_product->isAvailable()):?>
+                                            <div class="stock available">
+                                                <span><?= $escaper->escapeHtml(__('In stock')) ?></span></div>
+                                        <?php else:?>
+                                            <div class="stock unavailable">
+                                                <span><?= $escaper->escapeHtml(__('Out of stock')) ?></span></div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                                <?= ($pos && strpos($pos, $viewMode . '-primary')) ?
+                                    /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                                        $position,
+                                        'product-item-info_' . $_product->getId() . ' div.actions-primary'
+                                    ) : '' ?>
+                                <div data-role="add-to-links" class="actions-secondary">
+                                    <?php if ($addToBlock = $block->getChildBlock('addto')): ?>
+                                        <?= $addToBlock->setProduct($_product)->getChildHtml() ?>
+                                    <?php endif; ?>
+                                    <?php
+                                    $shareUrl = (string) $_product->getProductUrl();
+                                    $shareTitle = (string) $_product->getName();
+                                    $encodedUrl = rawurlencode($shareUrl);
+                                    $encodedTitle = rawurlencode($shareTitle);
+                                    $encodedWhatsappText = rawurlencode($shareTitle . ' ' . $shareUrl);
+                                    $encodedEmailBody = rawurlencode($shareTitle . "\n" . $shareUrl);
+                                    ?>
+                                    <div class="product-share-wrap"
+                                         data-share-url="<?= $escaper->escapeUrl($shareUrl) ?>"
+                                         data-share-title="<?= $escaper->escapeHtmlAttr($shareTitle) ?>">
+                                        <button type="button"
+                                                class="product-share-btn"
+                                                title="<?= $escaper->escapeHtmlAttr(__('Share')) ?>"
+                                                aria-label="<?= $escaper->escapeHtmlAttr(__('Share')) ?>"
+                                                aria-expanded="false"
+                                                aria-haspopup="true">
+                                            <?= $escaper->escapeHtml(__('Share')) ?>
+                                        </button>
+                                        <div class="product-share-menu">
+                                            <a class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=<?= $escaper->escapeHtmlAttr($encodedUrl) ?>" target="_blank" rel="noopener noreferrer">Facebook</a>
+                                            <a class="share-link" href="https://twitter.com/intent/tweet?url=<?= $escaper->escapeHtmlAttr($encodedUrl) ?>&amp;text=<?= $escaper->escapeHtmlAttr($encodedTitle) ?>" target="_blank" rel="noopener noreferrer">X</a>
+                                            <a class="share-link" href="https://wa.me/?text=<?= $escaper->escapeHtmlAttr($encodedWhatsappText) ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                                            <a class="share-link" href="https://t.me/share/url?url=<?= $escaper->escapeHtmlAttr($encodedUrl) ?>&amp;text=<?= $escaper->escapeHtmlAttr($encodedTitle) ?>" target="_blank" rel="noopener noreferrer">Telegram</a>
+                                            <a class="share-link" href="mailto:?subject=<?= $escaper->escapeHtmlAttr($encodedTitle) ?>&amp;body=<?= $escaper->escapeHtmlAttr($encodedEmailBody) ?>">Email</a>
+                                            <button type="button" class="share-copy-btn"><?= $escaper->escapeHtml(__('Copy Link')) ?></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?= ($pos && strpos($pos, $viewMode . '-secondary')) ?
+                                    /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                                        $position,
+                                        'product-item-info_' . $_product->getId() . ' div.actions-secondary'
+                                    ) : '' ?>
+                            </div>
+                            <?php if ($showDescription): ?>
+                                <div class="product description product-item-description">
+                                    <?= /* @noEscape */ $_helper->productAttribute(
+                                        $_product,
+                                        $_product->getShortDescription(),
+                                        'short_description'
+                                    ) ?>
+                                    <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>"
+                                       title="<?= /* @noEscape */ $_productNameStripped ?>"
+                                       class="action more"><?= $escaper->escapeHtml(__('Learn More')) ?></a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?= ($pos && strpos($pos, $viewMode . '-actions')) ?
+                /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                    $position,
+                    'product-item-info_' . $_product->getId() . ' div.product-item-actions'
+                ) : '' ?>
+            </li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+    <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
+    <?php if ($viewMode === 'list'): ?>
+    <style>
+        .catalog-category-view .products-list .product-item .product-item-info,
+        .catalogsearch-result-index .products-list .product-item .product-item-info {
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 28px !important;
+            width: 100% !important;
+        }
+
+        .catalog-category-view .products-list .product-item .product-photo-slider,
+        .catalogsearch-result-index .products-list .product-item .product-photo-slider,
+        .catalog-category-view .products-list .product-item .product-item-photo,
+        .catalogsearch-result-index .products-list .product-item .product-item-photo {
+            width: 300px !important;
+            min-width: 300px !important;
+            max-width: 300px !important;
+            flex: 0 0 300px !important;
+        }
+
+        .catalog-category-view .products-list .product-item .product-item-photo .product-image-container,
+        .catalogsearch-result-index .products-list .product-item .product-item-photo .product-image-container {
+            width: 300px !important;
+            max-width: 300px !important;
+        }
+
+        .catalog-category-view .products-list .product-item .product-item-details,
+        .catalogsearch-result-index .products-list .product-item .product-item-details {
+            flex: 1 1 auto !important;
+            width: auto !important;
+            min-width: 0 !important;
+        }
+
+        @media (max-width: 767px) {
+            .catalog-category-view .products-list .product-item .product-item-info,
+            .catalogsearch-result-index .products-list .product-item .product-item-info {
+                display: block !important;
+            }
+
+            .catalog-category-view .products-list .product-item .product-photo-slider,
+            .catalogsearch-result-index .products-list .product-item .product-photo-slider,
+            .catalog-category-view .products-list .product-item .product-item-photo,
+            .catalogsearch-result-index .products-list .product-item .product-item-photo,
+            .catalog-category-view .products-list .product-item .product-item-photo .product-image-container,
+            .catalogsearch-result-index .products-list .product-item .product-item-photo .product-image-container {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+            }
+        }
+    </style>
+    <?php endif; ?>
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+<?php endif; ?>

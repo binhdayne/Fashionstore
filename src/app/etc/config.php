@@ -359,6 +359,7 @@ return [
         'FashionStore_ContactWidget' => 1,
         'FashionStore_CustomHeader' => 1,
         'FashionStore_ExchangeRate' => 1,
+        'FashionStore_PriceFilterFix' => 1,
         'FashionStore_ProductSize' => 1,
         'FashionStore_SocialLogin' => 1,
         'FashionStore_Weather' => 1,
@@ -366,6 +367,7 @@ return [
         'PayPal_BraintreeCustomerBalance' => 1,
         'PayPal_BraintreeGiftCardAccount' => 1,
         'PayPal_BraintreeGiftWrapping' => 1,
-        'PayPal_BraintreeGraphQl' => 1
+        'PayPal_BraintreeGraphQl' => 1,
+        'Vnpay_Payment' => 1
     ]
 ];

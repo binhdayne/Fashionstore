@@ -8,6 +8,5 @@
     <body>
         <referenceBlock name="FashionStore.chatwidget" remove="true"/>
         <referenceBlock name="fashionstore.contactwidget" remove="true"/>
-        <referenceBlock name="custom.header.weather" remove="true"/>
     </body>
 </page>

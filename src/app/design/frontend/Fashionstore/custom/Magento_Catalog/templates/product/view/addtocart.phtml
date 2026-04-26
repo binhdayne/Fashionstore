@@ -9,27 +9,91 @@
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
 <?php $buyNowTitle = __('Mua ngay'); ?>
+<?php $productUrl = $_product ? (string)$_product->getProductUrl() : ''; ?>
+<?php $productName = $_product ? (string)$_product->getName() : ''; ?>
+<?php $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($productUrl); ?>
+<?php $instagramShareUrl = 'https://www.instagram.com/?url=' . rawurlencode($productUrl); ?>
+<?php $xShareUrl = 'https://twitter.com/intent/tweet?url=' . rawurlencode($productUrl) . '&text=' . rawurlencode($productName); ?>
+<?php $mediaBaseUrl = rtrim((string)$block->getBaseUrl(), '/') . '/media/'; ?>
+<?php $facebookIconUrl = $mediaBaseUrl . 'share-icons/facebook.png'; ?>
+<?php $instagramIconUrl = $mediaBaseUrl . 'share-icons/instagram.png'; ?>
+<?php $xIconUrl = $mediaBaseUrl . 'share-icons/x.png'; ?>
 <?php if ($_product->isSaleable()) :?>
 <div class="box-tocart">
     <div class="fieldset">
         <?php if ($block->shouldRenderQuantity()) :?>
         <div class="field qty">
             <label class="label" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
-            <div class="control">
-                <input type="number"
-                       name="qty"
-                       id="qty"
-                       min="0"
-                       value="<?= $block->getProductDefaultQty() * 1 ?>"
-                       title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
-                       class="input-text qty"
-                       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
-                       />
+            <div class="control-wrap">
+                <div class="control">
+                    <button type="button"
+                            class="qty-btn qty-btn-minus"
+                            data-role="qty-decrease"
+                            aria-label="<?= $block->escapeHtmlAttr(__('Giảm số lượng')) ?>">-</button>
+                    <input type="number"
+                           name="qty"
+                           id="qty"
+                           min="0"
+                           value="<?= $block->getProductDefaultQty() * 1 ?>"
+                           title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                           class="input-text qty"
+                           data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                           />
+                    <button type="button"
+                            class="qty-btn qty-btn-plus"
+                            data-role="qty-increase"
+                            aria-label="<?= $block->escapeHtmlAttr(__('Tăng số lượng')) ?>">+</button>
+                </div>
+                <div class="fashionstore-share" data-role="share-wrap" data-inline-share-handler="1">
+                    <button type="button"
+                            class="fashionstore-share-toggle"
+                            data-role="share-toggle"
+                            aria-label="<?= $block->escapeHtmlAttr(__('Chia sẻ sản phẩm')) ?>"
+                            aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 3l4.5 4.5-1.4 1.4-2.1-2.1V15h-2V6.8L8.9 8.9 7.5 7.5 12 3zm-6 12h12v6H6v-6zm2 2v2h8v-2H8z"></path>
+                        </svg>
+                    </button>
+                    <div class="fashionstore-share-modal" data-role="share-modal" hidden>
+                        <div class="fashionstore-share-modal__backdrop" data-role="share-close"></div>
+                        <div class="fashionstore-share-modal__dialog" data-role="share-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="fashionstore-share-title">
+                            <h3 id="fashionstore-share-title"><?= $block->escapeHtml(__('Chia sẻ')) ?></h3>
+                            <p><?= $block->escapeHtml(__('Hãy chia sẻ nội dung này lên tài khoản xã hội của bạn.')) ?></p>
+                            <div class="fashionstore-share-modal__actions">
+                                          <a class="fashionstore-share-link fashionstore-share-link-instagram"
+                                              href="<?= $block->escapeUrl($instagramShareUrl) ?>"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                              aria-label="<?= $block->escapeHtmlAttr(__('Share on Instagram')) ?>">
+                                            <img src="<?= $block->escapeUrl($instagramIconUrl) ?>" alt="<?= $block->escapeHtmlAttr(__('Instagram')) ?>">
+                                          </a>
+                                <a class="fashionstore-share-link fashionstore-share-link-facebook"
+                                   href="<?= $block->escapeUrl($facebookShareUrl) ?>"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                              aria-label="<?= $block->escapeHtmlAttr(__('Share on Facebook')) ?>">
+                                            <img src="<?= $block->escapeUrl($facebookIconUrl) ?>" alt="<?= $block->escapeHtmlAttr(__('Facebook')) ?>">
+                                        </a>
+                                        <a class="fashionstore-share-link fashionstore-share-link-x"
+                                           href="<?= $block->escapeUrl($xShareUrl) ?>"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           aria-label="<?= $block->escapeHtmlAttr(__('Share on X')) ?>">
+                                            <img src="<?= $block->escapeUrl($xIconUrl) ?>" alt="<?= $block->escapeHtmlAttr(__('X')) ?>">
+                                          </a>
+                            </div>
+                            <button type="button" class="fashionstore-share-cancel" data-role="share-close-btn"><?= $block->escapeHtml(__('HỦY')) ?></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <?php endif; ?>
         <input type="hidden" name="return_url" value="" data-role="buy-now-return-url">
         <input type="hidden" name="fashionstore_buy_now" value="0" data-role="buy-now-flag">
+        <div class="fashionstore-buy-now-size-required" data-role="buy-now-size-required" hidden>
+            <?= $block->escapeHtml(__('Vui lòng chọn size trước khi thêm vào giỏ hoặc mua ngay.')) ?>
+        </div>
         <div class="actions fashionstore-product-actions">
             <button type="submit"
                     title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
@@ -50,6 +114,418 @@
     </div>
 </div>
 <?php endif; ?>
+<style>
+    .catalog-product-view .fotorama__arr,
+    .catalog-product-view .fotorama__fullscreen-icon,
+    .catalog-product-view .fotorama__nav-wrap,
+    .catalog-product-view .fotorama__thumb-border {
+        display: none !important;
+    }
+
+    .catalog-product-view .fotorama__stage {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .catalog-product-view .fotorama-item.fashionstore-grid-ready .fotorama__stage {
+        display: none !important;
+    }
+
+    .catalog-product-view .fashionstore-gallery-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0 !important;
+        width: 100% !important;
+    }
+
+    .catalog-product-view .fashionstore-gallery-grid__cell {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .catalog-product-view .fashionstore-gallery-grid__img {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover !important;
+    }
+
+    .catalog-product-view .product-info-main .page-title-wrapper .page-title,
+    .catalog-product-view .product-info-main .page-title-wrapper .page-title span {
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        font-variant: normal !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-reviews-summary {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin: 4px 0 12px !important;
+    }
+
+    .catalog-product-view .product-info-main .product-info-price {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .catalog-product-view .product-info-main .product-info-price .price-box {
+        margin: 0 !important;
+    }
+
+    .catalog-product-view .product-info-main .product-info-price .fashionstore-reviews-summary {
+        margin: 0 !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-stars {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 1px !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-star {
+        font-size: 22px !important;
+        color: #111 !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-reviews-summary .reviews-actions,
+    .catalog-product-view .product-info-main .fashionstore-reviews-summary .reviews-actions .action {
+        display: inline-flex !important;
+        align-items: baseline !important;
+        gap: 4px !important;
+        margin: 0 !important;
+        text-decoration: none !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-rating-value {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        color: #111 !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .product-info-main .fashionstore-review-count {
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        color: #0a5fb5 !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .fashionstore-size-options {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        margin-top: 10px !important;
+    }
+
+    .catalog-product-view .fashionstore-size-option {
+        min-width: 52px !important;
+        width: 52px !important;
+        height: 46px !important;
+        margin: 0 !important;
+        padding: 0 6px !important;
+        border: 1px solid #8f8f8f !important;
+        border-radius: 0 !important;
+        background: #f5f5f5 !important;
+        color: #111 !important;
+        font-size: 17px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        text-transform: uppercase !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .catalog-product-view .fashionstore-size-option.selected,
+    .catalog-product-view .fashionstore-size-option:hover {
+        border-color: #000 !important;
+        background: #000 !important;
+        color: #fff !important;
+        box-shadow: inset 0 0 0 2px #fff !important;
+    }
+
+    .catalog-product-view .field[data-attribute-code='size'] select,
+    .catalog-product-view .swatch-attribute[data-attribute-code='size'] select,
+    .catalog-product-view .swatch-attribute[data-attribute-code='size'] .super-attribute-select,
+    .catalog-product-view select.product-custom-option.fashionstore-size-select-hidden {
+        display: none !important;
+    }
+
+    .catalog-product-view .box-tocart .fieldset {
+        display: block !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty {
+        margin: 0 0 10px !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty .label {
+        display: block !important;
+        margin: 0 0 6px !important;
+        font-size: 14px !important;
+        color: #555 !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty .control-wrap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty .control {
+        width: 150px !important;
+        height: 44px !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 999px !important;
+        background: #f6f6f6 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty .qty-btn {
+        width: 40px !important;
+        height: 100% !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #707070 !important;
+        font-size: 24px !important;
+        font-weight: 300 !important;
+        padding: 0 !important;
+    }
+
+    .catalog-product-view .box-tocart .field.qty .input-text.qty {
+        width: 62px !important;
+        height: 100% !important;
+        border: 0 !important;
+        background: transparent !important;
+        text-align: center !important;
+        color: #111 !important;
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .catalog-product-view .fashionstore-share {
+        position: relative !important;
+    }
+
+    .catalog-product-view .fashionstore-share-toggle {
+        width: 38px !important;
+        height: 38px !important;
+        border: 1px solid #8fa8bf !important;
+        border-radius: 50% !important;
+        background: #fff !important;
+        color: #222 !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .catalog-product-view .fashionstore-share-toggle svg {
+        width: 17px !important;
+        height: 17px !important;
+        fill: #1f2e3d !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9998 !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal[hidden] {
+        display: none !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal.is-open {
+        display: flex !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal__backdrop {
+        position: absolute !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, .46) !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal__dialog {
+        position: relative !important;
+        width: min(720px, calc(100% - 30px)) !important;
+        background: #fff !important;
+        border-radius: 4px !important;
+        padding: 26px 20px 20px !important;
+        z-index: 2 !important;
+        text-align: left !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal__dialog h3 {
+        margin: 0 0 8px !important;
+        font-size: 18px !important;
+        line-height: 1.1 !important;
+        font-weight: 500 !important;
+        color: #000 !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal__dialog p {
+        margin: 0 0 22px !important;
+        font-size: 14px !important;
+        line-height: 1.32 !important;
+        color: #111 !important;
+    }
+
+    .catalog-product-view .fashionstore-share-modal__actions {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 12px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .catalog-product-view .fashionstore-share-link {
+        width: 46px !important;
+        height: 46px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-decoration: none !important;
+        position: relative !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+    }
+
+    .catalog-product-view .fashionstore-share-link img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .catalog-product-view .fashionstore-share-cancel {
+        display: block !important;
+        width: min(290px, 100%) !important;
+        height: 44px !important;
+        margin: 0 auto !important;
+        border: 1px solid #333 !important;
+        border-radius: 999px !important;
+        background: #fff !important;
+        color: #222 !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        letter-spacing: .08em !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions #instant-purchase {
+        display: none !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions .action {
+        width: 100% !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        border-radius: 999px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0 !important;
+        text-transform: uppercase !important;
+        padding: 0 14px !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions .action > span {
+        white-space: nowrap !important;
+        line-height: 1 !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions .action.tocart {
+        background: #000 !important;
+        border: 1px solid #000 !important;
+        color: #fff !important;
+    }
+
+    .catalog-product-view .box-tocart .actions.fashionstore-product-actions .action.buynow {
+        background: #fff !important;
+        border: 1px solid #000 !important;
+        color: #000 !important;
+    }
+
+    .catalog-product-view .fashionstore-buy-now-size-required {
+        margin: 0 0 10px !important;
+        color: #b42318 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .catalog-product-view .product-info-stock-sku,
+    .catalog-product-view .product.attribute.sku,
+    .catalog-product-view .product-info-stock-sku .type,
+    .catalog-product-view .product-info-stock-sku .value,
+    .catalog-product-view .product-info-main .sku {
+        display: none !important;
+    }
+
+    .catalog-product-view .product-social-links .action.tocompare,
+    .catalog-product-view .product-addto-links .action.tocompare,
+    .catalog-product-view .product-social-links .action.tocompare + .separator,
+    .catalog-product-view .product-addto-links .action.tocompare + .separator {
+        display: none !important;
+    }
+
+    @media (max-width: 768px) {
+        .catalog-product-view .fashionstore-gallery-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0 !important;
+        }
+
+        .catalog-product-view .fashionstore-share-modal__dialog {
+            padding: 22px 16px 18px !important;
+        }
+
+        .catalog-product-view .fashionstore-share-modal__dialog h3 {
+            font-size: 16px !important;
+        }
+
+        .catalog-product-view .fashionstore-share-modal__dialog p {
+            font-size: 13px !important;
+        }
+
+        .catalog-product-view .box-tocart .field.qty .control {
+            max-width: 180px !important;
+            width: 100% !important;
+        }
+
+        .catalog-product-view .box-tocart .actions.fashionstore-product-actions {
+            grid-template-columns: 1fr 1fr !important;
+        }
+
+        .catalog-product-view .box-tocart .actions.fashionstore-product-actions .action {
+            font-size: 12px !important;
+        }
+    }
+</style>
 <script type="text/x-magento-init">
     {
         "#product_addtocart_form": {
@@ -59,4 +535,258 @@
             }
         }
     }
+</script>
+<script>
+    (function () {
+        'use strict';
+
+        function buildFullGalleryGrid() {
+            var galleries = document.querySelectorAll('.catalog-product-view .fotorama-item');
+
+            galleries.forEach(function (gallery) {
+                var stage = gallery.querySelector('.fotorama__stage'),
+                    grid = gallery.querySelector('.fashionstore-gallery-grid'),
+                    navThumbs = Array.from(gallery.querySelectorAll('.fotorama__nav__frame img')),
+                    altText,
+                    seen = {},
+                    uniqueUrls = [],
+                    displayUrls = [];
+
+                if (!stage || !navThumbs.length) {
+                    return;
+                }
+
+                altText = (stage.querySelector('img') || navThumbs[0]).getAttribute('alt') || '';
+
+                if (!grid) {
+                    grid = document.createElement('div');
+                    grid.className = 'fashionstore-gallery-grid';
+                    stage.parentNode.insertBefore(grid, stage.nextSibling);
+                }
+
+                navThumbs.forEach(function (thumb) {
+                    var src = thumb.currentSrc || thumb.getAttribute('src') || thumb.getAttribute('data-src') || thumb.src || '',
+                        parsed,
+                        cleanPath,
+                        fullUrl;
+
+                    if (!src) {
+                        return;
+                    }
+
+                    try {
+                        parsed = new URL(src, window.location.origin);
+                    } catch (error) {
+                        return;
+                    }
+
+                    cleanPath = parsed.pathname;
+                    if (cleanPath.indexOf('/media/catalog/product/') === -1) {
+                        return;
+                    }
+
+                    cleanPath = cleanPath.replace(/\/cache\/[^/]+\//, '/');
+
+                    fullUrl = window.location.origin + cleanPath;
+                    if (!seen[fullUrl]) {
+                        seen[fullUrl] = true;
+                        uniqueUrls.push(fullUrl);
+                    }
+                });
+
+                if (!uniqueUrls.length) {
+                    return;
+                }
+
+                displayUrls = uniqueUrls.slice(0, 4);
+
+                if (!displayUrls.length) {
+                    return;
+                }
+
+                if (grid.querySelectorAll('.fashionstore-gallery-grid__img').length === displayUrls.length) {
+                    var currentUrls = Array.from(grid.querySelectorAll('.fashionstore-gallery-grid__img')).map(function (img) {
+                            return img.getAttribute('src') || '';
+                        }),
+                        normalizedCurrent = currentUrls.map(function (url) {
+                            return url.split('?')[0];
+                        }),
+                        normalizedTarget = displayUrls.map(function (url) {
+                            return url.split('?')[0];
+                        }),
+                        isSameOrder = normalizedCurrent.length === normalizedTarget.length &&
+                            normalizedCurrent.every(function (url, index) {
+                                return url === normalizedTarget[index];
+                            });
+
+                    if (isSameOrder) {
+                        return;
+                    }
+                }
+
+                grid.innerHTML = '';
+                displayUrls.forEach(function (url, index) {
+                    var cell = document.createElement('div'),
+                        img = document.createElement('img');
+
+                    cell.className = 'fashionstore-gallery-grid__cell';
+                    img.className = 'fashionstore-gallery-grid__img';
+                    img.src = url;
+                    img.alt = altText;
+                    img.loading = index < 2 ? 'eager' : 'lazy';
+
+                    cell.appendChild(img);
+                    grid.appendChild(cell);
+                });
+
+                gallery.classList.add('fashionstore-grid-ready');
+            });
+        }
+
+        function moveReviewSummaryNearPrice() {
+            var productMain = document.querySelector('.catalog-product-view .product-info-main'),
+                summary,
+                infoPrice,
+                priceBox;
+
+            if (!productMain) {
+                return;
+            }
+
+            summary = productMain.querySelector('.fashionstore-reviews-summary');
+            infoPrice = productMain.querySelector('.product-info-price');
+            priceBox = infoPrice ? infoPrice.querySelector('.price-box') : null;
+
+            if (!summary || !infoPrice || !priceBox) {
+                return;
+            }
+
+            if (summary.parentElement !== infoPrice) {
+                infoPrice.insertBefore(summary, priceBox.nextSibling);
+            }
+        }
+
+        function closeAllShareModal() {
+            document.querySelectorAll('[data-role="share-modal"]').forEach(function (modal) {
+                modal.setAttribute('hidden', 'hidden');
+                modal.classList.remove('is-open');
+            });
+            document.querySelectorAll('[data-role="share-toggle"]').forEach(function (toggle) {
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+            document.body.classList.remove('fashionstore-share-open');
+        }
+
+        function bindShareModalFallback() {
+            var wrap = document.querySelector('[data-role="share-wrap"]'),
+                toggle,
+                modal,
+                dialog,
+                closeTriggers;
+
+            if (!wrap || wrap.getAttribute('data-share-fallback-bound') === '1') {
+                return;
+            }
+
+            toggle = wrap.querySelector('[data-role="share-toggle"]');
+            modal = wrap.querySelector('[data-role="share-modal"]');
+            dialog = wrap.querySelector('[data-role="share-modal-dialog"]');
+            closeTriggers = wrap.querySelectorAll('[data-role="share-close"], [data-role="share-close-btn"]');
+
+            if (!toggle || !modal) {
+                return;
+            }
+
+            wrap.setAttribute('data-share-fallback-bound', '1');
+
+            toggle.addEventListener('click', function (event) {
+                var isOpen = !modal.hasAttribute('hidden') && modal.classList.contains('is-open');
+
+                event.preventDefault();
+                closeAllShareModal();
+
+                if (!isOpen) {
+                    modal.removeAttribute('hidden');
+                    modal.classList.add('is-open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    document.body.classList.add('fashionstore-share-open');
+                }
+            });
+
+            closeTriggers.forEach(function (node) {
+                node.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    closeAllShareModal();
+                });
+            });
+
+            if (dialog) {
+                dialog.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
+        }
+
+        if (!document.querySelector('[data-role="share-wrap"][data-inline-share-handler="1"]')) {
+            document.addEventListener('click', function (event) {
+                var toggle = event.target.closest('[data-role="share-toggle"]'),
+                    closeTrigger = event.target.closest('[data-role="share-close"], [data-role="share-close-btn"]'),
+                    modalDialog = event.target.closest('[data-role="share-modal-dialog"]'),
+                    wrap,
+                    modal,
+                    isOpen;
+
+                if (toggle) {
+                    event.preventDefault();
+                    wrap = toggle.closest('[data-role="share-wrap"]');
+                    modal = wrap ? wrap.querySelector('[data-role="share-modal"]') : null;
+                    if (!modal) {
+                        return;
+                    }
+
+                    isOpen = !modal.hasAttribute('hidden') && modal.classList.contains('is-open');
+                    closeAllShareModal();
+
+                    if (!isOpen) {
+                        modal.removeAttribute('hidden');
+                        modal.classList.add('is-open');
+                        toggle.setAttribute('aria-expanded', 'true');
+                        document.body.classList.add('fashionstore-share-open');
+                    }
+                    return;
+                }
+
+                if (closeTrigger) {
+                    event.preventDefault();
+                    closeAllShareModal();
+                    return;
+                }
+
+                if (modalDialog) {
+                    event.stopPropagation();
+                }
+            }, true);
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeAllShareModal();
+            }
+        });
+
+        buildFullGalleryGrid();
+        moveReviewSummaryNearPrice();
+        bindShareModalFallback();
+        document.addEventListener('contentUpdated', buildFullGalleryGrid);
+        document.addEventListener('contentUpdated', moveReviewSummaryNearPrice);
+        document.addEventListener('contentUpdated', bindShareModalFallback);
+        window.setTimeout(buildFullGalleryGrid, 150);
+        window.setTimeout(buildFullGalleryGrid, 500);
+        window.setTimeout(buildFullGalleryGrid, 900);
+        window.setTimeout(buildFullGalleryGrid, 1400);
+        window.setTimeout(moveReviewSummaryNearPrice, 120);
+        window.setTimeout(moveReviewSummaryNearPrice, 420);
+        window.setTimeout(bindShareModalFallback, 120);
+        window.setTimeout(bindShareModalFallback, 420);
+    }());
 </script>

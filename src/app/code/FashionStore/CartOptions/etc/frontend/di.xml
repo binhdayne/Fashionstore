@@ -12,6 +12,8 @@
     <type name="Magento\Checkout\Controller\Onepage\Success">
         <plugin name="fashionstore_cartoptions_restore_original_quote_after_buy_now"
                 type="FashionStore\CartOptions\Plugin\Checkout\RestoreOriginalQuotePlugin"/>
+        <plugin name="fashionstore_cartoptions_redirect_gateway_on_success"
+            type="FashionStore\CartOptions\Plugin\Checkout\RedirectGatewayPaymentOnSuccessPlugin"/>
     </type>
     <type name="Magento\Checkout\Controller\Index\Index">
         <plugin name="fashionstore_cartoptions_require_login_for_checkout"

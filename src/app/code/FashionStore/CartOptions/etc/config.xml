@@ -10,7 +10,7 @@
                 <active>0</active>
             </cashondelivery>
             <fashionstore_vnpay>
-                <active>1</active>
+                <active>0</active>
                 <model>FashionStore\CartOptions\Model\Payment\Vnpay</model>
                 <order_status>pending</order_status>
                 <title>VNPay</title>

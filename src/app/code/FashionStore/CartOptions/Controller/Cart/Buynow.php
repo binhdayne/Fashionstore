@@ -14,6 +14,8 @@ use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\UrlInterface;
+use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteFactory;
@@ -42,6 +44,8 @@ class Buynow extends Action
 
     private CustomerRepositoryInterface $customerRepository;
 
+    private UrlInterface $urlBuilder;
+
     public function __construct(
         Context $context,
         FormKeyValidator $formKeyValidator,
@@ -62,6 +66,7 @@ class Buynow extends Action
         $this->storeManager = $storeManager;
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
+        $this->urlBuilder = $context->getUrl();
     }
 
     public function execute(): Redirect
@@ -77,6 +82,9 @@ class Buynow extends Action
 
         try {
             if (!$this->customerSession->isLoggedIn()) {
+                $targetUrl = $this->resolveLoginTargetUrl();
+                $this->customerSession->setBeforeAuthUrl($targetUrl);
+                $this->customerSession->setAfterAuthUrl($targetUrl);
                 $this->messageManager->addErrorMessage(__('Vui lòng đăng nhập để sử dụng Mua ngay.'));
                 return $resultRedirect->setPath('customer/account/login');
             }
@@ -91,11 +99,23 @@ class Buynow extends Action
             $store = $this->storeManager->getStore();
             $product = $this->productRepository->getById($productId, false, (int) $store->getId());
             $originalQuoteId = (int) $this->checkoutSession->getQuoteId();
+            $sourceQuote = null;
+
+            if ($originalQuoteId > 0) {
+                try {
+                    $sourceQuote = $this->cartRepository->get($originalQuoteId);
+                } catch (NoSuchEntityException $exception) {
+                    $sourceQuote = null;
+                }
+            }
+
             $buyNowQuote = $this->quoteFactory->create();
 
             $buyNowQuote->setStoreId((int) $store->getId());
+            $buyNowQuote->setStore($store);
             $buyNowQuote->setIsActive(true);
             $buyNowQuote->setInventoryProcessed(false);
+            $this->applyCurrencyContextFromStore($buyNowQuote);
 
             if ($this->customerSession->isLoggedIn()) {
                 $customer = $this->customerRepository->getById((int) $this->customerSession->getCustomerId());
@@ -111,6 +131,10 @@ class Buynow extends Action
             $result = $buyNowQuote->addProduct($product, new DataObject($buyNowRequest));
             if (is_string($result)) {
                 throw new LocalizedException(__($result));
+            }
+
+            if ($sourceQuote && (int) $sourceQuote->getId() > 0) {
+                $this->copyCheckoutContextFromSourceQuote($buyNowQuote, $sourceQuote);
             }
 
             $buyNowQuote->collectTotals();
@@ -134,7 +158,7 @@ class Buynow extends Action
                 $this->checkoutSession->unsetData(self::SESSION_KEY_ORIGINAL_QUOTE_ID);
             }
 
-            return $resultRedirect->setPath('checkout');
+            return $resultRedirect->setUrl($this->urlBuilder->getUrl('checkout') . '#payment');
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
         } catch (\Throwable $exception) {
@@ -158,5 +182,77 @@ class Buynow extends Action
             $this->checkoutSession->replaceQuote($originalQuote);
         } catch (NoSuchEntityException $exception) {
         }
+    }
+
+    private function resolveLoginTargetUrl(): string
+    {
+        $baseUrl = $this->urlBuilder->getBaseUrl();
+        $refererUrl = (string) $this->getRequest()->getServer('HTTP_REFERER');
+
+        if ($refererUrl !== '' && str_starts_with($refererUrl, $baseUrl)) {
+            return $refererUrl;
+        }
+
+        $productId = (int) $this->getRequest()->getParam('product');
+        if ($productId > 0) {
+            try {
+                $product = $this->productRepository->getById($productId, false, (int) $this->storeManager->getStore()->getId());
+
+                return (string) $product->getProductUrl();
+            } catch (NoSuchEntityException $exception) {
+            }
+        }
+
+        return $baseUrl;
+    }
+
+    private function applyCurrencyContextFromStore(Quote $quote): void
+    {
+        $store = $quote->getStore();
+
+        $quote->setGlobalCurrencyCode((string) $store->getCurrentCurrencyCode());
+        $quote->setBaseCurrencyCode((string) $store->getBaseCurrencyCode());
+        $quote->setStoreCurrencyCode((string) $store->getCurrentCurrencyCode());
+        $quote->setQuoteCurrencyCode((string) $store->getCurrentCurrencyCode());
+
+        $baseToQuoteRate = (float) ($store->getBaseCurrency()->getRate($store->getCurrentCurrency()) ?: 1);
+        $storeToBaseRate = $baseToQuoteRate > 0 ? 1 / $baseToQuoteRate : 1;
+
+        $quote->setBaseToGlobalRate(1.0);
+        $quote->setStoreToBaseRate($storeToBaseRate);
+        $quote->setStoreToQuoteRate(1.0);
+        $quote->setBaseToQuoteRate($baseToQuoteRate > 0 ? $baseToQuoteRate : 1.0);
+    }
+
+    private function copyCheckoutContextFromSourceQuote(Quote $targetQuote, Quote $sourceQuote): void
+    {
+        if ($sourceQuote->isVirtual()) {
+            return;
+        }
+
+        $this->copyAddressData($targetQuote->getShippingAddress(), $sourceQuote->getShippingAddress());
+        $this->copyAddressData($targetQuote->getBillingAddress(), $sourceQuote->getBillingAddress());
+
+        $shippingMethod = (string) $sourceQuote->getShippingAddress()->getShippingMethod();
+        if ($shippingMethod !== '') {
+            $targetQuote->getShippingAddress()->setShippingMethod($shippingMethod);
+        }
+
+        $paymentMethod = (string) $sourceQuote->getPayment()->getMethod();
+        if ($paymentMethod !== '') {
+            $targetQuote->getPayment()->setMethod($paymentMethod);
+        }
+    }
+
+    private function copyAddressData(AddressInterface $targetAddress, AddressInterface $sourceAddress): void
+    {
+        if (!$sourceAddress->getId()) {
+            return;
+        }
+
+        $targetAddress->addData($sourceAddress->getData());
+        $targetAddress->setId(null);
+        $targetAddress->setQuoteId(null);
+        $targetAddress->setCustomerAddressId($sourceAddress->getCustomerAddressId());
     }
 }
