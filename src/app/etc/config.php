@@ -357,7 +357,7 @@ return [
         'FashionStore_CartOptions' => 1,
         'FashionStore_ChatWidget' => 1,
         'FashionStore_ContactWidget' => 1,
-        'FashionStore_CustomHeader' => 0,
+        'FashionStore_CustomHeader' => 1,
         'FashionStore_ExchangeRate' => 0,
         'FashionStore_Recommendation' => 1,
         'FashionStore_SocialLogin' => 0,

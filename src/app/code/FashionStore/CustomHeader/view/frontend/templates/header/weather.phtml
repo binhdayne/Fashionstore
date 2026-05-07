@@ -124,13 +124,17 @@ $translationStringsJson = json_encode(
     }
 
     #header-info-bar {
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: space-between;
         gap: 20px;
         min-height: 52px;
         width: 100%;
         font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+    }
+
+    #header-info-bar.is-mounted {
+        display: flex;
     }
 
     .left-section,
@@ -201,8 +205,6 @@ $translationStringsJson = json_encode(
         gap: 4px;
         flex: 0 0 auto;
     }
-
-
 
     .weather-icon {
         width: 16px;
@@ -297,6 +299,32 @@ $translationStringsJson = json_encode(
     .inline-search-bar .search-icon-right svg {
         width: 16px;
         height: 16px;
+    }
+    .header-cart-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+        color: #fff;
+        text-decoration: none;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        flex: 0 0 auto;
+    }
+
+    .header-cart-link:hover,
+    .header-cart-link:focus {
+        border-color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+    }
+
+    .header-cart-link svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
     }
 
     @media (max-width: 600px) {
@@ -894,6 +922,13 @@ $translationStringsJson = json_encode(
                 </svg>
             </span>
         </div>
+        <a class="header-cart-link" href="/checkout/cart/" aria-label="View cart">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true" focusable="false">
+                <circle cx="9" cy="20" r="1.5"></circle>
+                <circle cx="18" cy="20" r="1.5"></circle>
+                <path d="M3 4h2l2.3 10.2a1 1 0 0 0 1 .8h9.8a1 1 0 0 0 1-.8L21 7H7"></path>
+            </svg>
+        </a>
     </div>
 </div>
 
@@ -1315,6 +1350,21 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         return $('#custom-search-input');
     }
 
+    function mountHeaderBar() {
+        var $headerBar = $('#header-info-bar');
+        var $target = $('.page-header .panel.header');
+
+        if (!$headerBar.length || !$target.length) {
+            return;
+        }
+
+        if (!$headerBar.parent().is($target)) {
+            $target.append($headerBar);
+        }
+
+        $headerBar.addClass('is-mounted');
+    }
+
     function hideSearchResults() {
         $('#search-filled-state').prop('hidden', true);
         $('#search-products-section').prop('hidden', true);
@@ -1569,6 +1619,7 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         fetchSearchSuggestions();
     });
 
+    mountHeaderBar();
     renderCustomerState(customerData.get('customer')());
     customerData.get('customer').subscribe(renderCustomerState);
     startPlaceholderRotation();
