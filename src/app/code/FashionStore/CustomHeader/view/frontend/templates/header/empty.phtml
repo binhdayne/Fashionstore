@@ -1,3 +1,7 @@
 <?php
-// Empty template to hide default header links
-?>
+/** @var \Magento\Framework\View\Element\Template $block */
+
+echo $block->getLayout()
+	->createBlock(\FashionStore\CustomHeader\Block\Header::class, 'custom.header.weather.inline')
+	->setTemplate('FashionStore_CustomHeader::header/weather.phtml')
+	->toHtml();

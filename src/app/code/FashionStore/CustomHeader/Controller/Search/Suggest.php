@@ -33,15 +33,16 @@ class Suggest extends Action implements HttpGetActionInterface
         CollectionFactory $productCollectionFactory,
         StoreManagerInterface $storeManager,
         Visibility $productVisibility,
-        ImageHelper $imageHelper,
-        PricingHelper $pricingHelper
+        ?ImageHelper $imageHelper = null,
+        ?PricingHelper $pricingHelper = null
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->storeManager = $storeManager;
         $this->productVisibility = $productVisibility;
-        $this->imageHelper = $imageHelper;
-        $this->pricingHelper = $pricingHelper;
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->imageHelper = $imageHelper ?: $objectManager->get(ImageHelper::class);
+        $this->pricingHelper = $pricingHelper ?: $objectManager->get(PricingHelper::class);
         parent::__construct($context);
     }
 
@@ -77,10 +78,11 @@ class Suggest extends Action implements HttpGetActionInterface
         $items = [];
 
         foreach ($collection as $product) {
+            $product->setStoreId($storeId);
             $items[] = [
                 'name' => (string) $product->getName(),
                 'sku' => (string) $product->getSku(),
-                'url' => $product->getProductUrl(),
+                'url' => (string) $product->getProductUrl(),
                 'image' => (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl(),
                 'price' => (string) $this->pricingHelper->currencyByStore(
                     (float) $product->getFinalPrice(),

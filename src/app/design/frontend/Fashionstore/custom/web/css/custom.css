@@ -503,3 +503,90 @@ body.catalog-category-view .filter-options-title,
 body.catalog-category-view .filter-options-content {
     display: none !important;
 }
+
+/* Product detail: size chips and +/- quantity controls */
+.catalog-product-view .product-options-wrapper .fs-size-select--hidden {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    pointer-events: none !important;
+}
+
+.catalog-product-view .product-options-wrapper .fs-size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.catalog-product-view .product-options-wrapper .fs-size-option {
+    min-width: 46px;
+    height: 40px;
+    border: 1px solid #d6d6d6;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.catalog-product-view .product-options-wrapper .fs-size-option:hover {
+    border-color: #1a1a1a;
+}
+
+.catalog-product-view .product-options-wrapper .fs-size-option.is-active {
+    border-color: #1a1a1a;
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.catalog-product-view .product-options-wrapper .fs-size-option.is-disabled,
+.catalog-product-view .product-options-wrapper .fs-size-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.catalog-product-view .box-tocart .field.qty .control {
+    width: auto;
+}
+
+.catalog-product-view .box-tocart .fs-qty-control {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #d6d6d6;
+    background: #fff;
+}
+
+.catalog-product-view .box-tocart .fs-qty-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: #1a1a1a;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.catalog-product-view .box-tocart .fs-qty-btn:hover {
+    background: #f3f3f3;
+}
+
+.catalog-product-view .box-tocart .fs-qty-control .input-text.qty {
+    width: 52px;
+    min-width: 52px;
+    height: 36px;
+    border: none;
+    text-align: center;
+    box-shadow: none;
+    -moz-appearance: textfield;
+}
+
+.catalog-product-view .box-tocart .fs-qty-control .input-text.qty::-webkit-outer-spin-button,
+.catalog-product-view .box-tocart .fs-qty-control .input-text.qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

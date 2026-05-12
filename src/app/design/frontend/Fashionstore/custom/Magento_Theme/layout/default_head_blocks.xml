@@ -3,5 +3,6 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="css/custom.css"/>
+        <script src="js/product-options-enhancements.js"/>
     </head>
 </page>

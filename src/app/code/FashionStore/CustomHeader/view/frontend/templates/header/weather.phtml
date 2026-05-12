@@ -1054,6 +1054,7 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
     var placeholderIntervalId = null;
     var suggestionTimerId = null;
     var suggestionRequest = null;
+    var searchQueryParamName = '<?= $escaper->escapeJs($queryParam) ?>';
 
     /* ═══════════════════════════════════════════════════════════════════
      *  PRODUCT DATABASE — 100 SKUs (ID 2-101)
@@ -1421,9 +1422,9 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         var nameHtml = (query && matchType === 'name')
             ? getHighlightedText(item.name, query, matchType)
             : escapeHtml(item.name);
-        var productUrl = (item && item.url) ? item.url : ('/' + (item.sku || '') + '.html');
+        var productUrl = (item && item.url) ? item.url : '#';
 
-        return '<a class="search-product-card no-underline" href="' + escapeHtml(productUrl) + '">' +
+        return '<a class="search-product-card no-underline" href="' + escapeHtml(productUrl) + '" data-sku="' + escapeHtml(item.sku) + '" data-name="' + escapeHtml(item.name) + '">' +
             '<div class="search-product-img-wrap">' +
             '<img class="search-product-img" src="' + escapeHtml(resolveProductImageUrl(item)) + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
             '</div>' +
@@ -1459,7 +1460,7 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
     /* ═══ FILLED STATE: Suggestions + Results ═══ */
     function renderSearchResults(query) {
         var searchUrl = $('#search_form').attr('action');
-        var queryParamName = '<?= $escaper->escapeJs($queryParam) ?>';
+        var queryParamName = searchQueryParamName;
 
         $('#search-loading').prop('hidden', true);
 
@@ -1753,6 +1754,51 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         if (event.key === 'Escape') {
             toggleSearch(false);
         }
+    });
+
+    $(document).on('click', '.search-product-card', function (event) {
+        var $card = $(this);
+        var href = ($card.attr('href') || '').trim();
+        var sku = ($card.attr('data-sku') || '').trim();
+        var name = ($card.attr('data-name') || '').trim();
+        var searchUrl = $('#search_form').attr('action');
+        var fallbackUrl = searchUrl + '?' + encodeURIComponent(searchQueryParamName) + '=' + encodeURIComponent(name || sku);
+
+        if (href && href !== '#') {
+            return;
+        }
+
+        event.preventDefault();
+
+        $.ajax({
+            url: suggestProductsUrl,
+            data: { q: sku || name },
+            dataType: 'json',
+            cache: false
+        }).done(function (response) {
+            var targetUrl = '';
+
+            if ($.isArray(response) && response.length) {
+                $.each(response, function (_, entry) {
+                    if (!entry || !entry.url) {
+                        return;
+                    }
+
+                    if (sku && entry.sku && String(entry.sku).toLowerCase() === sku.toLowerCase()) {
+                        targetUrl = String(entry.url);
+                        return false;
+                    }
+
+                    if (!targetUrl) {
+                        targetUrl = String(entry.url);
+                    }
+                });
+            }
+
+            window.location.href = targetUrl || fallbackUrl;
+        }).fail(function () {
+            window.location.href = fallbackUrl;
+        });
     });
 
     $(document).on('submit', '#search_form', function (event) {

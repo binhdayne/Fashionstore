@@ -163,6 +163,23 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             cursor: pointer !important;
         }
 
+        .checkout-cart-index .fashionstore-select-all {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            margin-bottom: 10px !important;
+            font-size: 11px !important;
+            color: #1a1a1a !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .checkout-cart-index .fashionstore-select-all__checkbox {
+            width: 14px !important;
+            height: 14px !important;
+            accent-color: #1a1a1a !important;
+            cursor: pointer !important;
+        }
+
         .checkout-cart-index .cart.item .product-item-photo {
             width: 98px !important;
             min-width: 98px !important;
@@ -407,6 +424,14 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             font-weight: 500 !important;
         }
 
+        .checkout-cart-index .cart-summary .table.totals .amount,
+        .checkout-cart-index .cart-summary .table.totals .amount .price {
+            color: #1a1a1a !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+        }
+
         .checkout-cart-index .cart-summary .table.totals .grand th,
         .checkout-cart-index .cart-summary .table.totals .grand td {
             border-bottom: 1px dashed #ddd1bc !important;
@@ -417,6 +442,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             color: #d2232a !important;
             font-size: 28px !important;
             font-weight: 600 !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .totals.sub {
+            display: none !important;
         }
 
         .checkout-cart-index .checkout.methods.items {
@@ -823,17 +852,6 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
             enhanceQtyControls();
 
-            if (!window.fashionstoreCartQtyObserverInitialized) {
-                window.fashionstoreCartQtyObserverInitialized = true;
-
-                new MutationObserver(function () {
-                    enhanceQtyControls();
-                }).observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-
             document.addEventListener('click', function (event) {
                 var button = event.target.closest('[data-qty-action]');
                 var input;
@@ -866,13 +884,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
     <script>
     (function () {
-        function getTotalsData() {
-            if (!window.checkoutConfig || !window.checkoutConfig.totalsData) {
-                return null;
-            }
-
-            return window.checkoutConfig.totalsData;
-        }
+        var numberFormatter = new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
 
         function formatVnd(amount) {
             var normalized = Number(amount || 0);
@@ -881,58 +896,242 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                 normalized = 0;
             }
 
-            return new Intl.NumberFormat('vi-VN').format(Math.round(normalized)) + ' đ';
+            return numberFormatter.format(normalized) + ' đ';
         }
 
-        function ensureGrandTotalValue() {
+        function parseMoney(text) {
+            var normalized = String(text || '').trim();
+
+            if (!normalized) {
+                return 0;
+            }
+
+            normalized = normalized.replace(/\u00a0/g, ' ').replace(/[^0-9,.-]/g, '');
+
+            if (normalized.indexOf(',') !== -1 && normalized.indexOf('.') !== -1) {
+                normalized = normalized.replace(/\./g, '').replace(',', '.');
+            } else if (normalized.indexOf(',') !== -1) {
+                normalized = normalized.replace(',', '.');
+            }
+
+            var parsed = parseFloat(normalized);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function getItemSubtotal(checkbox) {
+            var row = checkbox.closest('tbody.cart.item');
+            var subtotalCell = row ? row.querySelector('.col.subtotal') : null;
+            var priceNode = subtotalCell ? subtotalCell.querySelector('.price') : null;
+            var subtotalText = priceNode ? priceNode.textContent : (subtotalCell ? subtotalCell.textContent : '');
+
+            return parseMoney(subtotalText);
+        }
+
+        function getTotalRows() {
             var totalsRoot = document.getElementById('cart-totals');
-            var totalsData = getTotalsData();
-            var grandTotal;
+            var summaryRoot = document.querySelector('.checkout-cart-index .cart-summary');
+            var table;
             var tableBody;
             var grandRow;
-            var priceNode;
 
-            if (!totalsRoot || !totalsData) {
-                return;
+            if (!totalsRoot && summaryRoot) {
+                totalsRoot = document.createElement('div');
+                totalsRoot.id = 'cart-totals';
+                totalsRoot.className = 'cart-totals';
+
+                table = document.createElement('table');
+                table.className = 'data table totals';
+                table.innerHTML = '<tbody></tbody>';
+                totalsRoot.appendChild(table);
+
+                summaryRoot.insertBefore(totalsRoot, summaryRoot.querySelector('.checkout.methods.items'));
             }
 
-            grandTotal = totalsData.grand_total;
-            if (typeof grandTotal === 'undefined' || grandTotal === null) {
-                grandTotal = totalsData.base_grand_total;
+            tableBody = totalsRoot ? totalsRoot.querySelector('table.totals tbody') : null;
+            if (!tableBody && totalsRoot) {
+                table = document.createElement('table');
+                table.className = 'data table totals';
+                table.innerHTML = '<tbody></tbody>';
+                totalsRoot.appendChild(table);
+                tableBody = table.querySelector('tbody');
             }
 
-            if (typeof grandTotal === 'undefined' || grandTotal === null) {
-                return;
+            if (tableBody) {
+                tableBody.querySelectorAll('tr.totals.sub').forEach(function (row) {
+                    row.remove();
+                });
             }
 
-            tableBody = totalsRoot.querySelector('table.totals tbody');
-            if (!tableBody) {
-                return;
-            }
-
-            grandRow = tableBody.querySelector('tr.grand.totals');
-            if (!grandRow) {
+            grandRow = tableBody ? tableBody.querySelector('tr.grand.totals') : null;
+            if (!grandRow && tableBody) {
                 grandRow = document.createElement('tr');
                 grandRow.className = 'grand totals';
                 grandRow.innerHTML = '<th class="mark" scope="row"><strong>Tổng thanh toán</strong></th>' +
-                    '<td class="amount"><strong><span class="price"></span></strong></td>';
+                    '<td class="amount"><strong><span class="price">0,00 đ</span></strong></td>';
                 tableBody.appendChild(grandRow);
             }
 
-            priceNode = grandRow.querySelector('.amount .price');
+            return {
+                grandRow: grandRow
+            };
+        }
+
+        function setRowAmount(row, amount) {
+            var amountNode;
+            var priceNode;
+
+            if (!row) {
+                return;
+            }
+
+            amountNode = row.querySelector('.amount');
+            if (!amountNode) {
+                amountNode = document.createElement('td');
+                amountNode.className = 'amount';
+                row.appendChild(amountNode);
+            }
+
+            priceNode = amountNode.querySelector('.price');
+            if (!priceNode) {
+                priceNode = document.createElement('span');
+                priceNode.className = 'price';
+                amountNode.textContent = '';
+                amountNode.appendChild(priceNode);
+            }
+
             if (!priceNode) {
                 return;
             }
 
-            if (!String(priceNode.textContent || '').trim()) {
-                priceNode.textContent = formatVnd(grandTotal);
+            priceNode.textContent = formatVnd(amount);
+            priceNode.style.color = row.classList.contains('grand') ? '#d2232a' : '#1a1a1a';
+            priceNode.style.opacity = '1';
+            priceNode.style.visibility = 'visible';
+        }
+
+        function getItemCheckboxes() {
+            return Array.prototype.slice.call(document.querySelectorAll('.checkout-cart-index .fashionstore-item-select__checkbox'));
+        }
+
+        function getCheckedItemsTotal() {
+            return getItemCheckboxes().reduce(function (total, checkbox) {
+                if (!checkbox.checked) {
+                    return total;
+                }
+
+                return total + getItemSubtotal(checkbox);
+            }, 0);
+        }
+
+        function getAllCheckboxState() {
+            var checkboxes = getItemCheckboxes();
+            var checkedCount = checkboxes.filter(function (checkbox) {
+                return checkbox.checked;
+            }).length;
+
+            return {
+                total: checkboxes.length,
+                checked: checkedCount,
+                allChecked: checkboxes.length > 0 && checkedCount === checkboxes.length,
+                someChecked: checkedCount > 0 && checkedCount < checkboxes.length
+            };
+        }
+
+        function updateSelectAllState() {
+            var state = getAllCheckboxState();
+            var selectAll = document.querySelector('.checkout-cart-index .fashionstore-select-all__checkbox');
+
+            if (!selectAll) {
+                return;
             }
+
+            selectAll.checked = state.allChecked;
+            selectAll.indeterminate = state.someChecked;
+        }
+
+        function updateTotalsBySelection() {
+            var rows = getTotalRows();
+            var selectedTotal = getCheckedItemsTotal();
+
+            setRowAmount(rows.grandRow, selectedTotal);
+            updateSelectAllState();
+        }
+
+        function injectSelectAllCheckbox() {
+            var itemHeader = document.querySelector('.checkout-cart-index #shopping-cart-table thead .col.item');
+            var wrapper;
+            var checkbox;
+            var label;
+
+            if (!itemHeader || itemHeader.querySelector('.fashionstore-select-all')) {
+                return;
+            }
+
+            wrapper = document.createElement('div');
+            wrapper.className = 'fashionstore-select-all';
+
+            checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'fashionstore-select-all__checkbox';
+            checkbox.setAttribute('aria-label', 'Chọn tất cả sản phẩm');
+
+            label = document.createElement('span');
+            label.className = 'fashionstore-select-all__label';
+            label.textContent = 'Chọn tất cả';
+
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
+            itemHeader.insertBefore(wrapper, itemHeader.firstChild);
+
+            checkbox.addEventListener('change', function () {
+                getItemCheckboxes().forEach(function (itemCheckbox) {
+                    itemCheckbox.checked = checkbox.checked;
+                });
+                updateTotalsBySelection();
+            });
+        }
+
+        function bindSelectionEvents() {
+            document.addEventListener('change', function (event) {
+                if (!event.target.matches('.checkout-cart-index .fashionstore-item-select__checkbox')) {
+                    return;
+                }
+
+                updateTotalsBySelection();
+            });
+        }
+
+        function localizeCartLabels() {
+            var title = document.querySelector('.checkout-cart-index .page-title span');
+            var checkoutSpan = document.querySelector('.checkout-cart-index .checkout.methods.items .action.primary.checkout span');
+            var updateCartButtons = document.querySelectorAll('.checkout-cart-index .cart.main.actions .action');
+
+            if (title && /shopping\s*cart/i.test(String(title.textContent || ''))) {
+                title.textContent = 'Giỏ hàng';
+            }
+
+            if (checkoutSpan && /proceed\s*to\s*checkout/i.test(String(checkoutSpan.textContent || ''))) {
+                checkoutSpan.textContent = 'TIẾN HÀNH THANH TOÁN';
+            }
+
+            updateCartButtons.forEach(function (button) {
+                var text = String(button.textContent || '');
+
+                if (/update\s*shopping\s*cart/i.test(text)) {
+                    button.textContent = 'Cập nhật giỏ hàng';
+                }
+            });
         }
 
         function boot() {
-            ensureGrandTotalValue();
-            window.setTimeout(ensureGrandTotalValue, 500);
-            window.setTimeout(ensureGrandTotalValue, 1400);
+            injectSelectAllCheckbox();
+            bindSelectionEvents();
+            localizeCartLabels();
+            updateTotalsBySelection();
+
+            window.setTimeout(updateTotalsBySelection, 250);
+            window.setTimeout(updateTotalsBySelection, 800);
+            window.setTimeout(localizeCartLabels, 250);
         }
 
         if (document.readyState === 'loading') {
