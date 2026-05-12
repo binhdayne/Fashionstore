@@ -12,6 +12,14 @@ $qtyValue = (float) $block->getQty();
 <tbody class="cart item">
     <tr class="item-info">
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
+            <div class="fashionstore-item-select">
+                <input type="checkbox"
+                       class="fashionstore-item-select__checkbox"
+                       name="selected_items[]"
+                       value="<?= $block->escapeHtmlAttr((string) $_item->getId()) ?>"
+                       checked="checked"
+                       aria-label="<?= $block->escapeHtmlAttr(__('Select item %1', $block->getProductName())) ?>">
+            </div>
             <?php if ($block->hasProductUrl()): ?>
                 <a href="<?= $block->escapeUrl($block->getProductUrl()) ?>"
                    title="<?= $block->escapeHtml($block->getProductName()) ?>"

@@ -362,6 +362,25 @@ $translationStringsJson = json_encode(
         z-index: 10000;
     }
 
+    /* Search popup should not surface recommendation/cart content */
+    #search-empty-state #search-recently-section,
+    #search-zero-result {
+        display: none !important;
+    }
+
+    body.csc-no-scroll .fashionstore-recommendation,
+    body.csc-no-scroll .cart-summary,
+    body.csc-no-scroll .fashionstore-cart-options {
+        visibility: hidden !important;
+    }
+
+    #fs-chat-root,
+    .chat-widget-group,
+    #back-to-top,
+    .fs-back-to-top {
+        right: 0 !important;
+    }
+
     #dior-side-menu {
         position: fixed;
         top: 0;
@@ -1377,14 +1396,36 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         $('#search-input-clear').removeClass('visible');
     }
 
+    function resolveProductImageUrl(item) {
+        var imageUrl = (item && item.image) ? String(item.image) : '';
+        var filename;
+
+        if (!imageUrl) {
+            return '';
+        }
+
+        if (imageUrl.indexOf('/media/import_master/') === 0) {
+            filename = imageUrl.split('/').pop();
+            if (filename && filename.length >= 2) {
+                return '/media/catalog/product/' +
+                    filename.charAt(0).toLowerCase() + '/' +
+                    filename.charAt(1).toLowerCase() + '/' +
+                    filename;
+            }
+        }
+
+        return imageUrl;
+    }
+
     function buildProductCard(item, query, matchType) {
         var nameHtml = (query && matchType === 'name')
             ? getHighlightedText(item.name, query, matchType)
             : escapeHtml(item.name);
+        var productUrl = (item && item.url) ? item.url : ('/' + (item.sku || '') + '.html');
 
-        return '<a class="search-product-card no-underline" href="/' + escapeHtml(item.sku) + '.html">' +
+        return '<a class="search-product-card no-underline" href="' + escapeHtml(productUrl) + '">' +
             '<div class="search-product-img-wrap">' +
-            '<img class="search-product-img" src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
+            '<img class="search-product-img" src="' + escapeHtml(resolveProductImageUrl(item)) + '" alt="' + escapeHtml(item.name) + '" loading="eager" decoding="sync" onerror="this.src=\'https://placehold.co/400x533/f9fafb/a1a1aa?text=No+Image\'">' +
             '</div>' +
             '<div class="search-product-name no-underline">' + nameHtml + '</div>' +
             '<div class="search-product-sku no-underline">' + escapeHtml(item.sku) + '</div>' +
@@ -1539,8 +1580,57 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
             data: { q: query },
             dataType: 'json',
             cache: false
-        }).done(function () {
-            /* API results ignored — local intent engine handles display */
+        }).done(function (response) {
+            var updatesBySku = {};
+            var hasUpdates = false;
+
+            if (!$.isArray(response)) {
+                return;
+            }
+
+            $.each(response, function (_, entry) {
+                var sku = entry && entry.sku ? String(entry.sku) : '';
+
+                if (!sku) {
+                    return;
+                }
+
+                updatesBySku[sku] = {
+                    url: entry.url || null,
+                    image: entry.image || null,
+                    price: entry.price || null
+                };
+            });
+
+            if (!Object.keys(updatesBySku).length) {
+                return;
+            }
+
+            $.each(PRODUCTS, function (index, product) {
+                var update = updatesBySku[product.sku];
+
+                if (!update) {
+                    return;
+                }
+
+                if (update.url) {
+                    product.url = update.url;
+                }
+                if (update.image) {
+                    product.image = update.image;
+                }
+                if (update.price) {
+                    product.price = update.price;
+                }
+
+                hasUpdates = true;
+            });
+
+            if (!hasUpdates) {
+                return;
+            }
+
+            renderSearchResults(query);
         }).fail(function () {
             /* Local results already showing, nothing to do */
         });

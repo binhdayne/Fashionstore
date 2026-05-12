@@ -20,9 +20,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart-container {
-            display: flex !important;
-            align-items: flex-start !important;
-            gap: 32px !important;
+            display: grid !important;
+            grid-template-columns: minmax(0, 7fr) minmax(320px, 3fr) !important;
+            align-items: start !important;
+            gap: 68px !important;
         }
 
         .checkout-cart-index .cart-container::after {
@@ -38,21 +39,23 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .cart-container > .form.form-cart {
             order: 1 !important;
-            flex: 1 1 auto !important;
+            grid-column: 1 !important;
             min-width: 0 !important;
-            max-width: calc(100% - 412px) !important;
+            max-width: none !important;
         }
 
         .checkout-cart-index .cart-container > .cart-summary {
             order: 2 !important;
-            flex: 0 0 380px !important;
+            grid-column: 2 !important;
+            width: 100% !important;
             margin: 0 !important;
             padding: 28px 24px !important;
             background: #fff !important;
             border: 1px solid #ece4d5 !important;
             box-shadow: 0 18px 44px rgba(26, 26, 26, 0.06) !important;
             position: sticky !important;
-            top: 88px !important;
+            top: 20px !important;
+            z-index: 100120 !important;
         }
 
         .checkout-cart-index .cart.table-wrapper {
@@ -93,7 +96,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index #shopping-cart-table thead tr,
         .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
             display: grid !important;
-            grid-template-columns: minmax(240px, 1.7fr) 128px 96px 150px !important;
+            grid-template-columns: minmax(260px, 1.8fr) 128px 92px 150px !important;
             gap: 16px !important;
             align-items: start !important;
         }
@@ -143,7 +146,21 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart.item .col.item {
             display: flex !important;
             gap: 14px !important;
+            align-items: flex-start !important;
             min-width: 0 !important;
+        }
+
+        .checkout-cart-index .fashionstore-item-select {
+            flex: 0 0 auto !important;
+            margin-top: 6px !important;
+            line-height: 1 !important;
+        }
+
+        .checkout-cart-index .fashionstore-item-select input[type='checkbox'] {
+            width: 16px !important;
+            height: 16px !important;
+            accent-color: #1a1a1a !important;
+            cursor: pointer !important;
         }
 
         .checkout-cart-index .cart.item .product-item-photo {
@@ -164,11 +181,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.item .product-item-name {
-            margin: 0 0 8px !important;
+            margin: 0 0 10px !important;
             font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
-            font-size: 18px !important;
+            font-size: 17px !important;
             font-weight: 500 !important;
-            line-height: 1.3 !important;
+            line-height: 1.45 !important;
             white-space: normal !important;
             word-break: break-word !important;
         }
@@ -180,7 +197,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart.item .item-options dt,
         .checkout-cart-index .cart.item .item-options dd {
             font-size: 12px !important;
-            line-height: 1.5 !important;
+            line-height: 1.65 !important;
         }
 
         .checkout-cart-index .cart.item .item-options dt {
@@ -195,7 +212,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart.item .col.price,
         .checkout-cart-index .cart.item .col.qty,
         .checkout-cart-index .cart.item .col.subtotal {
-            padding-top: 4px !important;
+            padding-top: 6px !important;
             min-width: 0 !important;
         }
 
@@ -209,7 +226,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.item .control.qty {
-            width: 116px !important;
+            width: 96px !important;
         }
 
         .checkout-cart-index .fashionstore-qty-control {
@@ -252,15 +269,15 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            width: 34px !important;
-            height: 34px !important;
+            width: 28px !important;
+            height: 28px !important;
             padding: 0 !important;
             border: none !important;
             border-right: 1px solid #d7d0c3 !important;
             border-radius: 0 !important;
             background: #fff !important;
             color: #9f9f9f !important;
-            font-size: 20px !important;
+            font-size: 16px !important;
             line-height: 1 !important;
             cursor: pointer !important;
         }
@@ -277,21 +294,21 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .fashionstore-qty-button span {
             display: block !important;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         .checkout-cart-index .cart.item .input-text.qty {
-            height: 34px !important;
+            height: 28px !important;
             border: none !important;
             background: #fff !important;
             border-radius: 0 !important;
             text-align: center !important;
-            font-size: 16px !important;
+            font-size: 13px !important;
             font-weight: 400 !important;
             color: #666 !important;
             box-shadow: none !important;
-            width: 36px !important;
-            min-width: 36px !important;
+            width: 34px !important;
+            min-width: 34px !important;
             padding: 0 !important;
             -moz-appearance: textfield !important;
             appearance: textfield !important;
@@ -374,33 +391,25 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             margin: 0 !important;
         }
 
-        .checkout-cart-index .cart-summary .table.totals tbody tr:not(.grand.totals) {
-            display: none !important;
-        }
-
         .checkout-cart-index .cart-summary .table.totals th,
         .checkout-cart-index .cart-summary .table.totals td {
             padding: 10px 0 16px !important;
             border: none !important;
             color: #1a1a1a !important;
+            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
+            font-size: 12px !important;
+            line-height: 1.6 !important;
+        }
+
+        .checkout-cart-index .cart-summary .table.totals .mark,
+        .checkout-cart-index .cart-summary .table.totals .amount {
+            color: #1a1a1a !important;
+            font-weight: 500 !important;
         }
 
         .checkout-cart-index .cart-summary .table.totals .grand th,
         .checkout-cart-index .cart-summary .table.totals .grand td {
             border-bottom: 1px dashed #ddd1bc !important;
-        }
-
-        .checkout-cart-index .cart-summary .table.totals .grand .mark strong {
-            font-size: 0 !important;
-        }
-
-        .checkout-cart-index .cart-summary .table.totals .grand .mark strong::after {
-            content: 'Tổng giá trị đơn hàng';
-            font-size: 15px;
-            font-weight: 400;
-            color: #1a1a1a;
-            letter-spacing: 0;
-            text-transform: none;
         }
 
         .checkout-cart-index .cart-summary .table.totals .grand .price,
@@ -424,8 +433,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .checkout.methods.items .paypal,
         .checkout-cart-index .checkout.methods.items .amazon,
         .checkout-cart-index .checkout.methods.items .braintree,
-        .checkout-cart-index .checkout.methods.items .shortcut-buttons,
-        .checkout-cart-index .checkout.methods.items .item + .item {
+        .checkout-cart-index .checkout.methods.items .shortcut-buttons {
             display: none !important;
         }
 
@@ -433,30 +441,39 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             width: 100% !important;
             min-height: 52px !important;
             border-radius: 6px !important;
-            background: #d2232a !important;
-            border: 1px solid #d2232a !important;
+            background: #000 !important;
+            border: 1px solid #000 !important;
             color: #fff !important;
-            font-size: 12px !important;
+            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
+            font-size: 11px !important;
             font-weight: 500 !important;
-            letter-spacing: 1px !important;
+            letter-spacing: 0.1em !important;
             text-transform: uppercase !important;
-            box-shadow: 0 8px 16px rgba(210, 35, 42, 0.2) !important;
+            box-shadow: 0 8px 16px rgba(26, 26, 26, 0.18) !important;
+            position: relative !important;
+            z-index: 100130 !important;
         }
 
         .checkout-cart-index .checkout.methods.items .action.primary.checkout:hover {
-            background: #b81d24 !important;
-            border-color: #b81d24 !important;
+            background: #b8976a !important;
+            border-color: #b8976a !important;
         }
 
         .checkout-cart-index .checkout.methods.items .action.primary.checkout span {
-            font-size: 0 !important;
+            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.1em !important;
+            color: #fff !important;
         }
 
-        .checkout-cart-index .checkout.methods.items .action.primary.checkout span::after {
-            content: 'TIẾP TỤC THANH TOÁN →';
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.6px;
+        .checkout-cart-index #fs-chat-root,
+        .checkout-cart-index .chat-widget-group {
+            bottom: 24px !important;
+        }
+
+        .checkout-cart-index #back-to-top {
+            bottom: 24px !important;
         }
 
         .checkout-cart-index .checkout.methods.items::after {
@@ -504,6 +521,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         @media (max-width: 767px) {
+            .checkout-cart-index .page-main {
+                padding-bottom: 320px !important;
+            }
+
             .checkout-cart-index #shopping-cart-table thead {
                 display: none !important;
             }
@@ -523,6 +544,25 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             .checkout-cart-index .cart.table-wrapper,
             .checkout-cart-index .cart-container > .cart-summary {
                 padding: 20px 18px !important;
+            }
+
+            .checkout-cart-index .cart-container > .cart-summary {
+                position: fixed !important;
+                left: 12px !important;
+                right: 12px !important;
+                bottom: 10px !important;
+                top: auto !important;
+                margin-top: 0 !important;
+                max-height: 54vh !important;
+                overflow: auto !important;
+                border-radius: 12px !important;
+                z-index: 100220 !important;
+            }
+
+            .checkout-cart-index #fs-chat-root,
+            .checkout-cart-index .chat-widget-group,
+            .checkout-cart-index #back-to-top {
+                bottom: 180px !important;
             }
 
             .checkout-cart-index .cart.item .product-item-photo {
@@ -822,5 +862,84 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             });
         }());
     }
+    </script>
+
+    <script>
+    (function () {
+        function getTotalsData() {
+            if (!window.checkoutConfig || !window.checkoutConfig.totalsData) {
+                return null;
+            }
+
+            return window.checkoutConfig.totalsData;
+        }
+
+        function formatVnd(amount) {
+            var normalized = Number(amount || 0);
+
+            if (!isFinite(normalized)) {
+                normalized = 0;
+            }
+
+            return new Intl.NumberFormat('vi-VN').format(Math.round(normalized)) + ' đ';
+        }
+
+        function ensureGrandTotalValue() {
+            var totalsRoot = document.getElementById('cart-totals');
+            var totalsData = getTotalsData();
+            var grandTotal;
+            var tableBody;
+            var grandRow;
+            var priceNode;
+
+            if (!totalsRoot || !totalsData) {
+                return;
+            }
+
+            grandTotal = totalsData.grand_total;
+            if (typeof grandTotal === 'undefined' || grandTotal === null) {
+                grandTotal = totalsData.base_grand_total;
+            }
+
+            if (typeof grandTotal === 'undefined' || grandTotal === null) {
+                return;
+            }
+
+            tableBody = totalsRoot.querySelector('table.totals tbody');
+            if (!tableBody) {
+                return;
+            }
+
+            grandRow = tableBody.querySelector('tr.grand.totals');
+            if (!grandRow) {
+                grandRow = document.createElement('tr');
+                grandRow.className = 'grand totals';
+                grandRow.innerHTML = '<th class="mark" scope="row"><strong>Tổng thanh toán</strong></th>' +
+                    '<td class="amount"><strong><span class="price"></span></strong></td>';
+                tableBody.appendChild(grandRow);
+            }
+
+            priceNode = grandRow.querySelector('.amount .price');
+            if (!priceNode) {
+                return;
+            }
+
+            if (!String(priceNode.textContent || '').trim()) {
+                priceNode.textContent = formatVnd(grandTotal);
+            }
+        }
+
+        function boot() {
+            ensureGrandTotalValue();
+            window.setTimeout(ensureGrandTotalValue, 500);
+            window.setTimeout(ensureGrandTotalValue, 1400);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', boot);
+        } else {
+            boot();
+        }
+    }());
     </script>
 <?php endif; ?>

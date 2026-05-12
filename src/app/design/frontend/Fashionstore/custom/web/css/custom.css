@@ -492,3 +492,14 @@ body.fs-mobile-menu-open {
         grid-template-columns: 1fr;
     }
 }
+
+/* Keep category toolbar clean: only custom price slider should remain visible */
+body.catalog-category-view .filter-current,
+body.catalog-category-view .filter-actions,
+body.catalog-category-view .block-subtitle.filter-subtitle,
+body.catalog-category-view .filter-options,
+body.catalog-category-view .block-layered-nav,
+body.catalog-category-view .filter-options-title,
+body.catalog-category-view .filter-options-content {
+    display: none !important;
+}

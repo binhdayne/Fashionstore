@@ -261,20 +261,21 @@
 .fashionstore-cart-options__actions .action.secondary {
     width: 100%;
     min-height: 52px;
-    background: #1a1a1a;
-    border: 1px solid #1a1a1a;
+    background: #000;
+    border: 1px solid #000;
     color: #fff;
+    font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 0.1em;
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: 12px;
     box-shadow: 0 14px 26px rgba(26, 26, 26, 0.14);
 }
 
 .fashionstore-cart-options__actions .action.secondary:hover {
-    background: #c9a96e;
-    border-color: #c9a96e;
+    background: #b8976a;
+    border-color: #b8976a;
     color: #fff;
 }
 
