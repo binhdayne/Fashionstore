@@ -1,0 +1,1863 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Checkout\Block\Onepage */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+
+$homepageHeaderBlock = $block->getLayout()->getBlock('checkout.custom.header.weather');
+$homepageHeader = $homepageHeaderBlock ? (string) $homepageHeaderBlock->toHtml() : '';
+
+if ($homepageHeader === '') {
+    $homepageHeader = $block->getLayout()
+        ->createBlock(\FashionStore\CustomHeader\Block\Header::class)
+        ->setTemplate('FashionStore_CustomHeader::header/weather.phtml')
+        ->toHtml();
+}
+
+$checkoutStyle = <<<'STYLE'
+.checkout-index-index {
+    --font-size: 16px;
+    --background: #ffffff;
+    --foreground: oklch(0.145 0 0);
+    --card: #ffffff;
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: #030213;
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.95 0.0058 264.53);
+    --secondary-foreground: #030213;
+    --muted: #ececf0;
+    --muted-foreground: #717182;
+    --accent: #e9ebef;
+    --accent-foreground: #030213;
+    --destructive: #d4183d;
+    --destructive-foreground: #ffffff;
+    --border: rgba(0, 0, 0, 0.1);
+    --input: transparent;
+    --input-background: #f3f3f5;
+    --switch-background: #cbced4;
+    --font-weight-medium: 500;
+    --font-weight-normal: 400;
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: #030213;
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.checkout-index-index,
+.checkout-index-index .page-wrapper,
+.checkout-index-index .page-main,
+.checkout-index-index .checkout-container,
+.checkout-index-index .opc-wrapper,
+.checkout-index-index .opc-sidebar {
+    font-size: var(--font-size) !important;
+    color: var(--foreground) !important;
+}
+
+.checkout-index-index.dark,
+.dark .checkout-index-index {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.985 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(0.269 0 0);
+    --sidebar-ring: oklch(0.439 0 0);
+}
+
+.checkout-index-index .page-wrapper {
+    background: var(--background) !important;
+}
+
+.checkout-index-index .page-wrapper > .page-header {
+    display: none !important;
+}
+
+.checkout-index-index .fs-homepage-header {
+    margin: 0 calc(50% - 50vw) 24px !important;
+}
+
+.checkout-index-index .fs-homepage-header #header-info-bar {
+    display: flex !important;
+}
+
+.checkout-index-index .fs-homepage-header #header-info-bar {
+    justify-content: center !important;
+    min-height: 64px !important;
+}
+
+.checkout-index-index .fs-homepage-header #header-info-bar .left-section,
+.checkout-index-index .fs-homepage-header #header-info-bar .right-section,
+.checkout-index-index .fs-homepage-header #menu-overlay,
+.checkout-index-index .fs-homepage-header #dior-side-menu,
+.checkout-index-index .fs-homepage-header #search-overlay,
+.checkout-index-index .fs-homepage-header #search-bar {
+    display: none !important;
+}
+
+.checkout-index-index .fs-homepage-header #header-info-bar .center-section {
+    flex: 0 0 auto !important;
+}
+
+.checkout-index-index .fs-homepage-header #header-info-bar .logo-text {
+    margin: 0 auto !important;
+}
+
+.checkout-index-index .fs-checkout-intro,
+.checkout-index-index .fs-checkout-brand,
+.checkout-index-index .fs-checkout-breadcrumbs {
+    display: none !important;
+}
+
+.checkout-index-index .fr-ec-template-checkout__wrapper {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 340px !important;
+    gap: 24px !important;
+    max-width: 1220px !important;
+    margin: 0 auto !important;
+}
+
+.checkout-index-index .fr-ec-template-checkout__wrapper > section {
+    grid-column: 1 / -1 !important;
+}
+
+.checkout-index-index .fr-ec-template-checkout__left {
+    grid-column: 1 !important;
+}
+
+.checkout-index-index .fr-ec-template-checkout__right {
+    grid-column: 2 !important;
+    position: sticky !important;
+    top: 24px !important;
+    align-self: start !important;
+}
+
+.checkout-index-index .fr-ec-display--display3 {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+.checkout-index-index .fr-ec-body--standard {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+}
+
+.checkout-index-index .fr-ec-keyline-bottom {
+    border: 0 !important;
+    border-top: 1px solid var(--border) !important;
+    margin: 0 !important;
+}
+
+.checkout-index-index .fr-ec-link-text.fr-ec-button-reset {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    color: var(--foreground) !important;
+    cursor: pointer !important;
+}
+
+.checkout-index-index .nav-sections,
+.checkout-index-index .minicart-wrapper,
+.checkout-index-index .page-title-wrapper,
+.checkout-index-index .opc-progress-bar,
+.checkout-index-index .opc-estimated-wrapper {
+    display: none !important;
+}
+
+.checkout-index-index .page-main {
+    max-width: 1220px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 24px 48px !important;
+}
+
+.checkout-index-index .columns,
+.checkout-index-index .column.main {
+    width: 100% !important;
+    max-width: none !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.checkout-index-index .fs-checkout-step-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+}
+
+.checkout-index-index .fs-checkout-action {
+    min-height: 40px !important;
+    padding: 0 16px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 999px !important;
+    background: var(--secondary) !important;
+    color: var(--foreground) !important;
+    font-size: 14px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+}
+
+.checkout-index-index .fs-checkout-action:hover {
+    border-color: var(--ring) !important;
+}
+
+.checkout-index-index .fs-checkout-action.is-active,
+.checkout-index-index .fs-checkout-step-actions[data-mode='address'] .fs-checkout-action-address,
+.checkout-index-index .fs-checkout-step-actions[data-mode='payment'] .fs-checkout-action-payment {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+}
+
+.checkout-index-index .checkout-container {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 340px !important;
+    align-items: start !important;
+    gap: 24px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+}
+
+.checkout-index-index .checkout-container > * {
+    min-width: 0 !important;
+}
+
+.checkout-index-index .opc-wrapper,
+.checkout-index-index .opc-sidebar {
+    float: none !important;
+    width: auto !important;
+    clear: none !important;
+}
+
+.checkout-index-index .opc-wrapper {
+    grid-column: 1 !important;
+    background: var(--card) !important;
+    color: var(--card-foreground) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    padding: 32px 38px 40px !important;
+}
+
+.checkout-index-index .opc-sidebar {
+    grid-column: 2 !important;
+    position: sticky !important;
+    top: 24px !important;
+    background: transparent !important;
+    color: #111 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+}
+
+.checkout-index-index .opc-sidebar.opc-summary-wrapper {
+    margin-top: 0 !important;
+    align-self: start !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-summary {
+    padding: 20px 28px 20px !important;
+    margin: 0 !important;
+    background: #f3f3f3 !important;
+    border: 1px solid #dfdfdf !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-summary .minicart-items-wrapper,
+.checkout-index-index .opc-sidebar .opc-block-summary .items-in-cart .content,
+.checkout-index-index .opc-sidebar .opc-block-summary .shipping-information,
+.checkout-index-index .opc-sidebar .opc-block-summary .ship-to {
+    display: none !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-summary .items-in-cart,
+.checkout-index-index .opc-sidebar .opc-block-summary .fs-coupon-row {
+    display: none !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-shipping-information {
+    display: none !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-summary > .title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    color: #111 !important;
+}
+
+.checkout-index-index .opc-sidebar .opc-block-summary > .title:after {
+    content: attr(data-order-count);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: #111;
+}
+
+.checkout-index-index .authentication-wrapper {
+    margin: 0 0 24px !important;
+    padding: 0 !important;
+    float: none !important;
+    width: 100% !important;
+    text-align: left !important;
+    color: var(--muted-foreground) !important;
+    font-size: 0.95rem !important;
+}
+
+.checkout-index-index .authentication-wrapper:before {
+    content: 'Bạn đã có tài khoản? ';
+}
+
+.checkout-index-index .authentication-wrapper .action-auth-toggle {
+    background: transparent !important;
+    border: none !important;
+    color: var(--foreground) !important;
+    text-decoration: underline !important;
+    font-size: 0.95rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    letter-spacing: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    text-transform: none !important;
+}
+
+.checkout-index-index .authentication-wrapper .action-auth-toggle:hover {
+    color: var(--primary) !important;
+}
+
+.checkout-index-index .checkout-shipping-address,
+.checkout-index-index .checkout-shipping-method {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.checkout-index-index #shipping .step-title,
+.checkout-index-index #opc-shipping_method .step-title {
+    margin: 0 0 20px !important;
+    font-size: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index #shipping .step-title:after {
+    content: 'Thông tin giao hàng';
+    color: var(--foreground) !important;
+    font-size: 1.95rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index #opc-shipping_method {
+    display: none !important;
+}
+
+.checkout-index-index #opc-shipping_method .step-title:after {
+    content: 'Phương thức vận chuyển';
+    color: var(--foreground) !important;
+    font-size: 1.375rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.4 !important;
+}
+
+.checkout-index-index #shipping,
+.checkout-index-index #payment {
+    display: block !important;
+}
+
+.checkout-index-index #payment {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+}
+
+.checkout-index-index #payment .step-title {
+    margin: 0 0 20px !important;
+    font-size: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index #payment .step-title:after {
+    content: 'Phương thức thanh toán';
+    color: var(--foreground) !important;
+    font-size: 1.375rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.4 !important;
+}
+
+.checkout-index-index .fieldset,
+.checkout-index-index .form.form-login,
+.checkout-index-index .form-shipping-address,
+.checkout-index-index .form.methods-shipping {
+    margin: 0 !important;
+}
+
+.checkout-index-index .field {
+    margin: 0 0 16px !important;
+}
+
+.checkout-index-index label,
+.checkout-index-index .field .label,
+.checkout-index-index .label,
+.checkout-index-index .field .label span,
+.checkout-index-index .label span,
+.checkout-index-index .field > .label {
+    color: var(--foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    margin-bottom: 8px !important;
+}
+
+.checkout-index-index .form-login .field .control._with-tooltip {
+    position: relative !important;
+    display: block !important;
+    padding-right: 42px !important;
+}
+
+.checkout-index-index .form-login .field-tooltip {
+    position: absolute !important;
+    right: 12px !important;
+    top: 22px !important;
+    transform: translateY(-50%) !important;
+}
+
+.checkout-index-index .form-login .field-tooltip .field-tooltip-action {
+    margin: 0 !important;
+}
+
+.checkout-index-index input[type='text'],
+.checkout-index-index input[type='email'],
+.checkout-index-index input[type='password'],
+.checkout-index-index input[type='tel'],
+.checkout-index-index select,
+.checkout-index-index textarea {
+    width: 100% !important;
+    min-height: 50px !important;
+    background: var(--input-background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: none !important;
+    color: var(--foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-normal) !important;
+    line-height: 1.5 !important;
+    padding: 12px 14px !important;
+}
+
+.checkout-index-index textarea {
+    min-height: 110px !important;
+}
+
+.checkout-index-index input:focus,
+.checkout-index-index select:focus,
+.checkout-index-index textarea:focus {
+    border-color: var(--ring) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 18%, transparent) !important;
+    outline: none !important;
+}
+
+.checkout-index-index .note,
+.checkout-index-index .message.notice,
+.checkout-index-index .field-tooltip .label {
+    color: var(--muted-foreground) !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+.checkout-index-index .form-login .control._with-tooltip .note {
+    display: block !important;
+    max-width: none !important;
+    margin-top: 10px !important;
+}
+
+.checkout-index-index .message.notice {
+    background: var(--secondary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    padding: 12px 14px !important;
+}
+
+.checkout-index-index .shipping-address-item,
+.checkout-index-index .new-address-popup,
+.checkout-index-index .table-checkout-shipping-method {
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+}
+
+.checkout-index-index .shipping-address-items {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.checkout-index-index .shipping-address-item {
+    flex: 1 1 calc(50% - 8px) !important;
+    width: calc(50% - 8px) !important;
+    min-width: 280px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 18px 20px !important;
+}
+
+.checkout-index-index .table-checkout-shipping-method tbody tr + tr {
+    border-top: 1px solid var(--border) !important;
+}
+
+.checkout-index-index .table-checkout-shipping-method td {
+    padding: 16px !important;
+    color: var(--foreground) !important;
+    font-size: 0.95rem !important;
+}
+
+.checkout-index-index .table-checkout-shipping-method .col-price {
+    font-weight: var(--font-weight-medium) !important;
+    white-space: nowrap !important;
+}
+
+.checkout-index-index .actions-toolbar {
+    margin-top: 24px !important;
+}
+
+.checkout-index-index .actions-toolbar > .primary {
+    float: none !important;
+    text-align: right !important;
+}
+
+@media (max-width: 767px) {
+    .checkout-index-index .shipping-address-items {
+        display: block !important;
+    }
+
+    .checkout-index-index .shipping-address-item {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+.checkout-index-index .actions-toolbar .action.primary,
+.checkout-index-index .actions-toolbar .action.continue.primary,
+.checkout-index-index .action.primary.action-save-address,
+.checkout-index-index .action-update {
+    min-width: 280px !important;
+    min-height: 50px !important;
+    background: var(--primary) !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: var(--radius) !important;
+    color: var(--primary-foreground) !important;
+    box-shadow: none !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+}
+
+.checkout-index-index .actions-toolbar .action.primary:hover,
+.checkout-index-index .actions-toolbar .action.continue.primary:hover,
+.checkout-index-index .action.primary.action-save-address:hover,
+.checkout-index-index .action-update:hover {
+    opacity: 0.92 !important;
+}
+
+/* Hide method-specific place order buttons and use a single global button */
+.checkout-index-index #payment .payment-method .payment-method-content .actions-toolbar .action.primary,
+.checkout-index-index #payment .payment-method .payment-method-content .actions-toolbar .primary .action,
+.checkout-index-index #payment .payment-method .payment-method-content .actions-toolbar .primary button {
+    display: none !important;
+}
+
+.checkout-index-index .fs-global-place-order-wrap {
+    margin-top: 20px !important;
+    display: block !important;
+}
+
+.checkout-index-index .fs-global-place-order {
+    width: 100% !important;
+    min-height: 50px !important;
+    background: var(--primary) !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: var(--radius) !important;
+    color: var(--primary-foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+}
+
+.checkout-index-index .fs-global-place-order[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.checkout-index-index .fs-delivery-method-box {
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+.checkout-index-index .fs-delivery-head,
+.checkout-index-index .fs-delivery-body .fs-delivery-section {
+    display: none !important;
+}
+
+.checkout-index-index .fs-delivery-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding: 0 0 12px !important;
+    border-bottom: none !important;
+}
+
+.checkout-index-index .fs-delivery-method-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    color: #111 !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+}
+
+.checkout-index-index .fs-delivery-method-status {
+    color: #db0f14 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.checkout-index-index .fs-delivery-change {
+    border: none !important;
+    background: transparent !important;
+    color: #1a5fb4 !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+}
+
+.checkout-index-index .fs-delivery-body {
+    padding: 0 !important;
+}
+
+.checkout-index-index .fs-delivery-section {
+    padding: 16px 0 !important;
+}
+
+.checkout-index-index .fs-delivery-section + .fs-delivery-section {
+    border-top: 1px solid #d7d7d7 !important;
+}
+
+.checkout-index-index .fs-delivery-method-choices-title {
+    margin: 16px 0 10px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid #d7d7d7 !important;
+    color: #111 !important;
+    font-family: inherit !important;
+    font-size: 1.95rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index .fs-delivery-section-title {
+    margin: 0 0 10px !important;
+    color: #111 !important;
+    font-size: 22px !important;
+    font-weight: 500 !important;
+    line-height: 1.25 !important;
+}
+
+.checkout-index-index .fs-delivery-address-lines {
+    margin: 0 !important;
+    color: #111 !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+}
+
+.checkout-index-index .fs-delivery-address-lines span {
+    display: block !important;
+}
+
+.checkout-index-index .fs-delivery-date-value {
+    margin: 0 !important;
+    color: #111 !important;
+    font-size: 32px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+}
+
+.checkout-index-index .fs-shipping-date-info {
+    margin: 18px 0 0 !important;
+    padding-top: 14px !important;
+    border-top: 1px solid #d7d7d7 !important;
+}
+
+.checkout-index-index .fs-shipping-date-info-title {
+    margin: 0 0 8px !important;
+    color: #111 !important;
+    font-family: inherit !important;
+    font-size: 1.95rem !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.2 !important;
+}
+
+.checkout-index-index .fs-shipping-date-info-value {
+    margin: 0 !important;
+    color: #111 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 30px !important;
+}
+
+.checkout-index-index .fs-delivery-method-options {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 0 !important;
+}
+
+.checkout-index-index .fs-delivery-method-option {
+    width: 100% !important;
+    border: 1px solid #8d8d8d !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+    min-height: 62px !important;
+    padding: 14px 18px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    box-shadow: inset 0 0 0 1px transparent !important;
+}
+
+.checkout-index-index .fs-delivery-method-option.is-active {
+    border-color: #5f5f5f !important;
+    box-shadow: inset 0 0 0 1px #5f5f5f !important;
+}
+
+.checkout-index-index .fs-delivery-method-option-title {
+    display: block !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 30px !important;
+    color: oklch(0.145 0 0) !important;
+}
+
+.checkout-index-index .fs-delivery-method-option-desc {
+    display: block !important;
+    margin-top: 0 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 30px !important;
+    color: oklch(0.145 0 0) !important;
+}
+
+@media (max-width: 900px) {
+    .checkout-index-index .fs-delivery-method-options {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.checkout-index-index .fs-delivery-method-note {
+    display: none !important;
+}
+
+.checkout-index-index #fs-delivery-method-box .fs-delivery-head {
+    display: none !important;
+}
+
+.checkout-index-index .opc-block-summary > .title {
+    display: block !important;
+    margin: 0 0 18px !important;
+    color: var(--sidebar-foreground) !important;
+    font-size: 18px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart > .title {
+    padding: 16px 0 !important;
+    margin: 0 !important;
+    border-top: 1px solid var(--sidebar-border) !important;
+    border-bottom: 1px solid var(--sidebar-border) !important;
+    pointer-events: none !important;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart > .title strong {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    color: var(--sidebar-foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart > .title strong:after {
+    content: '';
+    font-size: 1.125rem;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart > .content,
+.checkout-index-index .opc-block-summary .items-in-cart.active > .content,
+.checkout-index-index .opc-block-summary .items-in-cart .block-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart .minicart-items-wrapper,
+.checkout-index-index .opc-block-summary .items-in-cart .minicart-items {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.checkout-index-index .opc-block-summary .minicart-items .product-item {
+    padding: 14px 0 !important;
+    border-top: 1px solid var(--sidebar-border) !important;
+}
+
+.checkout-index-index .opc-block-summary .minicart-items .product-item:first-child {
+    border-top: none !important;
+}
+
+.checkout-index-index .opc-block-summary .product-item .product-image-container {
+    width: 64px !important;
+    border-radius: calc(var(--radius) - 2px) !important;
+    overflow: hidden !important;
+}
+
+.checkout-index-index .opc-block-summary .product-item-name {
+    color: var(--sidebar-foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-medium) !important;
+    line-height: 1.5 !important;
+}
+
+.checkout-index-index .opc-block-summary .details-qty,
+.checkout-index-index .opc-block-summary .product-item-details .subtitle,
+.checkout-index-index .opc-block-summary .details-item-options,
+.checkout-index-index .opc-block-summary .content.minicart-items {
+    color: var(--muted-foreground) !important;
+    font-size: 14px !important;
+}
+
+.checkout-index-index .opc-block-summary .product-item .price,
+.checkout-index-index .opc-block-summary .table-totals .mark,
+.checkout-index-index .opc-block-summary .table-totals .amount,
+.checkout-index-index .opc-block-summary .grand.totals .mark,
+.checkout-index-index .opc-block-summary .grand.totals .amount {
+    color: var(--sidebar-foreground) !important;
+    font-size: 16px !important;
+    font-weight: var(--font-weight-normal) !important;
+    line-height: 1.5 !important;
+}
+
+.checkout-index-index .opc-block-summary .table-totals {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: 1px solid #d8d8d8 !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+}
+
+.checkout-index-index .opc-block-summary .table-totals tr th,
+.checkout-index-index .opc-block-summary .table-totals tr td {
+    padding: 12px 0 !important;
+    border-bottom: 1px solid #d8d8d8 !important;
+}
+
+.checkout-index-index .opc-block-summary .grand.totals .mark,
+.checkout-index-index .opc-block-summary .grand.totals .amount {
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+}
+
+.checkout-index-index .opc-block-summary .grand.totals .mark {
+    font-size: 17px !important;
+    width: 58% !important;
+    line-height: 1.25 !important;
+}
+
+.checkout-index-index .opc-block-summary .grand.totals .amount {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+    text-align: right !important;
+}
+
+.checkout-index-index .opc-block-summary .totals-tax-summary .mark,
+.checkout-index-index .opc-block-summary .totals-tax-summary .amount,
+.checkout-index-index .opc-block-summary .totals-tax .mark,
+.checkout-index-index .opc-block-summary .totals-tax .amount {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+}
+
+.checkout-index-index .fs-coupon-row {
+    margin-top: 18px;
+    padding: 16px 0;
+    border-top: 1px solid #d8d8d8;
+    border-bottom: 1px solid #d8d8d8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #111;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.checkout-index-index .fs-coupon-row:before {
+    content: '🎟  Phiếu giảm giá (1)';
+}
+
+.checkout-index-index .fs-coupon-row:after {
+    content: '›';
+    font-size: 20px;
+}
+
+@media (max-width: 1140px) {
+    .checkout-index-index .fr-ec-template-checkout__wrapper {
+        grid-template-columns: 1fr !important;
+    }
+
+    .checkout-index-index .fr-ec-template-checkout__left,
+    .checkout-index-index .fr-ec-template-checkout__right {
+        grid-column: auto !important;
+    }
+
+    .checkout-index-index .fr-ec-template-checkout__right {
+        position: static !important;
+    }
+
+    .checkout-index-index .checkout-container {
+        grid-template-columns: 1fr !important;
+    }
+
+    .checkout-index-index .opc-wrapper,
+    .checkout-index-index .opc-sidebar {
+        grid-column: auto !important;
+    }
+
+    .checkout-index-index .opc-sidebar {
+        position: static !important;
+        top: auto !important;
+        margin-top: 0 !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .checkout-index-index .fs-homepage-header,
+    .checkout-index-index .page-main {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .checkout-index-index .opc-wrapper,
+    .checkout-index-index .opc-sidebar {
+        padding: 22px 18px !important;
+    }
+    .checkout-index-index .actions-toolbar .action.primary,
+    .checkout-index-index .actions-toolbar .action.continue.primary,
+    .checkout-index-index .action.primary.action-save-address,
+    .checkout-index-index .action-update {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+STYLE;
+?>
+
+<?php if ($homepageHeader): ?>
+<div class="fs-homepage-header">
+    <header class="page-header">
+        <div class="panel wrapper">
+            <div class="panel header">
+                <?= /* @noEscape */ $homepageHeader ?>
+            </div>
+        </div>
+    </header>
+</div>
+<?php endif; ?>
+
+<div id="checkout" data-bind="scope:'checkout'" class="checkout-container">
+    <div id="checkout-loader" data-role="checkout-loader" class="loading-mask" data-mage-init='{"checkoutLoader": {}}'>
+        <div class="loader">
+            <img src="<?= $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')) ?>"
+                 alt="<?= $block->escapeHtmlAttr(__('Loading...')) ?>">
+        </div>
+    </div>
+    <?= /* @noEscape */ $secureRenderer->renderStyleAsTag('position: absolute;', '#checkout-loader img') ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('style', [], $checkoutStyle, false) ?>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+        {
+            "#checkout": {
+                "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+            }
+        }
+    </script>
+    <?php $serializedCheckoutConfig = /* @noEscape */ $block->getSerializedCheckoutConfig();
+    $scriptString = <<<script
+        window.checkoutConfig = {$serializedCheckoutConfig};
+        // Create aliases for customer.js model from customer module
+        window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
+        window.customerData = window.checkoutConfig.customerData;
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+    <?php $scriptString = <<<script
+        require([
+            'mage/url',
+            'Magento_Ui/js/block-loader'
+        ], function(url, blockLoader) {
+            blockLoader("{$block->escapeJs($block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')))}");
+            return url.setBaseUrl('{$block->escapeJs($block->escapeUrl($block->getBaseUrl()))}');
+        })
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+    <?php $scriptString = <<<script
+        require([
+            'jquery',
+            'mage/url',
+            'mage/storage',
+            'Magento_Checkout/js/model/step-navigator',
+            'uiRegistry',
+            'Magento_Checkout/js/model/quote',
+            'Magento_Checkout/js/model/totals',
+            'Magento_Catalog/js/price-utils',
+            'Magento_Checkout/js/model/shipping-rate-service',
+            'Magento_Checkout/js/action/select-shipping-method',
+            'Magento_Customer/js/model/address-list',
+            'Magento_Checkout/js/action/select-shipping-address',
+            'Magento_Checkout/js/action/set-shipping-information'
+        ], function (
+            $,
+            urlBuilder,
+            storage,
+            stepNavigator,
+            registry,
+            quote,
+            totals,
+            priceUtils,
+            shippingRateService,
+            selectShippingMethodAction,
+            addressList,
+            selectShippingAddressAction,
+            setShippingInformationAction
+        ) {
+            var shippingComponent,
+                billingComponent,
+                globalPlaceOrderButton,
+                paymentHashGuardId,
+                deliveryOptionStorageKey = 'fs_checkout_delivery_method',
+                deliveryExpressFee = 30000,
+                selectedDeliveryMethod = 'standard';
+
+            function persistDeliveryMethodToBackend() {
+                var endpointUrl = urlBuilder.build('fashionstore_cartoptions/cart/setdeliverymethod'),
+                    payload = 'delivery_method=' + encodeURIComponent(selectedDeliveryMethod);
+
+                return storage.post(
+                    endpointUrl,
+                    payload,
+                    false,
+                    'application/x-www-form-urlencoded; charset=UTF-8'
+                );
+            }
+
+            function formatDisplayPrice(amount) {
+                var value = Number(amount);
+
+                if (!isFinite(value)) {
+                    value = 0;
+                }
+
+                return priceUtils.formatPrice(value, window.checkoutConfig.priceFormat);
+            }
+
+            function escapeHtml(value) {
+                return $('<div/>').text(value || '').html();
+            }
+
+            function formatDateVi(date) {
+                var day = String(date.getDate()).padStart(2, '0'),
+                    month = String(date.getMonth() + 1).padStart(2, '0'),
+                    year = date.getFullYear();
+
+                return day + '/' + month + '/' + year;
+            }
+
+            function addDays(date, days) {
+                var next = new Date(date.getTime());
+                next.setDate(next.getDate() + days);
+                return next;
+            }
+
+            function getBackendGrandTotal() {
+                var grandTotalSegment = totals && typeof totals.getSegment === 'function'
+                    ? totals.getSegment('grand_total')
+                    : null,
+                    value = grandTotalSegment && grandTotalSegment.value !== undefined
+                        ? Number(grandTotalSegment.value)
+                        : NaN;
+
+                return isFinite(value) ? value : null;
+            }
+
+            function getBackendShippingAmount() {
+                var shippingSegment = totals && typeof totals.getSegment === 'function'
+                        ? totals.getSegment('shipping')
+                        : null,
+                    value = shippingSegment && shippingSegment.value !== undefined
+                        ? Number(shippingSegment.value)
+                        : 0;
+
+                return isFinite(value) ? value : 0;
+            }
+
+            function getDeliveryFee() {
+                return selectedDeliveryMethod === 'express' ? deliveryExpressFee : 0;
+            }
+
+            function getDeliveryDateText() {
+                var now = new Date(),
+                    fromDate,
+                    toDate;
+
+                if (selectedDeliveryMethod === 'express') {
+                    return 'Trong ngày: ' + formatDateVi(now);
+                }
+
+                fromDate = addDays(now, 2);
+                toDate = addDays(now, 5);
+
+                return 'Đến giữa: ' + formatDateVi(fromDate) + ' - ' + formatDateVi(toDate);
+            }
+
+            function getShippingAddressHtml() {
+                var address = quote && quote.shippingAddress ? quote.shippingAddress() : null,
+                    fullName,
+                    lines = [],
+                    streetLines = [],
+                    cityLine = [];
+
+                if (!address) {
+                    return '<span>Vui lòng nhập địa chỉ giao hàng.</span>';
+                }
+
+                fullName = $.trim([address.firstname || '', address.lastname || ''].join(' '));
+                if (fullName) {
+                    lines.push('<span>' + escapeHtml(fullName.toUpperCase()) + '</span>');
+                }
+
+                if (address.region && address.region.region) {
+                    lines.push('<span>' + escapeHtml(address.region.region) + '</span>');
+                }
+
+                if ($.isArray(address.street)) {
+                    streetLines = address.street.filter(function (part) {
+                        return $.trim(part || '') !== '';
+                    });
+                } else if (address.street) {
+                    streetLines = [address.street];
+                }
+
+                if (streetLines.length) {
+                    lines.push('<span>' + escapeHtml(streetLines.join(', ')) + '</span>');
+                }
+
+                if (address.city) {
+                    cityLine.push(address.city);
+                }
+
+                if (cityLine.length) {
+                    lines.push('<span>' + escapeHtml(cityLine.join(', ')) + '</span>');
+                }
+
+                if (address.telephone) {
+                    lines.push('<span>' + escapeHtml(address.telephone) + '</span>');
+                }
+
+                if (!lines.length) {
+                    return '<span>Vui lòng nhập địa chỉ giao hàng.</span>';
+                }
+
+                return lines.join('');
+            }
+
+            function updateDeliveryPanelContent() {
+                var addressNode = $('#fs-delivery-address-lines'),
+                    dateNode = $('#fs-delivery-date-value');
+
+                if (addressNode.length) {
+                    addressNode.html(getShippingAddressHtml());
+                }
+
+                if (dateNode.length) {
+                    dateNode.text(getDeliveryDateText());
+                }
+            }
+
+            function ensureShippingDateInfoBlock() {
+                var shippingStep = $('#shipping').first(),
+                    shippingInfoBlock,
+                    dateValueNode,
+                    shippingAddressBlock;
+
+                if (!shippingStep.length) {
+                    return;
+                }
+
+                shippingInfoBlock = shippingStep.find('#fs-shipping-date-info').first();
+
+                if (!shippingInfoBlock.length) {
+                    shippingInfoBlock = $(
+                        '<div id="fs-shipping-date-info" class="fs-shipping-date-info">' +
+                            '<h3 class="fs-shipping-date-info-title">Ngày giao hàng</h3>' +
+                            '<p class="fs-shipping-date-info-value"></p>' +
+                        '</div>'
+                    );
+
+                    shippingAddressBlock = shippingStep.find('.checkout-shipping-address').first();
+                    if (shippingAddressBlock.length) {
+                        shippingAddressBlock.after(shippingInfoBlock);
+                    } else {
+                        shippingStep.append(shippingInfoBlock);
+                    }
+                }
+
+                dateValueNode = shippingInfoBlock.find('.fs-shipping-date-info-value').first();
+                if (dateValueNode.length) {
+                    dateValueNode.text(getDeliveryDateText());
+                }
+            }
+
+            function renderDeliveryFeeRow() {
+                var totalsBody = $('.opc-block-summary .table-totals tbody').first(),
+                    fee = getDeliveryFee(),
+                    shippingRow,
+                    shippingPriceNode;
+
+                if (!totalsBody.length) {
+                    return;
+                }
+
+                totalsBody.find('#fs-delivery-fee-row').remove();
+
+                shippingRow = totalsBody.find('tr.totals.shipping, tr.totals.shipping.excl, tr[class*="shipping"]').first();
+                if (!shippingRow.length) {
+                    return;
+                }
+
+                shippingPriceNode = shippingRow.find('td.amount .price').first();
+                if (!shippingPriceNode.length) {
+                    shippingPriceNode = shippingRow.find('td.amount').first();
+                }
+
+                shippingPriceNode.text(formatDisplayPrice(fee > 0 ? fee : 0));
+            }
+
+            function applyGrandTotalWithDeliveryFee() {
+                var backendGrandTotal = getBackendGrandTotal(),
+                    backendShippingAmount = getBackendShippingAmount(),
+                    fee = getDeliveryFee(),
+                    displayGrandTotal;
+
+                if (backendGrandTotal === null) {
+                    return;
+                }
+
+                displayGrandTotal = backendGrandTotal - backendShippingAmount + (fee > 0 ? fee : 0);
+
+                $('.opc-block-summary tr.grand.totals td.amount .price').text(formatDisplayPrice(displayGrandTotal));
+            }
+
+            function updateDeliveryMethodNote() {
+                var note = $('#fs-delivery-method-note'),
+                    fee = getDeliveryFee();
+
+                if (!note.length) {
+                    return;
+                }
+
+                if (fee > 0) {
+                    note.text('Đã áp dụng phụ thu giao hàng hỏa tốc: ' + formatDisplayPrice(fee));
+                    return;
+                }
+
+                note.text('Giao hàng thường không tính thêm phí.');
+            }
+
+            function updateDeliveryFeePresentation() {
+                renderDeliveryFeeRow();
+                applyGrandTotalWithDeliveryFee();
+                updateDeliveryMethodNote();
+                updateDeliveryPanelContent();
+                ensureShippingDateInfoBlock();
+            }
+
+            function tuneOrderSummaryDisplay() {
+                var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
+                    itemCount = $('.opc-sidebar .opc-block-summary .minicart-items .product-item').length,
+                    table = $('.opc-sidebar .opc-block-summary .table-totals').first();
+
+                if (summaryTitle.length) {
+                    summaryTitle.text('Tổng đơn hàng');
+                    summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
+                }
+
+                if (table.length) {
+                    table.find('tr').each(function () {
+                        var mark = $(this).find('.mark .label, .mark').first(),
+                            text = $.trim(mark.text()).toLowerCase();
+
+                        if (text.indexOf('cart subtotal') > -1 || text.indexOf('subtotal') > -1) {
+                            mark.text('Tạm tính');
+                        }
+
+                        if (text.indexOf('grand total') > -1 || text.indexOf('tổng cộng') > -1) {
+                            mark.text('Tổng đơn đặt hàng');
+                        }
+
+                        if (text.indexOf('tax') > -1 || text.indexOf('thuế') > -1) {
+                            mark.text('Đã bao gồm thuế giá trị gia tăng');
+                        }
+                    });
+                }
+
+                if (!$('.opc-sidebar .fs-coupon-row').length && $('.opc-sidebar .opc-block-summary').length) {
+                    $('.opc-sidebar .opc-block-summary').append('<div class="fs-coupon-row" aria-hidden="true"></div>');
+                }
+            }
+
+            function syncDeliveryMethodToCheckoutProvider() {
+                var checkoutProvider = registry.get('checkoutProvider');
+
+                if (!checkoutProvider || typeof checkoutProvider.set !== 'function') {
+                    return;
+                }
+
+                checkoutProvider.set('shippingAddress.custom_attributes.fs_delivery_method', selectedDeliveryMethod);
+            }
+
+            function ensureDeliveryMethodBox() {
+                var paymentMethods = $('#payment .payment-methods').first(),
+                    container,
+                    selectedValue;
+
+                if (!paymentMethods.length || $('#fs-delivery-method-box').length) {
+                    return;
+                }
+
+                container = $(
+                    '<div id="fs-delivery-method-box" class="fs-delivery-method-box">' +
+                        '<div class="fs-delivery-head">' +
+                            '<span class="fs-delivery-method-label">1.Tùy chọn giao hàng <span class="fs-delivery-method-status">✓</span></span>' +
+                            '<button type="button" class="fs-delivery-change">Thay đổi</button>' +
+                        '</div>' +
+                        '<div class="fs-delivery-body">' +
+                            '<div class="fs-delivery-section">' +
+                                '<h3 class="fs-delivery-section-title">Giao đến địa chỉ</h3>' +
+                                '<div id="fs-delivery-address-lines" class="fs-delivery-address-lines"></div>' +
+                            '</div>' +
+                            '<div class="fs-delivery-section">' +
+                                '<h3 class="fs-delivery-section-title">Ngày giao hàng</h3>' +
+                                '<p id="fs-delivery-date-value" class="fs-delivery-date-value"></p>' +
+                            '</div>' +
+                            '<div class="fs-delivery-method-choices-title">Lựa chọn phương thức giao hàng</div>' +
+                            '<div class="fs-delivery-method-options" role="radiogroup" aria-label="Phương thức giao hàng">' +
+                            '<button type="button" class="fs-delivery-method-option" data-method="standard" role="radio" aria-checked="false">' +
+                                '<span class="fs-delivery-method-option-title">Giao hàng thường</span>' +
+                                '<span class="fs-delivery-method-option-desc">Sẽ đến trong 2-5 ngày</span>' +
+                            '</button>' +
+                            '<button type="button" class="fs-delivery-method-option" data-method="express" role="radio" aria-checked="false">' +
+                                '<span class="fs-delivery-method-option-title">Giao hàng hỏa tốc</span>' +
+                                '<span class="fs-delivery-method-option-desc">Sẽ đến trong 1-4 tiếng ở nội thành và trong ngày ở liên tỉnh</span>' +
+                            '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<p id="fs-delivery-method-note" class="fs-delivery-method-note"></p>' +
+                    '</div>'
+                );
+
+                paymentMethods.before(container);
+
+                selectedValue = window.localStorage ? window.localStorage.getItem(deliveryOptionStorageKey) : null;
+                if (selectedValue === 'standard' || selectedValue === 'express') {
+                    selectedDeliveryMethod = selectedValue;
+                }
+
+                function syncDeliveryMethodOptions() {
+                    $('#fs-delivery-method-box .fs-delivery-method-option').each(function () {
+                        var option = $(this),
+                            isActive = option.attr('data-method') === selectedDeliveryMethod;
+
+                        option.toggleClass('is-active', isActive);
+                        option.attr('aria-checked', isActive ? 'true' : 'false');
+                    });
+                }
+
+                $('#fs-delivery-method-box .fs-delivery-method-option').on('click', function () {
+                    selectedDeliveryMethod = $(this).attr('data-method') === 'express' ? 'express' : 'standard';
+
+                    if (window.localStorage) {
+                        window.localStorage.setItem(deliveryOptionStorageKey, selectedDeliveryMethod);
+                    }
+
+                    syncDeliveryMethodOptions();
+                    syncDeliveryMethodToCheckoutProvider();
+                    updateDeliveryFeePresentation();
+                    persistDeliveryMethodToBackend();
+                    $('#fs-delivery-method-box').removeClass('is-editing');
+                });
+
+                $('#fs-delivery-method-box .fs-delivery-change').on('click', function () {
+                    openAddressEditor();
+                });
+
+                syncDeliveryMethodOptions();
+                syncDeliveryMethodToCheckoutProvider();
+                updateDeliveryPanelContent();
+                updateDeliveryFeePresentation();
+                persistDeliveryMethodToBackend();
+            }
+
+            function getActivePlaceOrderButton() {
+                var activeMethod = $('#payment .payment-method._active'),
+                    checkedInput = $('#payment input[name="payment[method]"]:checked'),
+                    targetMethod = activeMethod;
+
+                if (!targetMethod.length && checkedInput.length) {
+                    targetMethod = checkedInput.closest('.payment-method');
+                }
+
+                if (!targetMethod.length) {
+                    return $();
+                }
+
+                return targetMethod.find('.action.primary.checkout, button[title="Place Order"]')
+                    .filter(function () {
+                        return !$(this).is(':disabled');
+                    })
+                    .first();
+            }
+
+            function syncGlobalPlaceOrderState() {
+                var nativeButton = getActivePlaceOrderButton();
+
+                if (!globalPlaceOrderButton || !globalPlaceOrderButton.length) {
+                    return;
+                }
+
+                globalPlaceOrderButton.prop('disabled', !nativeButton.length);
+            }
+
+            function initGlobalPlaceOrder() {
+                var paymentContainer = $('#payment .payment-methods').first(),
+                    wrap;
+
+                if (!paymentContainer.length) {
+                    paymentContainer = $('#payment').first();
+                }
+
+                if (!paymentContainer.length || $('#fs-global-place-order-wrap').length) {
+                    syncGlobalPlaceOrderState();
+                    return;
+                }
+
+                wrap = $('<div id="fs-global-place-order-wrap" class="fs-global-place-order-wrap"></div>');
+                globalPlaceOrderButton = $('<button type="button" class="action primary fs-global-place-order">Đặt hàng</button>');
+                wrap.append(globalPlaceOrderButton);
+                paymentContainer.append(wrap);
+
+                globalPlaceOrderButton.on('click', function (event) {
+                    var nativeButton = getActivePlaceOrderButton(),
+                        syncRequest;
+
+                    event.preventDefault();
+                    if (!nativeButton.length) {
+                        return;
+                    }
+
+                    if (!ensureShippingAddressReady()) {
+                        return;
+                    }
+
+                    syncRequest = syncShippingInformationForTotals();
+
+                    if (syncRequest && typeof syncRequest.always === 'function') {
+                        syncRequest.always(function () {
+                            nativeButton.trigger('click');
+                        });
+                        return;
+                    }
+
+                    window.setTimeout(function () {
+                        nativeButton.trigger('click');
+                    }, 250);
+                });
+
+                $(document).on('change click', '#payment input[name="payment[method]"], #payment .payment-method-title, #payment .payment-method-content', function () {
+                    window.setTimeout(syncGlobalPlaceOrderState, 0);
+                });
+
+                window.setTimeout(syncGlobalPlaceOrderState, 200);
+                window.setTimeout(syncGlobalPlaceOrderState, 1000);
+            }
+
+            function ensurePaymentStepVisible() {
+                if (billingComponent && typeof billingComponent.isVisible === 'function') {
+                    billingComponent.isVisible(true);
+                }
+
+                $('.fs-checkout-breadcrumb[data-step="payment"]')
+                    .addClass('is-active')
+                    .removeClass('is-disabled');
+
+                initGlobalPlaceOrder();
+                ensureDeliveryMethodBox();
+                syncGlobalPlaceOrderState();
+            }
+
+            function setCheckoutActionMode(mode) {
+                var stepActions = $('.fs-checkout-step-actions');
+
+                if (!stepActions.length) {
+                    return;
+                }
+
+                stepActions.attr('data-mode', mode);
+                stepActions.find('.fs-checkout-action').removeClass('is-active');
+
+                if (mode === 'address') {
+                    stepActions.find('.fs-checkout-action-address').addClass('is-active');
+                    return;
+                }
+
+                stepActions.find('.fs-checkout-action-payment').addClass('is-active');
+            }
+
+            function toggleAddressEditor(isEnabled) {
+                $('#shipping, #opc-shipping_method')
+                    .find('input, select, textarea, button')
+                    .prop('disabled', !isEnabled);
+
+                $('#shipping, #opc-shipping_method')[isEnabled ? 'show' : 'hide']();
+
+                $('#payment .billing-address-same-as-shipping-block input[type="checkbox"]')
+                    .prop('checked', true)
+                    .prop('disabled', !isEnabled)
+                    .trigger('change');
+
+                $('#payment .billing-address-form, #payment .billing-address-details')
+                    .find('input, select, textarea, button')
+                    .prop('disabled', !isEnabled);
+
+                $('#payment .billing-address-form, ' +
+                    '#payment .billing-address-same-as-shipping-block, ' +
+                    '#payment .billing-address-details .action-edit, ' +
+                    '#payment .action-update')[isEnabled ? 'show' : 'hide']();
+
+                $('#fs-delivery-method-box')[isEnabled ? 'hide' : 'show']();
+
+                $('.billing-address-form, .billing-address-same-as-shipping-block, .billing-address-details .action-edit, .action-update')[isEnabled ? 'show' : 'hide']();
+                setCheckoutActionMode(isEnabled ? 'address' : 'payment');
+            }
+
+            function syncShippingInformationForTotals() {
+                var ratesObservable,
+                    availableRates,
+                    firstRate,
+                    selectedShippingMethod;
+
+                if (!shippingComponent || typeof shippingComponent.setShippingInformation !== 'function') {
+                    return;
+                }
+
+                if (typeof quote.isVirtual === 'function' && quote.isVirtual()) {
+                    return;
+                }
+
+                if (!ensureShippingAddressReady()) {
+                    return;
+                }
+
+                selectedShippingMethod = quote.shippingMethod ? quote.shippingMethod() : null;
+
+                if (!selectedShippingMethod) {
+                    ratesObservable = shippingRateService.getShippingRates();
+                    availableRates = ratesObservable && typeof ratesObservable === 'function' ? ratesObservable() : [];
+
+                    if (availableRates && availableRates.length) {
+                        firstRate = availableRates[0];
+                        if (firstRate) {
+                            selectShippingMethodAction(firstRate);
+                        }
+                    }
+
+                    selectedShippingMethod = quote.shippingMethod ? quote.shippingMethod() : null;
+                    if (!selectedShippingMethod) {
+                        return null;
+                    }
+                }
+
+                try {
+                    return setShippingInformationAction();
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            function ensureShippingAddressReady() {
+                var currentAddress,
+                    availableAddresses,
+                    firstAddress;
+
+                if (typeof quote.isVirtual === 'function' && quote.isVirtual()) {
+                    return true;
+                }
+
+                currentAddress = quote.shippingAddress && typeof quote.shippingAddress === 'function'
+                    ? quote.shippingAddress()
+                    : null;
+
+                if (currentAddress && currentAddress.firstname) {
+                    return true;
+                }
+
+                availableAddresses = addressList && typeof addressList === 'function' ? addressList() : [];
+                if (!availableAddresses || !availableAddresses.length) {
+                    return false;
+                }
+
+                firstAddress = availableAddresses[0];
+                if (firstAddress) {
+                    selectShippingAddressAction(firstAddress);
+                    return true;
+                }
+
+                return false;
+            }
+
+            function enforcePaymentHash() {
+                if (window.location.hash === '#payment') {
+                    return;
+                }
+
+                if (window.history && typeof window.history.replaceState === 'function') {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search + '#payment');
+                } else {
+                    window.location.hash = '#payment';
+                }
+            }
+
+            function startPaymentHashGuard() {
+                var attempts = 0;
+
+                if (paymentHashGuardId) {
+                    window.clearInterval(paymentHashGuardId);
+                }
+
+                paymentHashGuardId = window.setInterval(function () {
+                    attempts += 1;
+                    enforcePaymentHash();
+
+                    if (attempts >= 40) {
+                        window.clearInterval(paymentHashGuardId);
+                        paymentHashGuardId = null;
+                    }
+                }, 250);
+            }
+
+            function navigateToPaymentStep() {
+                syncShippingInformationForTotals();
+                ensurePaymentStepVisible();
+                stepNavigator.navigateTo('payment');
+
+                enforcePaymentHash();
+                toggleAddressEditor(false);
+
+                scrollToStep('#payment');
+            }
+
+            function openAddressEditor() {
+                ensurePaymentStepVisible();
+                toggleAddressEditor(true);
+                scrollToStep('#shipping');
+            }
+
+            function scrollToStep(stepSelector) {
+                var stepElement = $(stepSelector);
+
+                if (!stepElement.length) {
+                    return;
+                }
+
+                $('html, body').animate({
+                    scrollTop: Math.max(stepElement.offset().top - 16, 0)
+                }, 180);
+            }
+
+            registry.async('checkout.steps.shipping-step')(function (component) {
+                shippingComponent = component;
+                syncShippingInformationForTotals();
+            });
+
+            registry.async('checkout.steps.billing-step')(function (component) {
+                billingComponent = component;
+                ensurePaymentStepVisible();
+            });
+
+            if (quote.shippingMethod && typeof quote.shippingMethod.subscribe === 'function') {
+                quote.shippingMethod.subscribe(function () {
+                    syncShippingInformationForTotals();
+                });
+            }
+
+            if (quote.shippingAddress && typeof quote.shippingAddress.subscribe === 'function') {
+                quote.shippingAddress.subscribe(function () {
+                    syncShippingInformationForTotals();
+                    updateDeliveryPanelContent();
+                });
+            }
+
+            if (shippingRateService && typeof shippingRateService.getShippingRates === 'function') {
+                (function () {
+                    var ratesObservable = shippingRateService.getShippingRates();
+                    if (ratesObservable && typeof ratesObservable.subscribe === 'function') {
+                        ratesObservable.subscribe(function () {
+                            syncShippingInformationForTotals();
+                        });
+                    }
+                })();
+            }
+
+            if (totals && typeof totals.totals === 'function') {
+                totals.totals.subscribe(function () {
+                    updateDeliveryFeePresentation();
+                });
+            }
+
+            $(document).on('click', '.fs-checkout-breadcrumb[data-step="payment"] .fs-checkout-breadcrumb-button', function () {
+                navigateToPaymentStep();
+            });
+
+            $(document).on('click', '.fs-checkout-action-address', function () {
+                openAddressEditor();
+            });
+
+            $(document).on('click', '.fs-checkout-action-payment', function () {
+                navigateToPaymentStep();
+            });
+
+            $(document).on('click', 'a[href="#shipping"], a[href$="#shipping"]', function (event) {
+                event.preventDefault();
+                openAddressEditor();
+            });
+
+            $(window).on('hashchange', function () {
+                enforcePaymentHash();
+                toggleAddressEditor(false);
+                window.setTimeout(ensurePaymentStepVisible, 0);
+            });
+
+            $(document).ready(function () {
+                navigateToPaymentStep();
+                startPaymentHashGuard();
+                toggleAddressEditor(false);
+                ensureDeliveryMethodBox();
+                updateDeliveryFeePresentation();
+                tuneOrderSummaryDisplay();
+                window.setTimeout(enforcePaymentHash, 100);
+                window.setTimeout(enforcePaymentHash, 400);
+                window.setTimeout(enforcePaymentHash, 1200);
+                window.setTimeout(function () {
+                    toggleAddressEditor(false);
+                }, 300);
+                window.setTimeout(function () {
+                    toggleAddressEditor(false);
+                }, 1000);
+                window.setInterval(updateDeliveryFeePresentation, 1200);
+                window.setInterval(tuneOrderSummaryDisplay, 1200);
+                window.setTimeout(ensurePaymentStepVisible, 400);
+                window.setTimeout(ensurePaymentStepVisible, 1200);
+                window.setTimeout(ensurePaymentStepVisible, 3000);
+                window.setTimeout(ensurePaymentStepVisible, 5000);
+            });
+        });
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+</div>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="fashionstore_zalopay" translate="label" type="text" sortOrder="230"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>FashionStore ZaloPay</label>
+                <field id="active" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="environment" translate="label" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Environment</label>
+                    <source_model>FashionStore\CartOptions\Model\Config\Source\ZalopayEnvironment</source_model>
+                </field>
+                <field id="app_id" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App ID</label>
+                </field>
+                <field id="key1" translate="label" type="obscure" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Key 1</label>
+                </field>
+                <field id="key2" translate="label" type="obscure" sortOrder="60"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Callback Key</label>
+                </field>
+                <field id="sandbox_base_url" translate="label" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sandbox Base URL</label>
+                </field>
+                <field id="production_base_url" translate="label" type="text" sortOrder="80"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production Base URL</label>
+                </field>
+                <field id="callback_url" translate="label comment" type="text" sortOrder="90"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Callback URL Override</label>
+                    <comment>Leave blank to use the storefront callback route automatically.</comment>
+                </field>
+                <field id="redirect_url" translate="label comment" type="text" sortOrder="100"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Redirect URL After Payment</label>
+                    <comment>Optional. Leave blank to use Magento success page.</comment>
+                </field>
+                <field id="expire_duration_seconds" translate="label" type="text" sortOrder="110"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Expire Duration Seconds</label>
+                </field>
+                <field id="preferred_payment_method" translate="label comment" type="text" sortOrder="120"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Preferred Payment Method JSON</label>
+                    <comment>Example: ["vietqr"] or ["zalopay_wallet"]</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

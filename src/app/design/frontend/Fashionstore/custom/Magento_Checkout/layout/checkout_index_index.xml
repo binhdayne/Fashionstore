@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/custom.css"/>
+    </head>
+
+    <body>
+        <referenceBlock name="FashionStore.chatwidget" remove="true"/>
+        <referenceBlock name="fashionstore.contactwidget" remove="true"/>
+        <referenceBlock name="custom.header.weather" remove="true"/>
+
+        <referenceBlock name="checkout.root">
+            <block class="FashionStore\CustomHeader\Block\Header"
+                   name="checkout.custom.header.weather"
+                   as="checkout_custom_header_weather"
+                   template="FashionStore_CustomHeader::header/weather.phtml"
+                   before="-"/>
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="componentDisabled" xsi:type="boolean">true</item>
+                                        </item>
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="sortOrder" xsi:type="string">1</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

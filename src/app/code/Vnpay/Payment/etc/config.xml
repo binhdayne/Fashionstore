@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <vnpay>
+                <active>1</active>
+                <model>Vnpay\Payment\Model\Payment\Vnpay</model>
+                <title>Thanh toán bằng VNPAY</title>
+                <order_status>pending_payment</order_status>
+                <allowspecific>0</allowspecific>
+                <group>offline</group>
+                <sort_order>260</sort_order>
+                <tmn_code>VIQCWQ55</tmn_code>
+                <hash_secret>&lt;PUT_SECRET_KEY_HERE&gt;</hash_secret>
+                <payment_url>https://sandbox.vnpayment.vn/paymentv2/vpcpay.html</payment_url>
+                <force_qr>1</force_qr>
+            </vnpay>
+        </payment>
+    </default>
+</config>

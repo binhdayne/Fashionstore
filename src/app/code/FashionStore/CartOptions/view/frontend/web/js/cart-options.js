@@ -7,7 +7,10 @@ define([
     return function (config, element) {
         var form = $(element),
             manualAddressBlock = form.find('[data-manual-address]'),
-            selectedAddressField = form.find('[data-selected-address-id]');
+            selectedAddressField = form.find('[data-selected-address-id]'),
+            checkoutSelectionField = form.find('[data-role="checkout-selection"]'),
+            cartForm = $('#form-validate'),
+            checkoutButton = $('.checkout.methods.items .action.primary.checkout');
 
         function populateAddressFields(addressData) {
             form.find('[name="shipping_firstname"]').val(addressData.firstname || '');
@@ -68,9 +71,53 @@ define([
             persistSelection();
         }
 
+        function getSelectedCartItems() {
+            var selectedItems = [];
+
+            cartForm.find('[data-role="fashionstore-cart-select"]:checked').each(function () {
+                var checkbox = $(this),
+                    itemId = parseInt(checkbox.attr('data-item-id') || checkbox.val(), 10),
+                    qtyField = cartForm.find('#cart-' + itemId + '-qty'),
+                    qtyValue = parseFloat(qtyField.val() || '1');
+
+                if (!itemId || isNaN(itemId)) {
+                    return;
+                }
+
+                if (isNaN(qtyValue) || qtyValue <= 0) {
+                    qtyValue = 1;
+                }
+
+                selectedItems.push({
+                    item_id: itemId,
+                    qty: qtyValue
+                });
+            });
+
+            return selectedItems;
+        }
+
+        function syncCheckoutSelection() {
+            if (!checkoutSelectionField.length) {
+                return [];
+            }
+
+            var selectedItems = getSelectedCartItems();
+
+            checkoutSelectionField.val(JSON.stringify(selectedItems));
+
+            if (checkoutButton.length) {
+                checkoutButton.prop('disabled', selectedItems.length === 0);
+            }
+
+            return selectedItems;
+        }
+
         form.on('change', '[name="saved_address_option"]', syncAddressSelectionState);
         form.on('input change', 'input, textarea, select', persistSelection);
+        cartForm.on('change input', '[data-role="fashionstore-cart-select"], [data-role="cart-item-qty"]', syncCheckoutSelection);
         syncAddressSelectionState();
         persistSelection();
+        syncCheckoutSelection();
     };
 });

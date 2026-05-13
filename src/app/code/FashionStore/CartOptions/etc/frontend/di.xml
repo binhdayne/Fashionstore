@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Controller\Cart\Add">
+    <plugin name="fashionstore_cartoptions_restore_original_quote_before_add"
+        type="FashionStore\CartOptions\Plugin\Checkout\RestoreOriginalQuotePlugin"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Cart\Index">
+    <plugin name="fashionstore_cartoptions_restore_original_quote_before_cart"
+        type="FashionStore\CartOptions\Plugin\Checkout\RestoreOriginalQuotePlugin"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Onepage\Success">
+        <plugin name="fashionstore_cartoptions_restore_original_quote_after_buy_now"
+                type="FashionStore\CartOptions\Plugin\Checkout\RestoreOriginalQuotePlugin"/>
+        <plugin name="fashionstore_cartoptions_redirect_gateway_on_success"
+            type="FashionStore\CartOptions\Plugin\Checkout\RedirectGatewayPaymentOnSuccessPlugin"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Index\Index">
+        <plugin name="fashionstore_cartoptions_require_login_for_checkout"
+                type="FashionStore\CartOptions\Plugin\Checkout\RequireLoginForCheckoutPlugin"/>
+    </type>
+    <type name="Magento\Checkout\Model\Session">
+        <plugin name="fashionstore_cartoptions_buy_now_quote"
+                type="FashionStore\CartOptions\Plugin\Checkout\BuyNowQuotePlugin"/>
+    </type>
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="fashionstore_cartoptions_filter_checkout_payment_methods"
+                type="FashionStore\CartOptions\Plugin\Payment\FilterCheckoutMethodsPlugin"/>
+    </type>
+</config>
