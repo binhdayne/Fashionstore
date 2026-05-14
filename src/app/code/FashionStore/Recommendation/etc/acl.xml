@@ -6,7 +6,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="FashionStore_SocialLogin::config" title="FashionStore Social Login" sortOrder="520"/>
+                            <resource id="FashionStore_Recommendation::config" title="Recommendation Settings" sortOrder="90"/>
                         </resource>
                     </resource>
                 </resource>

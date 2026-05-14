@@ -1,0 +1,294 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$slides = [
+    [
+        'image' => '/media/slider/slider-1.png',
+        'eyebrow' => 'Bộ sưu tập mới',
+        'title' => 'Fashion<br>Store',
+        'description' => 'Thời trang cao cấp với tinh thần thanh lịch, hiện đại và đầy chuyển động.',
+        'url' => '/bo-suu-tap-2026.html',
+        'button' => 'Khám phá ngay',
+    ],
+    [
+        'image' => '/media/slider/slider-2.png',
+        'eyebrow' => 'Autumn 2026',
+        'title' => 'Silent<br>Luxury',
+        'description' => 'Những phom dáng tối giản, chất liệu sang trọng và bảng màu trầm sâu.',
+        'url' => '/bo-suu-tap-2026.html',
+        'button' => 'Xem bộ sưu tập',
+    ],
+    [
+        'image' => '/media/slider/slider-3.png',
+        'eyebrow' => 'Signature edit',
+        'title' => 'Urban<br>Elegance',
+        'description' => 'Lớp lang mềm mại cho nhịp sống thành thị, giữ trọn cảm giác cao cấp.',
+        'url' => '/bo-suu-tap-2026.html',
+        'button' => 'Mua ngay',
+    ],
+];
+?>
+<section id="fs-home-hero-slider" class="fs-home-hero-slider" aria-label="Hero slider Fashion Store">
+    <div class="fs-home-hero-slider__track" data-role="fs-home-hero-track">
+        <?php foreach ($slides as $slide): ?>
+            <div class="fs-home-hero-slider__slide">
+                <div class="fs-home-hero-slider__panel">
+                    <img class="fs-home-hero-slider__image"
+                         src="<?= $block->escapeUrl($slide['image']) ?>"
+                         alt="<?= $block->escapeHtmlAttr(strip_tags($slide['title'])) ?>"
+                         loading="lazy" />
+                    <div class="fs-home-hero-slider__shade"></div>
+                    <div class="fs-home-hero-slider__content">
+                        <p class="fs-home-hero-slider__eyebrow"><?= $block->escapeHtml($slide['eyebrow']) ?></p>
+                        <h1 class="fs-home-hero-slider__title"><?= /* @noEscape */ $slide['title'] ?></h1>
+                        <p class="fs-home-hero-slider__desc"><?= $block->escapeHtml($slide['description']) ?></p>
+                        <a class="fs-home-hero-slider__button" href="<?= $block->escapeUrl($slide['url']) ?>">
+                            <?= $block->escapeHtml($slide['button']) ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</section>
+
+<style>
+.fs-home-hero-slider {
+    position: relative;
+    margin: 0;
+    background: #090909;
+}
+
+.fs-home-hero-slider__track {
+    position: relative;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.fs-home-hero-slider__track.slick-initialized {
+    opacity: 1;
+}
+
+.fs-home-hero-slider .slick-list,
+.fs-home-hero-slider .slick-track,
+.fs-home-hero-slider .slick-slide,
+.fs-home-hero-slider .slick-slide > div,
+.fs-home-hero-slider__slide,
+.fs-home-hero-slider__panel {
+    height: 100%;
+}
+
+.fs-home-hero-slider__panel {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #111;
+}
+
+.fs-home-hero-slider__image,
+.fs-home-hero-slider__shade {
+    position: absolute;
+    inset: 0;
+}
+
+.fs-home-hero-slider__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fs-home-hero-slider__shade {
+    background: linear-gradient(90deg, rgba(8, 8, 8, 0.72) 0%, rgba(8, 8, 8, 0.35) 42%, rgba(8, 8, 8, 0.56) 100%);
+}
+
+.fs-home-hero-slider__content {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+    padding: 140px 60px 120px;
+    color: #fff;
+}
+
+.fs-home-hero-slider__eyebrow {
+    margin: 0 0 22px;
+    font: 400 11px/1.4 "Montserrat", sans-serif;
+    letter-spacing: .42em;
+    text-transform: uppercase;
+    color: #d7b98b;
+}
+
+.fs-home-hero-slider__title {
+    margin: 0 0 24px;
+    font: 300 clamp(60px, 10vw, 120px)/.92 "Cormorant Garamond", serif;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.fs-home-hero-slider__desc {
+    margin: 0 0 38px;
+    max-width: 34ch;
+    font: 400 13px/1.9 "Montserrat", sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .88);
+}
+
+.fs-home-hero-slider__button {
+    display: inline-block;
+    padding: 15px 34px;
+    border: 1px solid #d7b98b;
+    color: #d7b98b;
+    text-decoration: none;
+    font: 500 11px/1.4 "Montserrat", sans-serif;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    transition: background .25s ease, color .25s ease, transform .25s ease;
+}
+
+.fs-home-hero-slider__button:hover,
+.fs-home-hero-slider__button:focus-visible {
+    background: #d7b98b;
+    color: #111;
+    transform: translateY(-1px);
+}
+
+.fs-home-hero-slider .slick-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    width: 52px;
+    height: 52px;
+    margin-top: -26px;
+    border: 1px solid rgba(255, 255, 255, .3);
+    border-radius: 999px;
+    background: rgba(12, 12, 12, .35);
+    font-size: 0;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.fs-home-hero-slider .slick-arrow:hover {
+    transform: scale(1.04);
+    background: rgba(12, 12, 12, .55);
+    border-color: rgba(255, 255, 255, .5);
+}
+
+.fs-home-hero-slider .slick-prev {
+    left: 24px;
+}
+
+.fs-home-hero-slider .slick-next {
+    right: 24px;
+}
+
+.fs-home-hero-slider .slick-prev::before,
+.fs-home-hero-slider .slick-next::before {
+    display: block;
+    color: #ffffff;
+    font: 300 28px/1 "Cormorant Garamond", serif;
+}
+
+.fs-home-hero-slider .slick-prev::before {
+    content: '‹';
+}
+
+.fs-home-hero-slider .slick-next::before {
+    content: '›';
+}
+
+.fs-home-hero-slider .slick-dots {
+    position: absolute;
+    right: 28px;
+    bottom: 26px;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 3;
+}
+
+.fs-home-hero-slider .slick-dots button {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,.35);
+    font-size: 0;
+    cursor: pointer;
+}
+
+.fs-home-hero-slider .slick-dots .slick-active button {
+    background: #d7b98b;
+}
+
+@media (max-width: 767px) {
+    .fs-home-hero-slider__panel {
+        min-height: 82vh;
+    }
+
+    .fs-home-hero-slider__content {
+        padding: 112px 22px 110px;
+    }
+
+    .fs-home-hero-slider__title {
+        font-size: clamp(44px, 14vw, 72px);
+        letter-spacing: .1em;
+    }
+
+    .fs-home-hero-slider__desc {
+        max-width: none;
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .fs-home-hero-slider .slick-prev {
+        left: 14px;
+    }
+
+    .fs-home-hero-slider .slick-next {
+        right: 14px;
+    }
+
+    .fs-home-hero-slider .slick-arrow {
+        width: 44px;
+        height: 44px;
+        margin-top: -22px;
+    }
+
+    .fs-home-hero-slider .slick-dots {
+        left: 22px;
+        right: auto;
+        bottom: 20px;
+    }
+}
+</style>
+
+<script>
+require(['jquery', 'slick', 'domReady!'], function ($) {
+    var sliderTrack = $('#fs-home-hero-slider').find('[data-role="fs-home-hero-track"]');
+
+    if (!sliderTrack.length || sliderTrack.hasClass('slick-initialized')) {
+        return;
+    }
+
+    sliderTrack.slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 4200,
+        arrows: true,
+        dots: true,
+        infinite: true,
+        speed: 700,
+        swipe: true,
+        touchMove: true,
+        draggable: true,
+        pauseOnHover: true,
+        pauseOnFocus: true,
+        adaptiveHeight: false
+    });
+});
+</script>

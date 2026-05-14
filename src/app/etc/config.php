@@ -361,6 +361,7 @@ return [
         'FashionStore_ExchangeRate' => 1,
         'FashionStore_PriceFilterFix' => 1,
         'FashionStore_ProductSize' => 1,
+        'FashionStore_Recommendation' => 1,
         'FashionStore_SocialLogin' => 1,
         'FashionStore_Weather' => 1,
         'PayPal_Braintree' => 1,

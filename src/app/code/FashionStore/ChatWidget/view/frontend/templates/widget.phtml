@@ -3,10 +3,31 @@
 if ($block->getRequest()->getFullActionName() === 'checkout_index_index') { return; }
 if (!$block->isEnabled()) { return; }
 $ragUrl = $block->escapeUrl($block->getRagUrl());
+$siteBaseUrl = $block->getBaseUrl();
+$hotlineIcon = $block->escapeUrl($siteBaseUrl . 'media/hotline.png');
+$messengerIcon = $block->escapeUrl($siteBaseUrl . 'media/messenger.png');
+$zaloIcon = $block->escapeUrl($siteBaseUrl . 'media/zalo.png');
 ?>
 <style>
+/* Hide duplicated floating contact/icon widgets rendered by legacy scripts/modules */
+#fs-contact-widget,
+#fs-contact-widget *,
+.button-contact-vr,
+.button-contact-vr *,
+.phone-vr,
+.zalo-vr,
+.messenger-vr,
+.contact-vr,
+.floating-button-phone,
+.floating-button-messenger,
+.floating-button-zalo,
+.floating-button-close {
+  display: none !important;
+}
+
 #fs-chat-root *{box-sizing:border-box;margin:0;padding:0}
-#fs-chat-root{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;bottom:32px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none}
+.chat-widget-group{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;right:0 !important;bottom:110px !important;padding:0 !important;margin:0 !important;width:auto !important;z-index:99999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}
+#fs-chat-root{font-family:'Montserrat','Helvetica Neue',sans-serif;font-weight:300;position:fixed;right:0 !important;bottom:110px !important;padding:0 !important;margin:0 !important;width:auto !important;z-index:99999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}
 #fs-chat-root > *{pointer-events:auto}
 #fs-chat-window{width:360px;background:#fafaf8;border:0.5px solid #d0cbc4;display:flex;flex-direction:column;opacity:0;transform:translateY(16px) scale(0.97);pointer-events:none;transition:opacity .35s ease,transform .35s ease}
 #fs-chat-window.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
@@ -43,12 +64,23 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
 #fs-send{width:32px;height:32px;background:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
 #fs-send:hover{background:#333}
 #fs-brand{text-align:center;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#c8c3bc;padding:7px 0 5px;border-top:0.5px solid #e8e5e0;background:#fafaf8}
-#fs-bubble{width:56px;height:56px;border-radius:50%;background:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .3s,background .3s;flex-shrink:0}
-#fs-bubble:hover{transform:scale(1.06);background:#1a1a1a}
-#fs-bubble-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#9a9590;text-align:center}
+#fs-bubble{width:65px;height:65px;border-radius:50%;background:#0a0a0a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .25s,background .25s;flex-shrink:0;color:#fff;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+#fs-bubble:hover{transform:scale(1.04);background:#1a1a1a}
+.fs-chat-launcher{display:flex;flex-direction:column;align-items:center;order:2;pointer-events:auto;position:relative;z-index:2}
+.fs-quick-contact{display:flex;flex-direction:column;gap:10px;align-items:center;order:1;margin-bottom:0;opacity:0;visibility:hidden;transform:translateY(20px);transition:all .3s ease;pointer-events:none;position:relative;z-index:2}
+.fs-quick-contact::after{content:'';position:absolute;left:0;right:0;bottom:-16px;height:16px;background:transparent;pointer-events:auto}
+.chat-widget-group.fs-contacts-visible .fs-quick-contact,
+.chat-widget-group:focus-within .fs-quick-contact{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.fs-quick-contact-link{width:60px;height:60px;border:none;border-radius:50%;background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;transition:transform .2s;pointer-events:auto}
+.fs-quick-contact-link:hover{transform:translateY(-2px) scale(1.06)}
+.fs-quick-contact-link img{width:36px;height:36px;display:block}
+.fs-quick-contact-link img[alt="zalo"]{width:40px;height:40px}
+.fs-back-to-top{order:3;width:48px;height:48px;border:none;border-radius:50%;background:#000;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.5);z-index:10000;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
+.fs-back-to-top:hover{transform:translateY(-2px);background:#b8976a;box-shadow:0 8px 18px rgba(184,151,106,.45);cursor:pointer}
+.fs-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
-<div id="fs-chat-root">
+<div id="fs-chat-root" class="chat-widget-group" style="right: 0 !important; bottom: 110px !important; margin-right: 0 !important; padding-right: 0 !important; margin: 0 !important; padding: 0 !important; width: auto !important; transform: none !important;">
   <div id="fs-chat-window">
     <div id="fs-chat-header">
       <div class="fs-header-left">
@@ -59,8 +91,8 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
           </svg>
         </div>
         <div>
-          <div class="fs-title">Maison</div>
-          <div class="fs-subtitle">Tro ly thoi trang</div>
+          <div class="fs-title">Trợ lý</div>
+          <div class="fs-subtitle">Tư vấn thời trang</div>
         </div>
       </div>
       <button class="fs-close-btn" id="fs-close-btn" aria-label="Dong chat">
@@ -72,7 +104,7 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
     <div class="fs-divider"></div>
     <div id="fs-messages">
       <div class="fs-msg bot">
-        <div class="fs-msg-sender">Maison</div>
+        <div class="fs-msg-sender">Trợ lý</div>
         <div class="fs-msg-bubble">Bonjour. Toi la tro ly cua Fashion Store. Toi co the giup ban tim san pham, tu van phong cach, hoac giai dap thac mac ve bo suu tap.</div>
       </div>
     </div>
@@ -90,18 +122,33 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
         </svg>
       </button>
     </div>
-    <div id="fs-brand">Fashion Store - AI Assistant</div>
+    <div id="fs-brand">Fashion Store - Trợ lý ảo</div>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
-    <button id="fs-bubble" aria-label="Mo chat">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M3 4h16a1 1 0 011 1v9a1 1 0 01-1 1H7l-4 3V5a1 1 0 011-1z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
-        <path d="M7 9h8M7 12h5" stroke="#b8976a" stroke-width="1" stroke-linecap="round"/>
-      </svg>
+  <div class="fs-chat-launcher">
+    <button id="fs-bubble" aria-label="Mở tư vấn">
+      TƯ VẤN
     </button>
-    <div id="fs-bubble-label">Chat</div>
+  </div>
+  <div class="fs-quick-contact">
+    <a class="fs-quick-contact-link" href="tel:1234567890" title="Hotline" aria-label="Hotline">
+      <img src="<?= $hotlineIcon ?>" alt="">
+      <span class="fs-sr-only">Hotline</span>
+    </a>
+    <a class="fs-quick-contact-link" href="https://m.me/yourpage" target="_blank" rel="noopener" title="Messenger" aria-label="Messenger">
+      <img src="<?= $messengerIcon ?>" alt="">
+      <span class="fs-sr-only">Messenger</span>
+    </a>
+    <a class="fs-quick-contact-link" href="https://zalo.me/123456789" target="_blank" rel="noopener" title="Zalo" aria-label="Zalo">
+      <img src="<?= $zaloIcon ?>" alt="zalo">
+      <span class="fs-sr-only">Zalo</span>
+    </a>
   </div>
 </div>
+<button id="back-to-top" class="fs-back-to-top" type="button" aria-label="Lên đầu trang" style="position: fixed; right: 0 !important; bottom: 40px !important; z-index: 999999 !important; pointer-events: auto !important; cursor: pointer !important;">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M6 14l6-6 6 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
 <script>
 (function(){
   var RAG_URL='<?= $ragUrl ?>';
@@ -113,12 +160,67 @@ $ragUrl = $block->escapeUrl($block->getRagUrl());
   function toggle(){isOpen=!isOpen;win.classList.toggle('open',isOpen);if(isOpen)inp.focus();}
   document.getElementById('fs-bubble').addEventListener('click',toggle);
   document.getElementById('fs-close-btn').addEventListener('click',toggle);
+  // Hover logic for quick contacts (JS-driven since parent has pointer-events:none)
+  var group=document.querySelector('.chat-widget-group');
+  var launcher=document.querySelector('.fs-chat-launcher');
+  var quickContact=document.querySelector('.fs-quick-contact');
+  var hoverTimer=null;
+  function showContacts(){if(hoverTimer){clearTimeout(hoverTimer);hoverTimer=null;}group.classList.add('fs-contacts-visible');}
+  function hideContacts(){hoverTimer=setTimeout(function(){group.classList.remove('fs-contacts-visible');},200);}
+  if(launcher){launcher.addEventListener('mouseenter',showContacts);launcher.addEventListener('mouseleave',hideContacts);}
+  if(quickContact){quickContact.addEventListener('mouseenter',showContacts);quickContact.addEventListener('mouseleave',hideContacts);}
+  var backToTopNodes = document.querySelectorAll('#back-to-top');
+  if (backToTopNodes.length > 1) {
+    backToTopNodes.forEach(function (node, idx) {
+      if (idx > 0) {
+        node.removeAttribute('id');
+      }
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    if (e.target && (e.target.id === 'back-to-top' || e.target.closest('#back-to-top'))) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      window.setTimeout(function () {
+        if (window.pageYOffset > 0) {
+          window.scrollTo(0, 0);
+        }
+      }, 250);
+    }
+  });
+
+  function updateBackToTop() {
+    var btn = document.getElementById('back-to-top');
+    if (btn) {
+      btn.style.display = (window.pageYOffset > 300) ? 'flex' : 'none';
+    }
+  }
+
+  window.addEventListener('scroll', updateBackToTop, { passive: true });
+  document.addEventListener('scroll', updateBackToTop, true);
+
+  var backToTopBtn = document.getElementById('back-to-top');
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      window.setTimeout(function () {
+        if (window.pageYOffset > 0) {
+          window.scrollTo(0, 0);
+        }
+      }, 250);
+    });
+
+    updateBackToTop();
+
+    window.setInterval(updateBackToTop, 300);
+  }
   document.querySelectorAll('.fs-chip').forEach(function(c){c.addEventListener('click',function(){inp.value=c.getAttribute('data-q');send();});});
   inp.addEventListener('keydown',function(e){if(e.key==='Enter')send();});
   document.getElementById('fs-send').addEventListener('click',send);
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function addMsg(r,t){var d=document.createElement('div');d.className='fs-msg '+r;d.innerHTML='<div class="fs-msg-sender">'+(r==='bot'?'Maison':'Ban')+'</div><div class="fs-msg-bubble">'+esc(t)+'</div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
-  function showTyping(){var d=document.createElement('div');d.className='fs-msg bot';d.id='fs-typing';d.innerHTML='<div class="fs-msg-sender">Maison</div><div class="fs-typing"><span></span><span></span><span></span></div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function addMsg(r,t){var d=document.createElement('div');d.className='fs-msg '+r;d.innerHTML='<div class="fs-msg-sender">'+(r==='bot'?'Trợ lý':'Bạn')+'</div><div class="fs-msg-bubble">'+esc(t)+'</div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function showTyping(){var d=document.createElement('div');d.className='fs-msg bot';d.id='fs-typing';d.innerHTML='<div class="fs-msg-sender">Trợ lý</div><div class="fs-typing"><span></span><span></span><span></span></div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
   function rmTyping(){var t=document.getElementById('fs-typing');if(t)t.remove();}
   function send(){var t=inp.value.trim();if(!t)return;inp.value='';sugg.style.display='none';addMsg('user',t);showTyping();fetch(RAG_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,use_pdf_context:true,use_mysql_context:true})}).then(function(r){return r.json();}).then(function(d){rmTyping();addMsg('bot',d.answer||'Xin loi, toi chua the tra loi.');}).catch(function(){rmTyping();addMsg('bot','Ket noi that bai. Vui long thu lai.');});}
 }());

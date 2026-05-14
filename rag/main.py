@@ -11,6 +11,9 @@ from pypdf import PdfReader
 import io
 import uuid
 
+from graph_embeddings import most_similar_products, train_deepwalk_embeddings
+from recommendation_engine import RecommendationEngine
+
 QDRANT_URL   = os.getenv("QDRANT_URL",   "http://qdrant:6333")
 OLLAMA_URL   = os.getenv("OLLAMA_URL",   "http://ollama:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "deepseek-r1")
@@ -36,6 +39,7 @@ embedder = SentenceTransformer(EMBED_MODEL)
 qdrant   = QdrantClient(url=QDRANT_URL)
 DB_URL   = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 engine   = sqlalchemy.create_engine(DB_URL, pool_pre_ping=True)
+recommendation_engine = RecommendationEngine(engine=engine)
 
 
 def ensure_collection():
@@ -116,9 +120,141 @@ class IngestResponse(BaseModel):
     chunks_indexed: int
 
 
+class RecommendationResponse(BaseModel):
+    user_id: str
+    mode: str
+    items: list[dict]
+    trained_at: float | None
+    matrix_shape: list[int]
+
+
+def build_recommendation_response(
+    user_id: str,
+    top_k: int = 6,
+    seed_product_id: int | None = None,
+    category_id: int | None = None,
+) -> RecommendationResponse:
+    result = recommendation_engine.predict_top_k(
+        user_id=user_id,
+        top_k=top_k,
+        seed_product_id=seed_product_id,
+        category_id=category_id,
+    )
+    return RecommendationResponse(
+        user_id=user_id,
+        mode=result.mode,
+        items=result.items,
+        trained_at=result.trained_at,
+        matrix_shape=list(result.matrix_shape),
+    )
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "model": OLLAMA_MODEL}
+
+
+@app.get("/recommendations/health")
+def recommendation_health():
+    return {
+        "status": "ok",
+        "engine": "hybrid-recommendation",
+        "details": recommendation_engine.get_status(),
+    }
+
+
+@app.post("/recommendations/train")
+def train_recommendations():
+    recommendation_engine.ensure_fitted(force=True)
+    return {
+        "status": "trained",
+        "details": recommendation_engine.get_status(),
+    }
+
+
+@app.get("/recommendations/{user_id}", response_model=RecommendationResponse)
+def get_recommendations(
+    user_id: str,
+    top_k: int = 6,
+    seed_product_id: int | None = None,
+    category_id: int | None = None,
+):
+    return build_recommendation_response(
+        user_id=user_id,
+        top_k=top_k,
+        seed_product_id=seed_product_id,
+        category_id=category_id,
+    )
+
+
+@app.get("/recommend/{user_id}", response_model=RecommendationResponse)
+def get_recommendations_alias(
+    user_id: str,
+    top_k: int = 6,
+    seed_product_id: int | None = None,
+    category_id: int | None = None,
+):
+    return build_recommendation_response(
+        user_id=user_id,
+        top_k=top_k,
+        seed_product_id=seed_product_id,
+        category_id=category_id,
+    )
+
+
+@app.get("/suggest/{user_id}", response_model=RecommendationResponse)
+def get_suggestions_alias(
+    user_id: str,
+    top_k: int = 6,
+    seed_product_id: int | None = None,
+    category_id: int | None = None,
+):
+    return build_recommendation_response(
+        user_id=user_id,
+        top_k=top_k,
+        seed_product_id=seed_product_id,
+        category_id=category_id,
+    )
+
+
+@app.get("/recommendations/similar/{product_id}")
+def get_similar_products(product_id: int, top_k: int = 6):
+    items = recommendation_engine.find_similar_products(product_id=product_id, top_k=top_k)
+    return {
+        "product_id": product_id,
+        "mode": "content_based",
+        "items": items,
+    }
+
+
+@app.get("/graph/similar/{product_id}")
+def get_graph_similar_products(product_id: int, top_k: int = 6):
+    recommendation_engine.ensure_fitted()
+    if recommendation_engine.interactions.empty:
+        return {
+            "product_id": product_id,
+            "mode": "graph",
+            "items": [],
+        }
+
+    try:
+        _, embeddings = train_deepwalk_embeddings(recommendation_engine.interactions)
+        return {
+            "product_id": product_id,
+            "mode": "graph",
+            "items": most_similar_products(embeddings, product_id=product_id, top_k=top_k),
+            "graph_shape": {
+                "interactions": int(len(recommendation_engine.interactions.index)),
+                "products": int(len(embeddings.index)),
+            },
+        }
+    except RuntimeError as exception:
+        return {
+            "product_id": product_id,
+            "mode": "graph_unavailable",
+            "items": [],
+            "error": str(exception),
+        }
 
 
 @app.post("/ingest/pdf", response_model=IngestResponse)
