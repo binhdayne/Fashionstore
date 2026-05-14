@@ -3,10 +3,9 @@
 if ($block->getRequest()->getFullActionName() === 'checkout_index_index') { return; }
 if (!$block->isEnabled()) { return; }
 $ragUrl = $block->escapeUrl($block->getRagUrl());
-$siteBaseUrl = $block->getBaseUrl();
-$hotlineIcon = $block->escapeUrl($siteBaseUrl . 'media/hotline.png');
-$messengerIcon = $block->escapeUrl($siteBaseUrl . 'media/messenger.png');
-$zaloIcon = $block->escapeUrl($siteBaseUrl . 'media/zalo.png');
+$hotlineIcon = $block->escapeUrl($block->getViewFileUrl('FashionStore_ChatWidget::images/hotline.png'));
+$messengerIcon = $block->escapeUrl($block->getViewFileUrl('FashionStore_ChatWidget::images/messenger.png'));
+$zaloIcon = $block->escapeUrl($block->getViewFileUrl('FashionStore_ChatWidget::images/zalo.png'));
 ?>
 <style>
 /* Hide duplicated floating contact/icon widgets rendered by legacy scripts/modules */
