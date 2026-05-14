@@ -590,3 +590,7 @@ body.catalog-category-view .filter-options-content {
     -webkit-appearance: none;
     margin: 0;
 }
+
+/* Hide shipping step UI - component still runs to load saved address */
+.checkout-index-index #shipping { display: none !important; }
+.checkout-index-index #opc-shipping_method { display: none !important; }
