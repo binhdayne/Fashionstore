@@ -9,22 +9,29 @@ define([
     'use strict';
 
     var allowedMethods = [
-        'vnpay',
-        'fashionstore_vnpay',
-        'fashionstore_momo',
         'fashionstore_cod',
+        'fashionstore_banktransfer_qr',
         'fashionstore_zalopay',
-        'fashionstore_banktransfer_qr'
+        'vnpay',
+        'fashionstore_vnpay'
     ];
 
     var fallbackMethods = {
         fashionstore_cod: {
             method: 'fashionstore_cod',
-            title: 'Thanh toan khi nhan hang'
+            title: 'Thanh toán offline khi nhận hàng'
         },
         fashionstore_banktransfer_qr: {
             method: 'fashionstore_banktransfer_qr',
-            title: 'Chuyen khoan QR'
+            title: 'Chuyển khoản QR'
+        },
+        fashionstore_zalopay: {
+            method: 'fashionstore_zalopay',
+            title: 'ZaloPay'
+        },
+        vnpay: {
+            method: 'vnpay',
+            title: 'Thanh toán bằng VNPAY'
         }
     };
 
@@ -42,8 +49,10 @@ define([
     }
 
     function filterMethods(methods) {
-        return _.filter(ensureSyntheticMethods(methods), function (method) {
+        return _.sortBy(_.filter(ensureSyntheticMethods(methods), function (method) {
             return allowedMethods.indexOf(method.method) !== -1;
+        }), function (method) {
+            return allowedMethods.indexOf(method.method);
         });
     }
 
@@ -67,28 +76,24 @@ define([
 
     rendererList.push(
         {
-            type: 'vnpay',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
-        },
-        {
-            type: 'fashionstore_vnpay',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
-        },
-        {
-            type: 'fashionstore_momo',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
-        },
-        {
             type: 'fashionstore_cod',
             component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
+        },
+        {
+            type: 'fashionstore_banktransfer_qr',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/bank-transfer-qr-method'
         },
         {
             type: 'fashionstore_zalopay',
             component: 'FashionStore_CartOptions/js/view/payment/method-renderer/zalopay-svg-method'
         },
         {
-            type: 'fashionstore_banktransfer_qr',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/bank-transfer-qr-method'
+            type: 'vnpay',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
+        },
+        {
+            type: 'fashionstore_vnpay',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect'
         }
     );
 

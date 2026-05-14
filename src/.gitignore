@@ -1,0 +1,14 @@
+# Magento 2 ignore rules for src/
+var/
+generated/
+pub/static/
+pub/media/*
+!pub/media/import_master/
+app/etc/env.php
+auth.json
+.env
+node_modules/
+vendor/
+.DS_Store
+*.log
+.vscode/

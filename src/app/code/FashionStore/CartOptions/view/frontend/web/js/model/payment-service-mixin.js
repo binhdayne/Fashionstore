@@ -4,26 +4,29 @@ define([
     'use strict';
 
     var allowedMethods = [
-        'vnpay',
-        'fashionstore_vnpay',
-        'fashionstore_momo',
         'fashionstore_cod',
+        'fashionstore_banktransfer_qr',
         'fashionstore_zalopay',
-        'fashionstore_banktransfer_qr'
+        'vnpay',
+        'fashionstore_vnpay'
     ];
 
     var fallbackMethods = [
         {
-            method: 'vnpay',
-            title: 'Thanh toán bằng VNPAY'
-        },
-        {
             method: 'fashionstore_cod',
-            title: 'Thanh toan khi nhan hang'
+            title: 'Thanh toán offline khi nhận hàng'
         },
         {
             method: 'fashionstore_banktransfer_qr',
-            title: 'Chuyen khoan QR'
+            title: 'Chuyển khoản QR'
+        },
+        {
+            method: 'fashionstore_zalopay',
+            title: 'ZaloPay'
+        },
+        {
+            method: 'vnpay',
+            title: 'Thanh toán bằng VNPAY'
         }
     ];
 
@@ -41,8 +44,10 @@ define([
     }
 
     function filterMethods(methods) {
-        return _.filter(ensureSyntheticMethods(methods), function (method) {
+        return _.sortBy(_.filter(ensureSyntheticMethods(methods), function (method) {
             return allowedMethods.indexOf(method.method) !== -1;
+        }), function (method) {
+            return allowedMethods.indexOf(method.method);
         });
     }
 

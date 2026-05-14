@@ -1,9 +1,1 @@
-define([], function () {
-    'use strict';
-
-    return function (payload) {
-        payload.addressInformation['extension_attributes'] = {};
-
-        return payload;
-    };
-});
+/var/www/html/src/vendor/magento/module-checkout/view/frontend/web/js/model/shipping-save-processor/payload-extender.js

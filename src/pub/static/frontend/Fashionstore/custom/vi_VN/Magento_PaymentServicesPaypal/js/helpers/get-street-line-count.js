@@ -1,13 +1,1 @@
-define(['uiRegistry'], function (uiRegistry) {
-    'use strict';
-
-    /**
-     * Returns the integer count of the number of street lines available on a customer address.
-     *
-     * @returns {number}
-     */
-    return function () {
-        const shippingAddress = uiRegistry.get('checkout.steps.shipping-step.shippingAddress');
-        return Object.values(shippingAddress.source.shippingAddress.street).length;
-    };
-});
+/var/www/html/src/vendor/magento/module-payment-services-paypal/view/frontend/web/js/helpers/get-street-line-count.js

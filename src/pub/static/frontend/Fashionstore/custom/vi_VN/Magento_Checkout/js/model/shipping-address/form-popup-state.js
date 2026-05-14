@@ -1,14 +1,1 @@
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-define([
-    'ko'
-], function (ko) {
-    'use strict';
-
-    return {
-        isVisible: ko.observable(false)
-    };
-});
+/var/www/html/src/vendor/magento/module-checkout/view/frontend/web/js/model/shipping-address/form-popup-state.js

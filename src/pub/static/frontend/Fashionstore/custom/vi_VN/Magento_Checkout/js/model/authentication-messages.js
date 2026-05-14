@@ -1,13 +1,1 @@
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-define([
-    'ko',
-    'Magento_Ui/js/model/messages'
-], function (ko, Messages) {
-    'use strict';
-
-    return new Messages();
-});
+/var/www/html/src/vendor/magento/module-checkout/view/frontend/web/js/model/authentication-messages.js

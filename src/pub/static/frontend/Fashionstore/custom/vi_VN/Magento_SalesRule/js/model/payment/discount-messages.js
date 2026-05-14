@@ -1,12 +1,1 @@
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-define([
-    'Magento_Ui/js/model/messages'
-], function (Messages) {
-    'use strict';
-
-    return new Messages();
-});
+/var/www/html/src/vendor/magento/module-sales-rule/view/frontend/web/js/model/payment/discount-messages.js

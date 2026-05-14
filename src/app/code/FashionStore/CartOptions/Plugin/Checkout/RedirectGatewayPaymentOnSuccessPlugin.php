@@ -17,7 +17,6 @@ class RedirectGatewayPaymentOnSuccessPlugin
     private const REDIRECT_METHODS = [
         'vnpay',
         'fashionstore_vnpay',
-        'fashionstore_momo',
     ];
 
     private CheckoutSession $checkoutSession;

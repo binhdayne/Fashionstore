@@ -39,39 +39,28 @@ define([
         },
 
         afterPlaceOrder: function () {
-            this.createZalopayOrder();
-        },
-
-        getButtonTitle: function () {
-            return 'Thanh toan voi ZaloPay';
-        },
-
-        createZalopayOrder: function () {
             var self = this;
 
             self.isCreatingOrder(true);
-            self.statusMessage('Dang tao ma thanh toan ZaloPay...');
+            self.statusMessage('Dang chuyen huong sang cong ZaloPay...');
 
             $.ajax({
                 url: urlBuilder.build('fashionstore_cartoptions/zalopay/create'),
                 type: 'POST',
-                dataType: 'json'
+                dataType: 'json',
+                data: {
+                    force: 1
+                }
             }).done(function (response) {
-                if (!response || !response.success) {
-                    self.messageContainer.addErrorMessage({
-                        message: response && response.message ? response.message : 'Khong the tao giao dich ZaloPay.'
-                    });
-                    self.statusMessage('Khong the tao giao dich ZaloPay.');
+                if (response && response.success && response.order_url) {
+                    window.location.href = response.order_url;
                     return;
                 }
 
-                self.orderIncrementId(response.order_increment_id || '');
-                self.gatewayUrl(response.order_url || '');
-                self.qrImageUrl(response.qr_image || '');
-                self.amountLabel(self.buildAmountLabel(response));
-                self.statusMessage('Quet QR bang ZaloPay de hoan tat thanh toan. He thong se tu dong kiem tra trang thai moi 5 giay.');
-                self.openPaymentModal();
-                self.startPolling();
+                self.messageContainer.addErrorMessage({
+                    message: response && response.message ? response.message : 'Khong the tao giao dich ZaloPay.'
+                });
+                self.statusMessage('Khong the tao giao dich ZaloPay.');
             }).fail(function () {
                 self.messageContainer.addErrorMessage({
                     message: 'Khong the ket noi toi may chu ZaloPay luc nay.'
@@ -82,8 +71,16 @@ define([
             });
         },
 
+        getButtonTitle: function () {
+            return 'Thanh toan voi ZaloPay';
+        },
+
+        createZalopayOrder: function () {
+            return;
+        },
+
         openPaymentModal: function () {
-            this.isModalVisible(true);
+            this.isModalVisible(false);
         },
 
         buildAmountLabel: function (response) {

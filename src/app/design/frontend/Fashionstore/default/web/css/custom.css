@@ -761,3 +761,18 @@ header .logo img {
         font-size: 22px !important;
     }
 }
+
+/* Hide the AI/chat widget that is rendered directly on the page */
+#fs-chat-root,
+#fs-chat-root *,
+#fs-chat-window,
+#fs-chat-window *,
+#fs-chat-launcher,
+.fs-chat-launcher,
+#fs-contact-widget,
+#fs-contact-widget * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

@@ -5,4 +5,8 @@
         <plugin name="fashionstore_cartoptions_ensure_shipping_before_place_order"
                 type="FashionStore\CartOptions\Plugin\Checkout\EnsureShippingAddressBeforePlaceOrderPlugin"/>
     </type>
+    <type name="Magento\Quote\Model\PaymentMethodManagement">
+        <plugin name="fashionstore_cartoptions_ensure_shipping_before_payment_method"
+                type="FashionStore\CartOptions\Plugin\Checkout\EnsureShippingAddressBeforePlaceOrderPlugin"/>
+    </type>
 </config>

@@ -19,7 +19,7 @@
                 <sort_order>210</sort_order>
             </fashionstore_vnpay>
             <fashionstore_momo>
-                <active>1</active>
+                <active>0</active>
                 <model>FashionStore\CartOptions\Model\Payment\Momo</model>
                 <order_status>pending</order_status>
                 <title>MoMo</title>
@@ -31,7 +31,7 @@
                 <active>1</active>
                 <model>FashionStore\CartOptions\Model\Payment\Cod</model>
                 <order_status>pending</order_status>
-                <title>Thanh toan khi nhan hang</title>
+                <title>Thanh toán offline khi nhận hàng</title>
                 <allowspecific>0</allowspecific>
                 <group>offline</group>
                 <sort_order>225</sort_order>
@@ -51,13 +51,13 @@
                 <production_base_url>https://openapi.zalopay.vn</production_base_url>
                 <environment>sandbox</environment>
                 <expire_duration_seconds>900</expire_duration_seconds>
-                <preferred_payment_method>["vietqr"]</preferred_payment_method>
+                <preferred_payment_method></preferred_payment_method>
             </fashionstore_zalopay>
             <fashionstore_banktransfer_qr>
                 <active>1</active>
                 <model>FashionStore\CartOptions\Model\Payment\BankTransferQr</model>
                 <order_status>pending_payment</order_status>
-                <title>Chuyen khoan QR</title>
+                <title>Chuyển khoản QR</title>
                 <allowspecific>0</allowspecific>
                 <group>offline</group>
                 <sort_order>240</sort_order>

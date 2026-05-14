@@ -421,6 +421,20 @@ $checkoutStyle = <<<'STYLE'
     border-top: none !important;
 }
 
+html.fs-payment-mode .checkout-index-index #shipping,
+html.fs-payment-mode .checkout-index-index #opc-shipping_method,
+.checkout-index-index.fs-payment-mode #shipping,
+.checkout-index-index.fs-payment-mode #opc-shipping_method {
+    display: none !important;
+}
+
+html.fs-address-mode .checkout-index-index #shipping,
+html.fs-address-mode .checkout-index-index #opc-shipping_method,
+.checkout-index-index.fs-address-mode #shipping,
+.checkout-index-index.fs-address-mode #opc-shipping_method {
+    display: block !important;
+}
+
 .checkout-index-index #payment .step-title {
     margin: 0 0 20px !important;
     font-size: 0 !important;
@@ -1063,6 +1077,14 @@ STYLE;
         (function () {
             var targetHash = '#payment';
 
+            document.documentElement.classList.add('fs-payment-mode');
+            document.documentElement.classList.remove('fs-address-mode');
+
+            if (document.body) {
+                document.body.classList.add('fs-payment-mode');
+                document.body.classList.remove('fs-address-mode');
+            }
+
             if (window.location.hash && window.location.hash !== '#shipping') {
                 return;
             }
@@ -1143,7 +1165,6 @@ script;
             var shippingComponent,
                 billingComponent,
                 globalPlaceOrderButton,
-                paymentHashGuardId,
                 deliveryOptionStorageKey = 'fs_checkout_delivery_method',
                 deliveryExpressFee = 30000,
                 selectedDeliveryMethod = 'standard';
@@ -1278,6 +1299,29 @@ script;
                 }
 
                 return lines.join('');
+            }
+
+            function isCheckoutAddressComplete(address) {
+                var street = address && address.street ? address.street : [],
+                    firstStreetLine = '';
+
+                if (!address) {
+                    return false;
+                }
+
+                if ($.isArray(street)) {
+                    firstStreetLine = street[0] || '';
+                } else {
+                    firstStreetLine = street;
+                }
+
+                return $.trim(address.firstname || '') !== '' &&
+                    $.trim(address.lastname || '') !== '' &&
+                    $.trim(address.city || '') !== '' &&
+                    $.trim(address.postcode || '') !== '' &&
+                    $.trim(address.telephone || '') !== '' &&
+                    $.trim(address.countryId || address.country_id || '') !== '' &&
+                    $.trim(firstStreetLine || '') !== '';
             }
 
             function updateDeliveryPanelContent() {
@@ -1575,6 +1619,7 @@ script;
                     }
 
                     if (!ensureShippingAddressReady()) {
+                        openAddressEditor();
                         return;
                     }
 
@@ -1633,6 +1678,10 @@ script;
             }
 
             function toggleAddressEditor(isEnabled) {
+                $('html, body')
+                    .toggleClass('fs-address-mode', isEnabled)
+                    .toggleClass('fs-payment-mode', !isEnabled);
+
                 $('#shipping, #opc-shipping_method')
                     .find('input, select, textarea, button')
                     .prop('disabled', !isEnabled);
@@ -1716,7 +1765,7 @@ script;
                     ? quote.shippingAddress()
                     : null;
 
-                if (currentAddress && currentAddress.firstname) {
+                if (isCheckoutAddressComplete(currentAddress)) {
                     return true;
                 }
 
@@ -1725,10 +1774,13 @@ script;
                     return false;
                 }
 
-                firstAddress = availableAddresses[0];
+                firstAddress = availableAddresses.filter(function (address) {
+                    return isCheckoutAddressComplete(address);
+                })[0] || availableAddresses[0];
+
                 if (firstAddress) {
                     selectShippingAddressAction(firstAddress);
-                    return true;
+                    return isCheckoutAddressComplete(firstAddress);
                 }
 
                 return false;
@@ -1746,25 +1798,12 @@ script;
                 }
             }
 
-            function startPaymentHashGuard() {
-                var attempts = 0;
-
-                if (paymentHashGuardId) {
-                    window.clearInterval(paymentHashGuardId);
+            function navigateToPaymentStep() {
+                if (!ensureShippingAddressReady()) {
+                    openAddressEditor();
+                    return;
                 }
 
-                paymentHashGuardId = window.setInterval(function () {
-                    attempts += 1;
-                    enforcePaymentHash();
-
-                    if (attempts >= 40) {
-                        window.clearInterval(paymentHashGuardId);
-                        paymentHashGuardId = null;
-                    }
-                }, 250);
-            }
-
-            function navigateToPaymentStep() {
                 syncShippingInformationForTotals();
                 ensurePaymentStepVisible();
                 stepNavigator.navigateTo('payment');
@@ -1851,26 +1890,36 @@ script;
             });
 
             $(window).on('hashchange', function () {
-                enforcePaymentHash();
-                toggleAddressEditor(false);
+                if (ensureShippingAddressReady()) {
+                    enforcePaymentHash();
+                    toggleAddressEditor(false);
+                } else {
+                    openAddressEditor();
+                }
                 window.setTimeout(ensurePaymentStepVisible, 0);
             });
 
             $(document).ready(function () {
                 navigateToPaymentStep();
-                startPaymentHashGuard();
-                toggleAddressEditor(false);
+                if (ensureShippingAddressReady()) {
+                    toggleAddressEditor(false);
+                } else {
+                    openAddressEditor();
+                }
                 ensureDeliveryMethodBox();
                 updateDeliveryFeePresentation();
                 tuneOrderSummaryDisplay();
-                window.setTimeout(enforcePaymentHash, 100);
-                window.setTimeout(enforcePaymentHash, 400);
-                window.setTimeout(enforcePaymentHash, 1200);
                 window.setTimeout(function () {
-                    toggleAddressEditor(false);
+                    if (ensureShippingAddressReady()) {
+                        enforcePaymentHash();
+                        toggleAddressEditor(false);
+                    }
                 }, 300);
                 window.setTimeout(function () {
-                    toggleAddressEditor(false);
+                    if (ensureShippingAddressReady()) {
+                        enforcePaymentHash();
+                        toggleAddressEditor(false);
+                    }
                 }, 1000);
                 window.setInterval(updateDeliveryFeePresentation, 1200);
                 window.setInterval(tuneOrderSummaryDisplay, 1200);

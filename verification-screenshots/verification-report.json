@@ -1,0 +1,54 @@
+[
+  {
+    "name": "home-desktop",
+    "url": "http://localhost/",
+    "status": 200,
+    "title": "FashionStore - Thời Trang Cao Cấp Giá Rẻ",
+    "ok": true,
+    "screenshot": "\\\\wsl.localhost\\Ubuntu\\home\\duong\\magento2-shop\\verification-screenshots\\home-desktop.png",
+    "consoleErrors": [],
+    "requestFailures": [],
+    "badResponses": [],
+    "bodySample": "HÀ NỘI\n28 C\nTIN TỨC:\nTHU GIỮ LOẠT HÀNG GIẢ Ở SAIGON SQUARE, CHỢ BẾN THÀNH\nFASHIONSTORE\nCHÀO MỪNG, KHÁCH!\nĐÓNG\nTÀI KHOẢN\nĐăng nhập\n>\nĐăng ký\n>\nCỬA HÀNG\nThời trang nữ\n>\nThời trang nam\n>\nTúi xách\n>\nGiày\n>\nLiên hệ chúng tôi\nThời trang & Phụ kiện\nNước hoa & Mỹ phẩm\nSkip to Content\nĐÓNG\nTÀI KHOẢN\nĐăng nhậ",
+    "error": null
+  },
+  {
+    "name": "home-mobile",
+    "url": "http://localhost/",
+    "status": 200,
+    "title": "FashionStore - Thời Trang Cao Cấp Giá Rẻ",
+    "ok": true,
+    "screenshot": "\\\\wsl.localhost\\Ubuntu\\home\\duong\\magento2-shop\\verification-screenshots\\home-mobile.png",
+    "consoleErrors": [],
+    "requestFailures": [],
+    "badResponses": [],
+    "bodySample": "HÀ NỘI\n28 C\nFASHIONSTORE\nĐÓNG\nTÀI KHOẢN\nĐăng nhập\n>\nĐăng ký\n>\nCỬA HÀNG\nThời trang nữ\n>\nThời trang nam\n>\nTúi xách\n>\nGiày\n>\nLiên hệ chúng tôi\nThời trang & Phụ kiện\nNước hoa & Mỹ phẩm\nSkip to Content\nĐÓNG\nTÀI KHOẢN\nĐăng nhập\n>\nĐăng ký\n>\nCỬA HÀNG\nThời trang nữ\n>\nThời trang nam\n>\nTúi xách\n>\nGiày\n>\nLiên h",
+    "error": null
+  },
+  {
+    "name": "cart-desktop",
+    "url": "http://localhost/checkout/cart/",
+    "status": 200,
+    "title": "Giỏ hàng",
+    "ok": true,
+    "screenshot": "\\\\wsl.localhost\\Ubuntu\\home\\duong\\magento2-shop\\verification-screenshots\\cart-desktop.png",
+    "consoleErrors": [],
+    "requestFailures": [],
+    "badResponses": [],
+    "bodySample": "HÀ NỘI\n28 C\nTIN TỨC:\nTHU GIỮ LOẠT HÀNG GIẢ Ở SAIGON SQUARE, CHỢ BẾN THÀNH\nFASHIONSTORE\nCHÀO MỪNG, KHÁCH!\nĐÓNG\nTÀI KHOẢN\nĐăng nhập\n>\nĐăng ký\n>\nCỬA HÀNG\nThời trang nữ\n>\nThời trang nam\n>\nTúi xách\n>\nGiày\n>\nLiên hệ chúng tôi\nThời trang & Phụ kiện\nNước hoa & Mỹ phẩm\nSkip to Content\nĐÓNG\nTÀI KHOẢN\nĐăng nhậ",
+    "error": null
+  },
+  {
+    "name": "checkout-desktop",
+    "url": "http://localhost/checkout/",
+    "status": 200,
+    "title": "Đăng nhập khách hàng",
+    "ok": true,
+    "screenshot": "\\\\wsl.localhost\\Ubuntu\\home\\duong\\magento2-shop\\verification-screenshots\\checkout-desktop.png",
+    "consoleErrors": [],
+    "requestFailures": [],
+    "badResponses": [],
+    "bodySample": "HÀ NỘI\n28 C\nTIN TỨC:\nTHU GIỮ LOẠT HÀNG GIẢ Ở SAIGON SQUARE, CHỢ BẾN THÀNH\nFASHIONSTORE\nCHÀO MỪNG, KHÁCH!\nĐÓNG\nTÀI KHOẢN\nĐăng nhập\n>\nĐăng ký\n>\nCỬA HÀNG\nThời trang nữ\n>\nThời trang nam\n>\nTúi xách\n>\nGiày\n>\nLiên hệ chúng tôi\nThời trang & Phụ kiện\nNước hoa & Mỹ phẩm\nSkip to Content\nĐÓNG\nTÀI KHOẢN\nĐăng nhậ",
+    "error": null
+  }
+]

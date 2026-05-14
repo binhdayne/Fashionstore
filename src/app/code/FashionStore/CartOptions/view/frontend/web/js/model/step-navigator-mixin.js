@@ -43,7 +43,14 @@ define([], function () {
         };
 
         target.setHash = function (hash) {
-            return originalSetHash.call(this, normalizeStep(hash));
+            var normalizedHash = normalizeStep(hash);
+
+            if (normalizedHash === 'payment') {
+                replaceHash(normalizedHash);
+                return;
+            }
+
+            return originalSetHash.call(this, normalizedHash);
         };
 
         return target;

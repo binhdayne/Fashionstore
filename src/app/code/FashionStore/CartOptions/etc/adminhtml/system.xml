@@ -57,7 +57,7 @@
                 <field id="preferred_payment_method" translate="label comment" type="text" sortOrder="120"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Preferred Payment Method JSON</label>
-                    <comment>Example: ["vietqr"] or ["zalopay_wallet"]</comment>
+                    <comment>Optional. Leave blank to let ZaloPay sandbox decide. Example: ["vietqr"] or ["zalopay_wallet"]</comment>
                 </field>
             </group>
         </section>
