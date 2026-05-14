@@ -5,7 +5,7 @@ src/pub/static/
 src/pub/media/
 src/pub/opt/
 src/app/etc/env.php
-src/auth.json
+src/auth.json   
 local-backup/
 *.log
 .env
@@ -13,3 +13,10 @@ env/
 rootCA.pem
 .vscode/
 src/.vscode/
+
+# Tracked media files (force added with git add -f)
+!src/pub/media/hotline.png
+!src/pub/media/messenger.png
+!src/pub/media/zalo.png
+!src/pub/media/slider/
+!src/pub/media/slider/**
