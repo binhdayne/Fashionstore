@@ -1,6 +1,26 @@
 define([], function () {
     'use strict';
 
+    function replaceHash(hash) {
+        var targetHash = hash.charAt(0) === '#' ? hash : '#' + hash;
+
+        if (window.location.hash === targetHash) {
+            return;
+        }
+
+        if (window.history && typeof window.history.replaceState === 'function') {
+            window.history.replaceState(
+                null,
+                '',
+                window.location.pathname + window.location.search + targetHash
+            );
+
+            return;
+        }
+
+        window.location.hash = targetHash;
+    }
+
     function normalizeStep(code) {
         return code === 'shipping' ? 'payment' : code;
     }
@@ -12,7 +32,7 @@ define([], function () {
 
         target.handleHash = function () {
             if (window.location.hash === '#shipping') {
-                window.location.hash = '#payment';
+                replaceHash('#payment');
             }
 
             return originalHandleHash.apply(this, arguments);

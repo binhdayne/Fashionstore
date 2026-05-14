@@ -1059,6 +1059,29 @@ STYLE;
     </div>
     <?= /* @noEscape */ $secureRenderer->renderStyleAsTag('position: absolute;', '#checkout-loader img') ?>
     <?= /* @noEscape */ $secureRenderer->renderTag('style', [], $checkoutStyle, false) ?>
+    <?php $scriptString = <<<'script'
+        (function () {
+            var targetHash = '#payment';
+
+            if (window.location.hash && window.location.hash !== '#shipping') {
+                return;
+            }
+
+            if (window.history && typeof window.history.replaceState === 'function') {
+                window.history.replaceState(
+                    null,
+                    '',
+                    window.location.pathname + window.location.search + targetHash
+                );
+
+                return;
+            }
+
+            window.location.hash = targetHash;
+        }());
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
     <!-- ko template: getTemplate() --><!-- /ko -->
     <script type="text/x-magento-init">
         {

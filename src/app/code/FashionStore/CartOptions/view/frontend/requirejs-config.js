@@ -1,6 +1,8 @@
 var config = {
     map: {
         '*': {
+            'Magento_Checkout/js/proceed-to-checkout':
+                'FashionStore_CartOptions/js/proceed-to-checkout-payment',
             'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method':
                 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-redirect',
             'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2':
