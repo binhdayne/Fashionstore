@@ -1370,12 +1370,27 @@ script;
 
             function tuneOrderSummaryDisplay() {
                 var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
-                    itemCount = $('.opc-sidebar .opc-block-summary .minicart-items .product-item').length,
-                    table = $('.opc-sidebar .opc-block-summary .table-totals').first();
+                    table = $('.opc-sidebar .opc-block-summary .table-totals').first(),
+                    itemCount = 0;
+
+                // Lấy item count từ JS quote model (chính xác hơn DOM)
+                try {
+                    require(['Magento_Checkout/js/model/quote'], function(quote) {
+                        itemCount = quote.getItems().length;
+                        if (summaryTitle.length) {
+                            summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
+                        }
+                    });
+                } catch (e) {
+                    // Fallback: đọc từ DOM nếu quote model không có
+                    itemCount = $('.opc-sidebar .opc-block-summary .minicart-items .product-item').length;
+                    if (summaryTitle.length) {
+                        summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
+                    }
+                }
 
                 if (summaryTitle.length) {
                     summaryTitle.text('Tổng đơn hàng');
-                    summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
                 }
 
                 if (table.length) {
@@ -1559,7 +1574,18 @@ script;
 
                     if (syncRequest && typeof syncRequest.always === 'function') {
                         syncRequest.always(function () {
-                            nativeButton.trigger('click');
+                            var finalSyncRequest = syncShippingInformationForTotals();
+
+                            if (finalSyncRequest && typeof finalSyncRequest.always === 'function') {
+                                finalSyncRequest.always(function () {
+                                    nativeButton.trigger('click');
+                                });
+                                return;
+                            }
+
+                            window.setTimeout(function () {
+                                nativeButton.trigger('click');
+                            }, 250);
                         });
                         return;
                     }
@@ -1742,7 +1768,22 @@ script;
             }
 
             function navigateToPaymentStep() {
-                syncShippingInformationForTotals();
+                var syncRequest = syncShippingInformationForTotals();
+
+                if (syncRequest && typeof syncRequest.always === 'function') {
+                    syncRequest.always(function () {
+                        ensurePaymentStepVisible();
+                        stepNavigator.navigateTo('payment');
+
+                        enforcePaymentHash();
+                        toggleAddressEditor(false);
+
+                        scrollToStep('#payment');
+                    });
+
+                    return;
+                }
+
                 ensurePaymentStepVisible();
                 stepNavigator.navigateTo('payment');
 
