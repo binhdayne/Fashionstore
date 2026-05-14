@@ -1166,4 +1166,53 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
     }());
     </script>
+<script>
+(function () {
+    function enableCheckoutButton() {
+        var btn = document.querySelector(
+            '.checkout.methods.items .action.primary.checkout'
+        );
+        var checkboxes = document.querySelectorAll(
+            '.fashionstore-item-select__checkbox'
+        );
+        var checkedCount = 0;
+
+        checkboxes.forEach(function (cb) {
+            if (cb.checked) { checkedCount++; }
+        });
+
+        if (!btn) { return; }
+
+        if (checkboxes.length === 0 || checkedCount > 0) {
+            btn.disabled = false;
+            btn.removeAttribute('disabled');
+        } else {
+            btn.disabled = true;
+            btn.setAttribute('disabled', 'disabled');
+        }
+    }
+
+    // Bind checkbox change event
+    document.addEventListener('change', function (e) {
+        if (e.target && e.target.classList.contains('fashionstore-item-select__checkbox')) {
+            enableCheckoutButton();
+        }
+        if (e.target && e.target.classList.contains('fashionstore-select-all__checkbox')) {
+            enableCheckoutButton();
+        }
+    });
+
+    // Run on load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', enableCheckoutButton);
+    } else {
+        enableCheckoutButton();
+    }
+
+    // Retry sau khi JS khac co the da disable lai
+    setTimeout(enableCheckoutButton, 300);
+    setTimeout(enableCheckoutButton, 800);
+    setTimeout(enableCheckoutButton, 1500);
+}());
+</script>
 <?php endif; ?>

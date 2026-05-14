@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Api\CartRepositoryInterface">
+        <plugin name="fashionstore_cartoptions_ensure_quote_address_country"
+                type="FashionStore\CartOptions\Plugin\Quote\EnsureQuoteAddressCountryPlugin"/>
+    </type>
+    <type name="Magento\Checkout\Model\PaymentInformationManagement">
+        <plugin name="fashionstore_cartoptions_ensure_address_before_save_payment"
+                type="FashionStore\CartOptions\Plugin\Checkout\EnsureAddressBeforeSavePaymentPlugin"/>
+    </type>
     <type name="Magento\Quote\Model\QuoteManagement">
         <plugin name="fashionstore_cartoptions_ensure_shipping_before_place_order"
                 type="FashionStore\CartOptions\Plugin\Checkout\EnsureShippingAddressBeforePlaceOrderPlugin"/>

@@ -286,18 +286,18 @@ require(['jquery', 'slick', 'domReady!'], function ($) {
     sliderTrack.slick({
         slidesToShow: 1,
         slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 4200,
+        autoplay: false,
         arrows: true,
         dots: true,
-        infinite: true,
+        infinite: false,
         speed: 700,
         swipe: true,
         touchMove: true,
         draggable: true,
         pauseOnHover: true,
         pauseOnFocus: true,
-        adaptiveHeight: false
+        adaptiveHeight: false,
+        initialSlide: 0
     });
 });
 </script>

@@ -1,6 +1,11 @@
 define([], function () {
     'use strict';
 
+    // Guard: chi chay tren trang checkout
+    if (typeof window.checkoutConfig === 'undefined') {
+        return function (target) { return target; };
+    }
+
     function normalizeStep(code) {
         return code === 'shipping' ? 'payment' : code;
     }
@@ -14,7 +19,6 @@ define([], function () {
             if (window.location.hash === '#shipping') {
                 window.location.hash = '#payment';
             }
-
             return originalHandleHash.apply(this, arguments);
         };
 

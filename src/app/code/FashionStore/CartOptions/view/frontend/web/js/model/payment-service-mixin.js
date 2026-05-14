@@ -3,6 +3,11 @@ define([
 ], function (_) {
     'use strict';
 
+    // Guard: chi chay tren trang checkout
+    if (typeof window.checkoutConfig === 'undefined') {
+        return function (target) { return target; };
+    }
+
     var allowedMethods = [
         'vnpay',
         'fashionstore_vnpay',
@@ -13,30 +18,19 @@ define([
     ];
 
     var fallbackMethods = [
-        {
-            method: 'vnpay',
-            title: 'Thanh toán bằng VNPAY'
-        },
-        {
-            method: 'fashionstore_cod',
-            title: 'Thanh toan khi nhan hang'
-        },
-        {
-            method: 'fashionstore_banktransfer_qr',
-            title: 'Chuyen khoan QR'
-        }
+        { method: 'vnpay', title: 'Thanh toán bằng VNPAY' },
+        { method: 'fashionstore_cod', title: 'Thanh toan khi nhan hang' },
+        { method: 'fashionstore_banktransfer_qr', title: 'Chuyen khoan QR' }
     ];
 
     function ensureSyntheticMethods(methods) {
         var currentMethods = methods ? methods.slice() : [],
             existingCodes = _.pluck(currentMethods, 'method');
-
         _.each(fallbackMethods, function (method) {
             if (existingCodes.indexOf(method.method) === -1) {
                 currentMethods.push(method);
             }
         });
-
         return currentMethods;
     }
 

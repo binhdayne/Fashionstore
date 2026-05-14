@@ -8,6 +8,10 @@ define([
 ], function (Component, _, selectPaymentMethod, methodList, rendererList, quote) {
     'use strict';
 
+    if (typeof window.checkoutConfig === 'undefined') {
+        return {};
+    }
+
     var allowedMethods = [
         'vnpay',
         'fashionstore_vnpay',

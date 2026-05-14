@@ -71,6 +71,15 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
 
             $shippingAddress->importCustomerAddressData($customerAddress);
             $shippingAddress->setCustomerAddressId($customerAddressId);
+            
+            // Ensure country_id and region_id are properly set
+            if (!$shippingAddress->getCountryId() && $customerAddress->getCountryId()) {
+                $shippingAddress->setCountryId($customerAddress->getCountryId());
+            }
+            if (!$shippingAddress->getRegionId() && $customerAddress->getRegionId()) {
+                $shippingAddress->setRegionId($customerAddress->getRegionId());
+            }
+            
             $shippingAddress->setCollectShippingRates(true);
             $shippingAddress->collectShippingRates();
 
@@ -88,6 +97,14 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
             if (!$this->isAddressComplete($billingAddress)) {
                 $billingAddress->importCustomerAddressData($customerAddress);
                 $billingAddress->setCustomerAddressId($customerAddressId);
+                
+                // Ensure country_id and region_id are properly set
+                if (!$billingAddress->getCountryId() && $customerAddress->getCountryId()) {
+                    $billingAddress->setCountryId($customerAddress->getCountryId());
+                }
+                if (!$billingAddress->getRegionId() && $customerAddress->getRegionId()) {
+                    $billingAddress->setRegionId($customerAddress->getRegionId());
+                }
             }
 
             $this->deliveryFeeManager->applyToQuote(
