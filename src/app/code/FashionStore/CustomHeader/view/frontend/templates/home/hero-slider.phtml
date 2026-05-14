@@ -83,6 +83,8 @@ $slides = [
     min-height: 100vh;
     overflow: hidden;
     background: #111;
+    display: flex;
+    align-items: center;
 }
 
 .fs-home-hero-slider__image,
@@ -104,9 +106,11 @@ $slides = [
 .fs-home-hero-slider__content {
     position: relative;
     z-index: 1;
-    max-width: 620px;
+    width: 100%;
+    max-width: min(88vw, 1200px);
     padding: 140px 60px 120px;
     color: #fff;
+    text-align: left;
 }
 
 .fs-home-hero-slider__eyebrow {
@@ -119,16 +123,19 @@ $slides = [
 
 .fs-home-hero-slider__title {
     margin: 0 0 24px;
-    font: 300 clamp(60px, 10vw, 120px)/.92 "Cormorant Garamond", serif;
+    display: block;
+    width: 100%;
+    font: 300 clamp(60px, 10vw, 120px)/1.02 "Cormorant Garamond", serif;
     letter-spacing: .14em;
     text-transform: uppercase;
     color: #fff;
+    white-space: nowrap;
 }
 
 .fs-home-hero-slider__desc {
     margin: 0 0 38px;
     max-width: 34ch;
-    font: 400 13px/1.9 "Montserrat", sans-serif;
+    font: 400 13px/1.95 "Montserrat", sans-serif;
     letter-spacing: .08em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, .88);
@@ -230,11 +237,13 @@ $slides = [
     }
 
     .fs-home-hero-slider__content {
+        max-width: 90vw;
         padding: 112px 22px 110px;
     }
 
     .fs-home-hero-slider__title {
         font-size: clamp(44px, 14vw, 72px);
+        line-height: 1.05;
         letter-spacing: .1em;
     }
 

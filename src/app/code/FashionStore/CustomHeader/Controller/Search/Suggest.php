@@ -2,14 +2,15 @@
 
 namespace FashionStore\CustomHeader\Controller\Search;
 
+use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Store\Model\StoreManagerInterface;
 
 class Suggest extends Action implements HttpGetActionInterface
@@ -24,19 +25,24 @@ class Suggest extends Action implements HttpGetActionInterface
 
     private $imageHelper;
 
+    private $pricingHelper;
+
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
         CollectionFactory $productCollectionFactory,
         StoreManagerInterface $storeManager,
         Visibility $productVisibility,
-        ImageHelper $imageHelper
+        ?ImageHelper $imageHelper = null,
+        ?PricingHelper $pricingHelper = null
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->storeManager = $storeManager;
         $this->productVisibility = $productVisibility;
-        $this->imageHelper = $imageHelper;
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->imageHelper = $imageHelper ?: $objectManager->get(ImageHelper::class);
+        $this->pricingHelper = $pricingHelper ?: $objectManager->get(PricingHelper::class);
         parent::__construct($context);
     }
 
@@ -55,7 +61,7 @@ class Suggest extends Action implements HttpGetActionInterface
 
         $collection->setStoreId($storeId);
         $collection->addStoreFilter($storeId);
-        $collection->addAttributeToSelect(['name', 'thumbnail']);
+        $collection->addAttributeToSelect(['name', 'sku', 'small_image', 'thumbnail', 'price']);
         $collection->addAttributeToFilter('status', Status::STATUS_ENABLED);
         $collection->setVisibility($this->productVisibility->getVisibleInSiteIds());
         $collection->addAttributeToFilter(
@@ -72,10 +78,18 @@ class Suggest extends Action implements HttpGetActionInterface
         $items = [];
 
         foreach ($collection as $product) {
+            $product->setStoreId($storeId);
             $items[] = [
                 'name' => (string) $product->getName(),
-                'url' => $product->getProductUrl(),
-                'image' => $this->imageHelper->init($product, 'product_thumbnail_image')->getUrl(),
+                'sku' => (string) $product->getSku(),
+                'url' => (string) $product->getProductUrl(),
+                'image' => (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl(),
+                'price' => (string) $this->pricingHelper->currencyByStore(
+                    (float) $product->getFinalPrice(),
+                    $storeId,
+                    true,
+                    false
+                ),
             ];
         }
 
