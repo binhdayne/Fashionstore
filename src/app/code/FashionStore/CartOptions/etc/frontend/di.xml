@@ -29,4 +29,8 @@
         <plugin name="fashionstore_cartoptions_filter_checkout_payment_methods"
                 type="FashionStore\CartOptions\Plugin\Payment\FilterCheckoutMethodsPlugin"/>
     </type>
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="fashionstore_ensure_address_country"
+                type="FashionStore\CartOptions\Plugin\Checkout\EnsureAddressCountryPlugin"/>
+    </type>
 </config>
