@@ -1,0 +1,235 @@
+<?php
+/** @var \FashionStore\OrderManagement\Block\Order\View $block */
+$order = $block->getOrder();
+if (!$order): ?>
+    <p>Không tìm thấy đơn hàng.</p>
+<?php return; endif;
+
+$items = $block->getOrderItems();
+$totals = $block->getOrderTotals();
+$shipping = $order->getShippingAddress();
+$billing = $order->getBillingAddress();
+?>
+
+<div class="fs-order-view">
+    <div class="fs-order-view__header">
+        <div class="fs-order-view__header-left">
+            <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>"
+               class="fs-order-view__back">
+                &larr; Đơn hàng của tôi
+            </a>
+            <h1 class="fs-order-view__title">
+                Đơn hàng #<?= $block->escapeHtml($order->getIncrementId()) ?>
+            </h1>
+            <span class="fs-order-view__date">
+                Đặt ngày <?= $block->escapeHtml((new \DateTime((string) $order->getCreatedAt()))->format('d/m/Y')) ?>
+            </span>
+        </div>
+        <div class="fs-order-view__header-right">
+            <span class="fs-order-view__status fs-order-view__status--<?= $block->escapeHtmlAttr($block->getStatusClass()) ?>">
+                <?= $block->escapeHtml($block->getStatusLabel()) ?>
+            </span>
+            <?php if ($block->canCancel()): ?>
+                <button type="button"
+                        class="fs-order-btn fs-order-btn--cancel"
+                        onclick="FsOrderView.openCancelModal(<?= (int) $order->getId() ?>, '<?= $block->escapeJs($order->getIncrementId()) ?>')">
+                    Hủy đơn hàng
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="fs-order-view__body">
+        <div class="fs-order-view__section">
+            <h2 class="fs-order-view__section-title">Sản phẩm đã đặt</h2>
+            <div class="fs-order-view__items">
+                <div class="fs-order-view__items-header">
+                    <span>Sản phẩm</span>
+                    <span>Đơn giá</span>
+                    <span>Số lượng</span>
+                    <span>Thành tiền</span>
+                </div>
+                <?php foreach ($items as $item): ?>
+                    <div class="fs-order-view__item">
+                        <div class="fs-order-view__item-product">
+                            <img src="<?= $block->escapeUrl($item['image_url']) ?>"
+                                 alt="<?= $block->escapeHtmlAttr($item['name']) ?>"
+                                 class="fs-order-view__item-img"
+                                 width="80" height="80" loading="lazy"/>
+                            <div class="fs-order-view__item-info">
+                                <span class="fs-order-view__item-name">
+                                    <?= $block->escapeHtml($item['name']) ?>
+                                </span>
+                                <?php foreach ($item['options'] as $opt): ?>
+                                    <span class="fs-order-view__item-opt">
+                                        <?= $block->escapeHtml($opt) ?>
+                                    </span>
+                                <?php endforeach; ?>
+                                <span class="fs-order-view__item-sku">
+                                    Mã sản phẩm: <?= $block->escapeHtml($item['sku']) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <span class="fs-order-view__item-price"><?= $block->escapeHtml($item['price']) ?></span>
+                        <span class="fs-order-view__item-qty">x<?= (int) $item['qty'] ?></span>
+                        <span class="fs-order-view__item-subtotal"><?= $block->escapeHtml($item['subtotal']) ?></span>
+                    </div>
+                <?php endforeach; ?>
+
+                <div class="fs-order-view__totals">
+                    <?php foreach ($totals as $total): ?>
+                        <div class="fs-order-view__total-row<?= !empty($total['is_grand']) ? ' is-grand' : '' ?>">
+                            <span><?= $block->escapeHtml($total['label']) ?></span>
+                            <span><?= $block->escapeHtml($total['value']) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="fs-order-view__meta">
+            <?php if ($shipping): ?>
+                <?php
+                $shippingStreet = implode(', ', $shipping->getStreet() ?: []);
+                $shippingLine = trim(implode(', ', array_filter([
+                    $shippingStreet,
+                    (string) $shipping->getCity(),
+                    (string) $shipping->getRegion(),
+                ])));
+                ?>
+                <div class="fs-order-view__meta-block">
+                    <h3 class="fs-order-view__meta-title fs-order-view__meta-title--strong">Địa chỉ giao hàng</h3>
+                    <p class="fs-order-view__meta-name"><?= $block->escapeHtml($shipping->getFirstname() . ' ' . $shipping->getLastname()) ?></p>
+                    <?php if ($shippingLine !== ''): ?>
+                        <p><?= $block->escapeHtml($shippingLine) ?></p>
+                    <?php endif; ?>
+                    <p><strong>Điện thoại:</strong> <?= $block->escapeHtml((string) $shipping->getTelephone()) ?></p>
+                </div>
+            <?php endif; ?>
+
+            <div class="fs-order-view__meta-block">
+                <h3 class="fs-order-view__meta-title fs-order-view__meta-title--strong">Phương thức<br>Vận chuyển</h3>
+                <p class="fs-order-view__meta-highlight"><?= $block->escapeHtml($order->getShippingDescription() ?: 'Không có') ?></p>
+            </div>
+
+            <?php if ($billing): ?>
+                <?php
+                $billingStreet = implode(', ', $billing->getStreet() ?: []);
+                $billingLine = trim(implode(', ', array_filter([
+                    $billingStreet,
+                    (string) $billing->getCity(),
+                    (string) $billing->getRegion(),
+                ])));
+                ?>
+                <div class="fs-order-view__meta-block">
+                    <h3 class="fs-order-view__meta-title fs-order-view__meta-title--strong">Địa chỉ thanh toán</h3>
+                    <p class="fs-order-view__meta-name"><?= $block->escapeHtml($billing->getFirstname() . ' ' . $billing->getLastname()) ?></p>
+                    <?php if ($billingLine !== ''): ?>
+                        <p><?= $block->escapeHtml($billingLine) ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="fs-order-view__meta-block">
+                <h3 class="fs-order-view__meta-title fs-order-view__meta-title--strong">Phương thức<br>Thanh toán</h3>
+                <p class="fs-order-view__meta-highlight"><?= $block->escapeHtml($block->getPaymentMethodTitle()) ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fs-cancel-modal-view" class="fs-modal" style="display:none;">
+    <div class="fs-modal__overlay" onclick="FsOrderView.closeCancelModal()"></div>
+    <div class="fs-modal__box">
+        <div class="fs-modal__header">
+            <h3 class="fs-modal__title">Hủy đơn hàng <span id="fs-view-cancel-number"></span></h3>
+            <button type="button" class="fs-modal__close" onclick="FsOrderView.closeCancelModal()">X</button>
+        </div>
+        <div class="fs-modal__body">
+            <p class="fs-modal__desc">Vui lòng chọn lý do hủy:</p>
+            <div class="fs-cancel-reasons">
+                <?php foreach ([
+                    'Thay đổi địa chỉ giao hàng',
+                    'Đổi ý, không muốn mua nữa',
+                    'Tìm được giá tốt hơn ở nơi khác',
+                    'Đặt nhầm sản phẩm',
+                    'Đặt trùng đơn hàng',
+                    'Lý do khác',
+                ] as $reason): ?>
+                    <label class="fs-cancel-reason">
+                        <input type="radio" name="cancel_reason_view"
+                               value="<?= $block->escapeHtmlAttr($reason) ?>"/>
+                        <span><?= $block->escapeHtml($reason) ?></span>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="fs-modal__footer">
+            <button type="button" class="fs-order-btn fs-order-btn--secondary"
+                    onclick="FsOrderView.closeCancelModal()">Quay lại</button>
+            <button type="button" id="fs-view-confirm-cancel"
+                    class="fs-order-btn fs-order-btn--cancel"
+                    onclick="FsOrderView.confirmCancel()">Xác nhận hủy</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var FsOrderView = (function () {
+    'use strict';
+    var currentOrderId = null;
+    var cancelUrl = '<?= $block->escapeJs($block->getCancelUrl()) ?>';
+    var formKey = '<?= $block->escapeJs($block->getFormKey()) ?>';
+
+    function openCancelModal(orderId, orderNumber) {
+        currentOrderId = orderId;
+        document.getElementById('fs-view-cancel-number').textContent = '#' + orderNumber;
+        document.querySelectorAll('#fs-cancel-modal-view input[name="cancel_reason_view"]')
+            .forEach(function (radio) { radio.checked = false; });
+        document.getElementById('fs-cancel-modal-view').style.display = 'flex';
+    }
+
+    function closeCancelModal() {
+        currentOrderId = null;
+        document.getElementById('fs-cancel-modal-view').style.display = 'none';
+    }
+
+    function confirmCancel() {
+        var selected = document.querySelector('#fs-cancel-modal-view input[name="cancel_reason_view"]:checked');
+        if (!selected) {
+            alert('Vui lòng chọn lý do hủy.');
+            return;
+        }
+
+        var btn = document.getElementById('fs-view-confirm-cancel');
+        btn.disabled = true;
+        btn.textContent = 'Đang xử lý...';
+
+        var fd = new FormData();
+        fd.append('order_id', currentOrderId);
+        fd.append('reason', selected.value);
+        fd.append('form_key', formKey);
+
+        fetch(cancelUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                closeCancelModal();
+                alert(data.message || (data.success ? 'Đã hủy đơn hàng.' : 'Có lỗi xảy ra.'));
+                if (data.success) {
+                    window.location.href = '<?= $block->escapeJs($block->getBackUrl()) ?>';
+                }
+            })
+            .catch(function () { alert('Có lỗi xảy ra. Vui lòng thử lại.'); })
+            .finally(function () {
+                btn.disabled = false;
+                btn.textContent = 'Xác nhận hủy';
+            });
+    }
+
+    return {
+        openCancelModal: openCancelModal,
+        closeCancelModal: closeCancelModal,
+        confirmCancel: confirmCancel
+    };
+}());
+</script>
