@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="FashionStore_OrderManagement::css/order-history.css"/>
+    </head>
+    <body>
+        <referenceBlock name="sales.order.history" remove="true"/>
+        <referenceContainer name="content">
+            <block class="FashionStore\OrderManagement\Block\Order\History"
+                   name="fashionstore.order.history"
+                   template="FashionStore_OrderManagement::order/history.phtml"
+                   before="-"/>
+        </referenceContainer>
+    </body>
+</page>
