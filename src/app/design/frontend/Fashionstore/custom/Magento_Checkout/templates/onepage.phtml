@@ -1893,23 +1893,29 @@ script;
                     toggleAddressEditor(false);
                 }, 1000);
                 window.setInterval(updateDeliveryFeePresentation, 1200);
-                window.setInterval(tuneOrderSummaryDisplay, 1200);
+                require(['Magento_Checkout/js/model/totals'], function (totals) {
+                    if (totals && typeof totals.totals === 'function' && typeof totals.totals.subscribe === 'function') {
+                        totals.totals.subscribe(function () {
+                            window.setTimeout(tuneOrderSummaryDisplay, 100);
+                        });
+                    }
+                });
+                require(['Magento_Checkout/js/model/quote'], function (q) {
+                    if (q && typeof q.getItems === 'function') {
+                        // Poll nhanh trong 5 giây đầu sau khi load
+                        var count = 0;
+                        var poll = window.setInterval(function () {
+                            tuneOrderSummaryDisplay();
+                            count++;
+                            if (count >= 10) {
+                                window.clearInterval(poll);
+                            }
+                        }, 600);
+                    }
+                });
                 window.setTimeout(ensurePaymentStepVisible, 400);
                 window.setTimeout(ensurePaymentStepVisible, 1200);
                 window.setTimeout(ensurePaymentStepVisible, 3000);
-                require(['Magento_Checkout/js/model/quote'], function (q) {
-                    if (q.getItems && typeof q.getItems === 'function') {
-                        // Poll items count mỗi 500ms trong 5 giây đầu
-                        var pollCount = 0;
-                        var pollInterval = window.setInterval(function () {
-                            pollCount++;
-                            tuneOrderSummaryDisplay();
-                            if (pollCount >= 10) {
-                                window.clearInterval(pollInterval);
-                            }
-                        }, 500);
-                    }
-                });
                 window.setTimeout(ensurePaymentStepVisible, 5000);
             });
         });
