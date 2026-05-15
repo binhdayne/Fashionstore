@@ -19,7 +19,6 @@ $formKey = $block->getFormKey();
         <?php
         $tabCounts = $block->getTabCounts();
         $tabs = [
-            'all' => ['label' => 'Tất cả', 'count' => $tabCounts['all'] ?? 0],
             'pending' => ['label' => 'Chờ xác nhận', 'count' => $tabCounts['pending'] ?? 0],
             'processing' => ['label' => 'Đang giao hàng', 'count' => $tabCounts['processing'] ?? 0],
             'complete' => ['label' => 'Đã mua', 'count' => $tabCounts['complete'] ?? 0],
@@ -30,7 +29,7 @@ $formKey = $block->getFormKey();
         <div class="fs-order-tabs">
             <?php foreach ($tabs as $key => $tab): ?>
                 <button type="button"
-                        class="fs-order-tab<?= $key === 'all' ? ' is-active' : '' ?>"
+                        class="fs-order-tab<?= $key === 'pending' ? ' is-active' : '' ?>"
                         data-tab="<?= $block->escapeHtmlAttr($key) ?>">
                     <?= $block->escapeHtml($tab['label']) ?>
                     <?php if ((int) $tab['count'] > 0): ?>
@@ -114,9 +113,7 @@ $formKey = $block->getFormKey();
                     var status = card.getAttribute('data-status') || '';
                     var show = false;
 
-                    if (tabKey === 'all') {
-                        show = true;
-                    } else if (tabKey === 'pending' && (status === 'pending' || state === 'new')) {
+                    if (tabKey === 'pending' && (status === 'pending' || state === 'new')) {
                         show = true;
                     } else if (tabKey === 'processing' && state === 'processing') {
                         show = true;
@@ -150,6 +147,8 @@ $formKey = $block->getFormKey();
                     filterOrders(tab.getAttribute('data-tab'));
                 });
             });
+
+            filterOrders('pending');
         }());
         </script>
     <?php endif; ?>

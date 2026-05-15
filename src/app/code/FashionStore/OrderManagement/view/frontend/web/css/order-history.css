@@ -13,39 +13,65 @@
     text-transform: uppercase;
 }
 
+/* === TABS === */
 .fs-order-tabs {
     display: flex;
-    gap: 0;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-    margin-bottom: 24px;
-    overflow-x: auto;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
 }
 
 .fs-order-tab {
-    padding: 12px 20px;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
     font-size: 14px;
     font-weight: 500;
-    color: #666;
+    color: #555;
     cursor: pointer;
     white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
+    transition: all 0.15s;
 }
 
 .fs-order-tab:hover {
+    background: #ebebeb;
     color: #111;
 }
 
 .fs-order-tab.is-active {
-    color: #111;
-    border-bottom-color: #111;
+    background: #111;
+    border-color: #111;
+    color: #fff;
     font-weight: 600;
+}
+
+/* Màu sắc riêng từng tab */
+.fs-order-tab[data-tab="pending"].is-active {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: #fff;
+}
+
+.fs-order-tab[data-tab="processing"].is-active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.fs-order-tab[data-tab="complete"].is-active {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+}
+
+.fs-order-tab[data-tab="canceled"].is-active {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
 }
 
 .fs-order-tab__count {
@@ -55,15 +81,14 @@
     min-width: 20px;
     height: 20px;
     padding: 0 6px;
-    background: #f0f0f0;
+    background: rgba(0,0,0,0.12);
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 600;
-    color: #555;
+    font-weight: 700;
 }
 
 .fs-order-tab.is-active .fs-order-tab__count {
-    background: #111;
+    background: rgba(255,255,255,0.25);
     color: #fff;
 }
 

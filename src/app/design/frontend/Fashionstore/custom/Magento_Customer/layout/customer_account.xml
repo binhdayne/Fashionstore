@@ -2,10 +2,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="sale.reorder.sidebar" remove="true"/>
         <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="sale.reorder.sidebar" remove="true"/>
         <referenceBlock name="wishlist_sidebar" remove="true"/>
         <referenceBlock name="newsletter_subscribe" remove="true"/>
-        <referenceContainer name="sidebar.additional" remove="true"/>
+        <referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-newsletter-subscriptions-link" remove="true"/>
     </body>
 </page>
