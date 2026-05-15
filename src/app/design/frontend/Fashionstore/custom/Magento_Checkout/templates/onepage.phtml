@@ -956,6 +956,30 @@ $checkoutStyle = <<<'STYLE'
     text-align: right !important;
 }
 
+.checkout-index-index .opc-block-summary .fs-order-summary-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #d8d8d8;
+    color: #111;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-label,
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-value {
+    display: block;
+}
+
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-value {
+    white-space: nowrap;
+    text-align: right;
+}
+
 .checkout-index-index .opc-block-summary .totals-tax-summary .mark,
 .checkout-index-index .opc-block-summary .totals-tax-summary .amount,
 .checkout-index-index .opc-block-summary .totals-tax .mark,
@@ -1187,6 +1211,31 @@ script;
                 return isFinite(value) ? value : 0;
             }
 
+            function renderOrderSummaryTotal() {
+                var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
+                    grandTotal = getBackendGrandTotal(),
+                    totalNode;
+
+                if (!summaryTitle.length) {
+                    return;
+                }
+
+                totalNode = summaryTitle.siblings('.fs-order-summary-total').first();
+                if (!totalNode.length) {
+                    totalNode = $(
+                        '<div class="fs-order-summary-total" aria-live="polite">' +
+                            '<span class="fs-order-summary-total-label">Tổng thanh toán</span>' +
+                            '<span class="fs-order-summary-total-value"></span>' +
+                        '</div>'
+                    );
+                    summaryTitle.after(totalNode);
+                }
+
+                totalNode.find('.fs-order-summary-total-value').text(
+                    grandTotal === null ? '' : formatDisplayPrice(grandTotal)
+                );
+            }
+
             function getDeliveryFee() {
                 return selectedDeliveryMethod === 'express' ? deliveryExpressFee : 0;
             }
@@ -1375,6 +1424,8 @@ script;
                 if (summaryTitle.length) {
                     summaryTitle.text('Tổng đơn hàng');
                 }
+
+                renderOrderSummaryTotal();
 
                 // Đọc item count từ quote model (async)
                 try {
