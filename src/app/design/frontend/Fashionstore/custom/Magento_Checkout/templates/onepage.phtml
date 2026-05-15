@@ -1370,50 +1370,50 @@ script;
 
             function tuneOrderSummaryDisplay() {
                 var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
-                    table = $('.opc-sidebar .opc-block-summary .table-totals').first(),
-                    itemCount = 0;
-
-                // Lấy item count từ JS quote model (chính xác hơn DOM)
-                try {
-                    require(['Magento_Checkout/js/model/quote'], function(quote) {
-                        itemCount = quote.getItems().length;
-                        if (summaryTitle.length) {
-                            summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
-                        }
-                    });
-                } catch (e) {
-                    // Fallback: đọc từ DOM nếu quote model không có
-                    itemCount = $('.opc-sidebar .opc-block-summary .minicart-items .product-item').length;
-                    if (summaryTitle.length) {
-                        summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
-                    }
-                }
+                    table = $('.opc-sidebar .opc-block-summary .table-totals').first();
 
                 if (summaryTitle.length) {
                     summaryTitle.text('Tổng đơn hàng');
                 }
 
+                // Đọc item count từ quote model (async)
+                try {
+                    require(['Magento_Checkout/js/model/quote'], function (q) {
+                        var itemCount = 0;
+                        try {
+                            itemCount = q.getItems ? q.getItems().length : 0;
+                        } catch (e) {
+                            itemCount = 0;
+                        }
+                        var title = $('.opc-sidebar .opc-block-summary > .title').first();
+                        if (title.length) {
+                            title.text('Tổng đơn hàng');
+                            title.attr('data-order-count', String(itemCount) + ' Sản phẩm');
+                        }
+                    });
+                } catch (e) {}
+
                 if (table.length) {
                     table.find('tr').each(function () {
                         var mark = $(this).find('.mark .label, .mark').first(),
                             text = $.trim(mark.text()).toLowerCase();
-
                         if (text.indexOf('cart subtotal') > -1 || text.indexOf('subtotal') > -1) {
                             mark.text('Tạm tính');
                         }
-
                         if (text.indexOf('grand total') > -1 || text.indexOf('tổng cộng') > -1) {
                             mark.text('Tổng đơn đặt hàng');
                         }
-
                         if (text.indexOf('tax') > -1 || text.indexOf('thuế') > -1) {
                             mark.text('Đã bao gồm thuế giá trị gia tăng');
                         }
                     });
                 }
 
-                if (!$('.opc-sidebar .fs-coupon-row').length && $('.opc-sidebar .opc-block-summary').length) {
-                    $('.opc-sidebar .opc-block-summary').append('<div class="fs-coupon-row" aria-hidden="true"></div>');
+                if (!$('.opc-sidebar .fs-coupon-row').length &&
+                    $('.opc-sidebar .opc-block-summary').length) {
+                    $('.opc-sidebar .opc-block-summary').append(
+                        '<div class="fs-coupon-row" aria-hidden="true"></div>'
+                    );
                 }
             }
 
@@ -1881,6 +1881,8 @@ script;
                 ensureDeliveryMethodBox();
                 updateDeliveryFeePresentation();
                 tuneOrderSummaryDisplay();
+                window.setTimeout(tuneOrderSummaryDisplay, 2000);
+                window.setTimeout(tuneOrderSummaryDisplay, 4000);
                 window.setTimeout(enforcePaymentHash, 100);
                 window.setTimeout(enforcePaymentHash, 400);
                 window.setTimeout(enforcePaymentHash, 1200);
@@ -1895,6 +1897,19 @@ script;
                 window.setTimeout(ensurePaymentStepVisible, 400);
                 window.setTimeout(ensurePaymentStepVisible, 1200);
                 window.setTimeout(ensurePaymentStepVisible, 3000);
+                require(['Magento_Checkout/js/model/quote'], function (q) {
+                    if (q.getItems && typeof q.getItems === 'function') {
+                        // Poll items count mỗi 500ms trong 5 giây đầu
+                        var pollCount = 0;
+                        var pollInterval = window.setInterval(function () {
+                            pollCount++;
+                            tuneOrderSummaryDisplay();
+                            if (pollCount >= 10) {
+                                window.clearInterval(pollInterval);
+                            }
+                        }, 500);
+                    }
+                });
                 window.setTimeout(ensurePaymentStepVisible, 5000);
             });
         });
