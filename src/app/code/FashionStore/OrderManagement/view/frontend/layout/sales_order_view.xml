@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="FashionStore_OrderManagement::css/order-view.css"/>
+    </head>
+    <body>
+        <referenceBlock name="order.status" remove="true"/>
+        <referenceBlock name="order.date" remove="true"/>
+        <referenceBlock name="sales.order.info.buttons" remove="true"/>
+        <referenceBlock name="sales.order.info.buttons.rss" remove="true"/>
+        <referenceBlock name="sales.order.info.links" remove="true"/>
+        <referenceBlock name="order.comments" remove="true"/>
+        <referenceContainer name="content">
+            <block class="FashionStore\OrderManagement\Block\Order\View"
+                   name="fashionstore.order.view"
+                   template="FashionStore_OrderManagement::order/view.phtml"
+                   before="-"/>
+        </referenceContainer>
+        <referenceBlock name="sales.order.view" remove="true"/>
+        <referenceBlock name="sales.order.info" remove="true"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="sale.reorder.sidebar" remove="true"/>
+    </body>
+</page>

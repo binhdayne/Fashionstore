@@ -1,0 +1,45 @@
+<?php
+/** @var \Magento\Checkout\Block\Cart\Proceed $block */
+?>
+<div class="fashionstore-checkout-proceed">
+    <button
+        type="button"
+        id="fashionstore-proceed-to-checkout"
+        class="action primary checkout fashionstore-proceed-btn"
+        onclick="(function(){
+            var form = document.getElementById('fashionstore-cart-options-form');
+            if (!form) { window.location.href = '<?= $block->escapeUrl($block->getCheckoutUrl()) ?>'; return; }
+
+            var checkboxes = document.querySelectorAll('.fashionstore-item-select__checkbox:checked');
+            var selectedItems = [];
+            checkboxes.forEach(function(cb) {
+                var itemId = parseInt(cb.value, 10);
+                var qtyField = document.getElementById('cart-' + itemId + '-qty');
+                var qty = qtyField ? parseFloat(qtyField.value) || 1 : 1;
+                if (itemId) selectedItems.push({ item_id: itemId, qty: qty });
+            });
+
+            var hiddenField = form.querySelector('[data-role=\'checkout-selection\']');
+            if (hiddenField) hiddenField.value = JSON.stringify(selectedItems);
+
+            var submitButton = form.querySelector('[data-role=\'fashionstore-go-to-checkout-submit\']');
+            if (!submitButton) {
+                submitButton = document.createElement('button');
+                submitButton.type = 'submit';
+                submitButton.name = 'go_to_checkout';
+                submitButton.value = '1';
+                submitButton.setAttribute('data-role', 'fashionstore-go-to-checkout-submit');
+                submitButton.style.display = 'none';
+                form.appendChild(submitButton);
+            }
+            submitButton.value = '1';
+
+            if (typeof form.requestSubmit === 'function') {
+                form.requestSubmit(submitButton);
+            } else {
+                submitButton.click();
+            }
+        })()">
+        <span>TIẾN HÀNH THANH TOÁN</span>
+    </button>
+</div>

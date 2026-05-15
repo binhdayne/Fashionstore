@@ -3,51 +3,40 @@ define([
 ], function (_) {
     'use strict';
 
+    // Guard: chi chay tren trang checkout
+    if (typeof window.checkoutConfig === 'undefined') {
+        return function (target) { return target; };
+    }
+
     var allowedMethods = [
-        'fashionstore_cod',
-        'fashionstore_banktransfer_qr',
-        'fashionstore_zalopay',
         'vnpay',
-        'fashionstore_vnpay'
+        'fashionstore_vnpay',
+        'fashionstore_momo',
+        'fashionstore_cod',
+        'fashionstore_zalopay',
+        'fashionstore_banktransfer_qr'
     ];
 
     var fallbackMethods = [
-        {
-            method: 'fashionstore_cod',
-            title: 'Thanh toán offline khi nhận hàng'
-        },
-        {
-            method: 'fashionstore_banktransfer_qr',
-            title: 'Chuyển khoản QR'
-        },
-        {
-            method: 'fashionstore_zalopay',
-            title: 'ZaloPay'
-        },
-        {
-            method: 'vnpay',
-            title: 'Thanh toán bằng VNPAY'
-        }
+        { method: 'vnpay', title: 'Thanh toán bằng VNPAY' },
+        { method: 'fashionstore_cod', title: 'Thanh toan khi nhan hang' },
+        { method: 'fashionstore_banktransfer_qr', title: 'Chuyen khoan QR' }
     ];
 
     function ensureSyntheticMethods(methods) {
         var currentMethods = methods ? methods.slice() : [],
             existingCodes = _.pluck(currentMethods, 'method');
-
         _.each(fallbackMethods, function (method) {
             if (existingCodes.indexOf(method.method) === -1) {
                 currentMethods.push(method);
             }
         });
-
         return currentMethods;
     }
 
     function filterMethods(methods) {
-        return _.sortBy(_.filter(ensureSyntheticMethods(methods), function (method) {
+        return _.filter(ensureSyntheticMethods(methods), function (method) {
             return allowedMethods.indexOf(method.method) !== -1;
-        }), function (method) {
-            return allowedMethods.indexOf(method.method);
         });
     }
 

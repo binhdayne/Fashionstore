@@ -1,7 +1,6 @@
 define([
-    'jquery',
-    'Magento_Checkout/js/checkout-data'
-], function ($, checkoutData) {
+    'jquery'
+], function ($) {
     'use strict';
 
     return function (config, element) {
@@ -40,11 +39,16 @@ define([
                 },
                 selectedPaymentMethod = form.find('[name="payment_method"]:checked').val();
 
-            checkoutData.setShippingAddressFromData(addressData);
-            checkoutData.setBillingAddressFromData(addressData);
+            // Chi goi checkoutData neu dang o trang checkout.
+            if (typeof window.checkoutConfig !== 'undefined') {
+                require(['Magento_Checkout/js/checkout-data'], function (checkoutData) {
+                    checkoutData.setShippingAddressFromData(addressData);
+                    checkoutData.setBillingAddressFromData(addressData);
 
-            if (selectedPaymentMethod) {
-                checkoutData.setSelectedPaymentMethod(selectedPaymentMethod);
+                    if (selectedPaymentMethod) {
+                        checkoutData.setSelectedPaymentMethod(selectedPaymentMethod);
+                    }
+                });
             }
         }
 
@@ -74,7 +78,7 @@ define([
         function getSelectedCartItems() {
             var selectedItems = [];
 
-            cartForm.find('[data-role="fashionstore-cart-select"]:checked').each(function () {
+            cartForm.find('[data-role="fashionstore-cart-select"]:checked, .fashionstore-item-select__checkbox:checked').each(function () {
                 var checkbox = $(this),
                     itemId = parseInt(checkbox.attr('data-item-id') || checkbox.val(), 10),
                     qtyField = cartForm.find('#cart-' + itemId + '-qty'),
@@ -98,16 +102,25 @@ define([
         }
 
         function syncCheckoutSelection() {
-            if (!checkoutSelectionField.length) {
-                return [];
-            }
-
             var selectedItems = getSelectedCartItems();
 
-            checkoutSelectionField.val(JSON.stringify(selectedItems));
+            if (checkoutSelectionField.length) {
+                checkoutSelectionField.val(JSON.stringify(selectedItems));
+            }
 
             if (checkoutButton.length) {
-                checkoutButton.prop('disabled', selectedItems.length === 0);
+                // Enable button neu co it nhat 1 item duoc chon
+                // HOAC neu khong co checkbox nao (cart khong dung selection feature)
+                var checkboxCount = cartForm.find(
+                    '[data-role="fashionstore-cart-select"], .fashionstore-item-select__checkbox'
+                ).length;
+
+                if (checkboxCount === 0) {
+                    // Khong co checkbox -> khong disable button
+                    checkoutButton.prop('disabled', false);
+                } else {
+                    checkoutButton.prop('disabled', selectedItems.length === 0);
+                }
             }
 
             return selectedItems;
@@ -115,7 +128,7 @@ define([
 
         form.on('change', '[name="saved_address_option"]', syncAddressSelectionState);
         form.on('input change', 'input, textarea, select', persistSelection);
-        cartForm.on('change input', '[data-role="fashionstore-cart-select"], [data-role="cart-item-qty"]', syncCheckoutSelection);
+        cartForm.on('change input', '[data-role="fashionstore-cart-select"], .fashionstore-item-select__checkbox, [data-role="cart-item-qty"]', syncCheckoutSelection);
         syncAddressSelectionState();
         persistSelection();
         syncCheckoutSelection();

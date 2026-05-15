@@ -8,6 +8,8 @@
     <type name="Magento\Checkout\Controller\Cart\Index">
     <plugin name="fashionstore_cartoptions_restore_original_quote_before_cart"
         type="FashionStore\CartOptions\Plugin\Checkout\RestoreOriginalQuotePlugin"/>
+    <plugin name="fashionstore_restore_removed_cart_items"
+        type="FashionStore\CartOptions\Plugin\Checkout\RestoreRemovedCartItemsPlugin"/>
     </type>
     <type name="Magento\Checkout\Controller\Onepage\Success">
         <plugin name="fashionstore_cartoptions_restore_original_quote_after_buy_now"
@@ -26,5 +28,9 @@
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="fashionstore_cartoptions_filter_checkout_payment_methods"
                 type="FashionStore\CartOptions\Plugin\Payment\FilterCheckoutMethodsPlugin"/>
+    </type>
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="fashionstore_ensure_address_country"
+                type="FashionStore\CartOptions\Plugin\Checkout\EnsureAddressCountryPlugin"/>
     </type>
 </config>

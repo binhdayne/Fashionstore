@@ -1,24 +1,9 @@
 define([], function () {
     'use strict';
 
-    function replaceHash(hash) {
-        var targetHash = hash.charAt(0) === '#' ? hash : '#' + hash;
-
-        if (window.location.hash === targetHash) {
-            return;
-        }
-
-        if (window.history && typeof window.history.replaceState === 'function') {
-            window.history.replaceState(
-                null,
-                '',
-                window.location.pathname + window.location.search + targetHash
-            );
-
-            return;
-        }
-
-        window.location.hash = targetHash;
+    // Guard: chi chay tren trang checkout
+    if (typeof window.checkoutConfig === 'undefined') {
+        return function (target) { return target; };
     }
 
     function normalizeStep(code) {
@@ -32,9 +17,8 @@ define([], function () {
 
         target.handleHash = function () {
             if (window.location.hash === '#shipping') {
-                replaceHash('#payment');
+                window.location.hash = '#payment';
             }
-
             return originalHandleHash.apply(this, arguments);
         };
 
@@ -43,14 +27,7 @@ define([], function () {
         };
 
         target.setHash = function (hash) {
-            var normalizedHash = normalizeStep(hash);
-
-            if (normalizedHash === 'payment') {
-                replaceHash(normalizedHash);
-                return;
-            }
-
-            return originalSetHash.call(this, normalizedHash);
+            return originalSetHash.call(this, normalizeStep(hash));
         };
 
         return target;

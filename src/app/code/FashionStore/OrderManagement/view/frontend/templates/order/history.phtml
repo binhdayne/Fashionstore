@@ -1,0 +1,261 @@
+<?php
+/** @var \FashionStore\OrderManagement\Block\Order\History $block */
+$orders = $block->getOrders();
+$cancelUrl = $block->getCancelUrl();
+$formKey = $block->getFormKey();
+?>
+
+<div class="fs-order-history">
+    <h1 class="fs-order-history__title"><?= $block->escapeHtml(__('Đơn hàng của tôi')) ?></h1>
+
+    <?php if (empty($orders)): ?>
+        <div class="fs-order-history__empty">
+            <p><?= $block->escapeHtml(__('Bạn chưa có đơn hàng nào.')) ?></p>
+            <a href="<?= $block->escapeUrl($block->getUrl('catalog/category/view', ['id' => 2])) ?>" class="action primary">
+                <?= $block->escapeHtml(__('Tiếp tục mua sắm')) ?>
+            </a>
+        </div>
+    <?php else: ?>
+        <?php
+        $tabCounts = $block->getTabCounts();
+        $tabs = [
+            'pending' => ['label' => 'Chờ xác nhận', 'count' => $tabCounts['pending'] ?? 0],
+            'processing' => ['label' => 'Đang giao hàng', 'count' => $tabCounts['processing'] ?? 0],
+            'complete' => ['label' => 'Đã mua', 'count' => $tabCounts['complete'] ?? 0],
+            'canceled' => ['label' => 'Đã hủy', 'count' => $tabCounts['canceled'] ?? 0],
+        ];
+        ?>
+
+        <div class="fs-order-tabs">
+            <?php foreach ($tabs as $key => $tab): ?>
+                <button type="button"
+                        class="fs-order-tab<?= $key === 'pending' ? ' is-active' : '' ?>"
+                        data-tab="<?= $block->escapeHtmlAttr($key) ?>">
+                    <?= $block->escapeHtml($tab['label']) ?>
+                    <?php if ((int) $tab['count'] > 0): ?>
+                        <span class="fs-order-tab__count"><?= (int) $tab['count'] ?></span>
+                    <?php endif; ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="fs-order-list">
+            <?php foreach ($orders as $order): ?>
+                <div class="fs-order-card"
+                     data-order-id="<?= (int) $order['id'] ?>"
+                     data-state="<?= $block->escapeHtmlAttr($order['state']) ?>"
+                     data-status="<?= $block->escapeHtmlAttr($order['status']) ?>">
+                    <div class="fs-order-card__header">
+                        <div class="fs-order-card__meta">
+                            <span class="fs-order-card__id"><?= $block->escapeHtml(__('Đơn hàng #%1', $order['increment_id'])) ?></span>
+                            <span class="fs-order-card__date"><?= $block->escapeHtml((new \DateTime($order['created_at']))->format('d/m/Y')) ?></span>
+                        </div>
+                        <span class="fs-order-card__status fs-order-card__status--<?= $block->escapeHtmlAttr($order['status']) ?>">
+                            <?= $block->escapeHtml($order['status_label']) ?>
+                        </span>
+                    </div>
+
+                    <div class="fs-order-card__items">
+                        <?php foreach ($order['items'] as $item): ?>
+                            <div class="fs-order-item">
+                                <div class="fs-order-item__image">
+                                    <img src="<?= $block->escapeUrl($item['image_url']) ?>"
+                                         alt="<?= $block->escapeHtmlAttr($item['name']) ?>"
+                                         width="80" height="80" loading="lazy"/>
+                                </div>
+                                <div class="fs-order-item__info">
+                                    <span class="fs-order-item__name"><?= $block->escapeHtml($item['name']) ?></span>
+                                    <span class="fs-order-item__meta"><?= $block->escapeHtml(__('x%1 · %2', $item['qty'], $item['price'])) ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="fs-order-card__footer">
+                        <div class="fs-order-card__total">
+                            <?= $block->escapeHtml(__('Tổng cộng:')) ?> <strong><?= $block->escapeHtml($order['grand_total']) ?></strong>
+                        </div>
+                        <div class="fs-order-card__actions">
+                            <a href="<?= $block->escapeUrl($order['view_url']) ?>" class="fs-order-btn fs-order-btn--secondary">
+                                <?= $block->escapeHtml(__('Xem đơn hàng')) ?>
+                            </a>
+                            <?php if ($order['can_cancel']): ?>
+                                <button type="button"
+                                        class="fs-order-btn fs-order-btn--cancel"
+                                        onclick="FsOrderHistory.openCancelModal(<?= (int) $order['id'] ?>, '<?= $block->escapeJs($order['increment_id']) ?>')">
+                                    <?= $block->escapeHtml(__('Hủy đơn hàng')) ?>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <p id="fs-no-orders-msg" class="fs-order-history__empty fs-order-history__empty--filter" style="display:none;">
+            <?= $block->escapeHtml(__('Không có đơn hàng nào.')) ?>
+        </p>
+
+        <script>
+        (function () {
+            'use strict';
+
+            var tabs = document.querySelectorAll('.fs-order-tab');
+            var cards = document.querySelectorAll('.fs-order-card');
+            var list = document.querySelector('.fs-order-list');
+            var noResult = document.getElementById('fs-no-orders-msg');
+
+            function filterOrders(tabKey) {
+                var visibleCards = [];
+
+                cards.forEach(function (card) {
+                    var state = card.getAttribute('data-state') || '';
+                    var status = card.getAttribute('data-status') || '';
+                    var show = false;
+
+                    if (tabKey === 'pending' && (status === 'pending' || state === 'new')) {
+                        show = true;
+                    } else if (tabKey === 'processing' && state === 'processing') {
+                        show = true;
+                    } else if (tabKey === 'complete' && state === 'complete') {
+                        show = true;
+                    } else if (tabKey === 'canceled' && state === 'canceled') {
+                        show = true;
+                    }
+
+                    card.style.display = show ? '' : 'none';
+                    if (show) {
+                        visibleCards.push(card);
+                    }
+                });
+
+                if (noResult) {
+                    noResult.style.display = visibleCards.length === 0 ? 'block' : 'none';
+                }
+
+                if (list) {
+                    list.style.display = visibleCards.length === 0 ? 'none' : '';
+                }
+            }
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(function (item) {
+                        item.classList.remove('is-active');
+                    });
+                    tab.classList.add('is-active');
+                    filterOrders(tab.getAttribute('data-tab'));
+                });
+            });
+
+            filterOrders('pending');
+        }());
+        </script>
+    <?php endif; ?>
+</div>
+
+<div id="fs-cancel-modal" class="fs-modal" style="display:none;">
+    <div class="fs-modal__overlay" onclick="FsOrderHistory.closeCancelModal()"></div>
+    <div class="fs-modal__box">
+        <div class="fs-modal__header">
+            <h3 class="fs-modal__title"><?= $block->escapeHtml(__('Hủy đơn hàng')) ?> <span id="fs-cancel-order-number"></span></h3>
+            <button type="button" class="fs-modal__close" onclick="FsOrderHistory.closeCancelModal()">✕</button>
+        </div>
+        <div class="fs-modal__body">
+            <p class="fs-modal__desc"><?= $block->escapeHtml(__('Vui lòng chọn lý do hủy đơn hàng:')) ?></p>
+            <div class="fs-cancel-reasons">
+                <?php
+                $reasons = [
+                    'Thay đổi địa chỉ giao hàng',
+                    'Đổi ý, không muốn mua nữa',
+                    'Tìm được giá tốt hơn ở nơi khác',
+                    'Đặt nhầm sản phẩm',
+                    'Đặt trùng đơn hàng',
+                    'Lý do khác',
+                ];
+                foreach ($reasons as $label): ?>
+                    <label class="fs-cancel-reason">
+                        <input type="radio" name="cancel_reason" value="<?= $block->escapeHtmlAttr($label) ?>"/>
+                        <span><?= $block->escapeHtml($label) ?></span>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="fs-modal__footer">
+            <button type="button" class="fs-order-btn fs-order-btn--secondary" onclick="FsOrderHistory.closeCancelModal()">
+                <?= $block->escapeHtml(__('Quay lại')) ?>
+            </button>
+            <button type="button" id="fs-confirm-cancel-btn" class="fs-order-btn fs-order-btn--cancel" onclick="FsOrderHistory.confirmCancel()">
+                <?= $block->escapeHtml(__('Xác nhận hủy')) ?>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+var FsOrderHistory = (function () {
+    'use strict';
+
+    var currentOrderId = null;
+    var cancelUrl = '<?= $block->escapeJs($cancelUrl) ?>';
+    var formKey = '<?= $block->escapeJs($formKey) ?>';
+
+    function openCancelModal(orderId, orderNumber) {
+        currentOrderId = orderId;
+        document.getElementById('fs-cancel-order-number').textContent = '#' + orderNumber;
+        document.querySelectorAll('#fs-cancel-modal input[name="cancel_reason"]').forEach(function (radio) {
+            radio.checked = false;
+        });
+        document.getElementById('fs-cancel-modal').style.display = 'flex';
+    }
+
+    function closeCancelModal() {
+        currentOrderId = null;
+        document.getElementById('fs-cancel-modal').style.display = 'none';
+    }
+
+    function confirmCancel() {
+        var selected = document.querySelector('#fs-cancel-modal input[name="cancel_reason"]:checked');
+        if (!selected) {
+            alert('Vui lòng chọn lý do hủy đơn hàng.');
+            return;
+        }
+
+        var btn = document.getElementById('fs-confirm-cancel-btn');
+        btn.disabled = true;
+        btn.textContent = 'Đang xử lý...';
+
+        var formData = new FormData();
+        formData.append('order_id', currentOrderId);
+        formData.append('reason', selected.value);
+        formData.append('form_key', formKey);
+
+        fetch(cancelUrl, {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            closeCancelModal();
+            alert(data.message || 'Đã xử lý yêu cầu.');
+            if (data.success) {
+                window.location.reload();
+            }
+        })
+        .catch(function () {
+            alert('Có lỗi xảy ra. Vui lòng thử lại.');
+        })
+        .finally(function () {
+            btn.disabled = false;
+            btn.textContent = 'Xác nhận hủy';
+        });
+    }
+
+    return {
+        openCancelModal: openCancelModal,
+        closeCancelModal: closeCancelModal,
+        confirmCancel: confirmCancel
+    };
+}());
+ </script>

@@ -747,6 +747,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
                     <button type="submit" name="go_to_checkout" value="1" class="action secondary fashionstore-cart-options__submit">
                         <span><?= $block->escapeHtml(__('Cap nhat va sang checkout')) ?></span>
                     </button>
+                    <input type="hidden"
+                           name="checkout_selection"
+                           data-role="checkout-selection"
+                           value="[]"/>
                 </div>
             </form>
         </div>
@@ -1123,6 +1127,22 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             });
         }
 
+        function syncSelectionToForm() {
+            var cartOptionsForm = document.getElementById('fashionstore-cart-options-form');
+            var hiddenField = cartOptionsForm ? cartOptionsForm.querySelector('[data-role="checkout-selection"]') : null;
+
+            if (!hiddenField) {
+                return;
+            }
+
+            var selectedItems = getItemCheckboxes()
+                .filter(function (cb) { return cb.checked; })
+                .map(function (cb) { return { item_id: parseInt(cb.value, 10) }; })
+                .filter(function (item) { return !isNaN(item.item_id) && item.item_id > 0; });
+
+            hiddenField.value = JSON.stringify(selectedItems);
+        }
+
         function boot() {
             injectSelectAllCheckbox();
             bindSelectionEvents();
@@ -1132,6 +1152,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             window.setTimeout(updateTotalsBySelection, 250);
             window.setTimeout(updateTotalsBySelection, 800);
             window.setTimeout(localizeCartLabels, 250);
+
+            var cartOptionsForm = document.getElementById('fashionstore-cart-options-form');
+            if (cartOptionsForm) {
+                cartOptionsForm.addEventListener('submit', syncSelectionToForm);
+            }
         }
 
         if (document.readyState === 'loading') {
@@ -1141,4 +1166,53 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
     }());
     </script>
+<script>
+(function () {
+    function enableCheckoutButton() {
+        var btn = document.querySelector(
+            '.checkout.methods.items .action.primary.checkout'
+        );
+        var checkboxes = document.querySelectorAll(
+            '.fashionstore-item-select__checkbox'
+        );
+        var checkedCount = 0;
+
+        checkboxes.forEach(function (cb) {
+            if (cb.checked) { checkedCount++; }
+        });
+
+        if (!btn) { return; }
+
+        if (checkboxes.length === 0 || checkedCount > 0) {
+            btn.disabled = false;
+            btn.removeAttribute('disabled');
+        } else {
+            btn.disabled = true;
+            btn.setAttribute('disabled', 'disabled');
+        }
+    }
+
+    // Bind checkbox change event
+    document.addEventListener('change', function (e) {
+        if (e.target && e.target.classList.contains('fashionstore-item-select__checkbox')) {
+            enableCheckoutButton();
+        }
+        if (e.target && e.target.classList.contains('fashionstore-select-all__checkbox')) {
+            enableCheckoutButton();
+        }
+    });
+
+    // Run on load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', enableCheckoutButton);
+    } else {
+        enableCheckoutButton();
+    }
+
+    // Retry sau khi JS khac co the da disable lai
+    setTimeout(enableCheckoutButton, 300);
+    setTimeout(enableCheckoutButton, 800);
+    setTimeout(enableCheckoutButton, 1500);
+}());
+</script>
 <?php endif; ?>

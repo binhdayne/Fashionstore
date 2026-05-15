@@ -83,6 +83,9 @@ class Save extends Action
         $this->restoreOriginalQuoteIfNeeded();
 
         $quote = $this->checkoutSession->getQuote();
+        if ($goToCheckout) {
+            $this->removeUnselectedItems($quote);
+        }
         if (!$quote->getItemsCount()) {
             return $resultRedirect->setPath('checkout/cart');
         }
@@ -418,5 +421,60 @@ class Save extends Action
     private function getTrimmedRequestValue(string $key): string
     {
         return trim((string) $this->getRequest()->getParam($key, ''));
+    }
+
+    private function removeUnselectedItems(Quote $quote): void
+    {
+        $selectedItemsJson = trim((string) $this->getRequest()->getParam('checkout_selection', ''));
+
+        if ($selectedItemsJson === '' || $selectedItemsJson === '[]') {
+            return;
+        }
+
+        try {
+            $selectedItems = json_decode($selectedItemsJson, true);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        if (!is_array($selectedItems) || empty($selectedItems)) {
+            return;
+        }
+
+        $selectedItemIds = [];
+        foreach ($selectedItems as $item) {
+            if (!empty($item['item_id'])) {
+                $selectedItemIds[] = (int) $item['item_id'];
+            }
+        }
+
+        if (empty($selectedItemIds)) {
+            return;
+        }
+
+        // Lưu danh sách item bị xóa vào session để khôi phục sau
+        $removedItems = [];
+        foreach ($quote->getAllItems() as $item) {
+            if (!in_array((int) $item->getId(), $selectedItemIds, true)) {
+                $removedItems[] = [
+                    'item_id'     => (int) $item->getId(),
+                    'product_id'  => (int) $item->getProductId(),
+                    'sku'         => (string) $item->getSku(),
+                    'qty'         => (float) $item->getQty(),
+                    'buy_request' => $item->getBuyRequest()
+                        ? $item->getBuyRequest()->toArray()
+                        : [],
+                ];
+                $quote->removeItem($item->getId());
+            }
+        }
+
+        // Lưu vào session để RestoreRemovedCartItemsPlugin có thể khôi phục
+        if (!empty($removedItems)) {
+            $this->checkoutSession->setData(
+                'fashionstore_removed_cart_items',
+                $removedItems
+            );
+        }
     }
 }

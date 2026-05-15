@@ -8,7 +8,6 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 class EnsureShippingAddressBeforePlaceOrderPlugin
@@ -35,27 +34,10 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
 
     public function beforePlaceOrder(\Magento\Quote\Model\QuoteManagement $subject, int $cartId, $paymentMethod = null): array
     {
-        $this->ensureShippingAddress($cartId);
-
-        return [$cartId, $paymentMethod];
-    }
-
-    public function beforeSet(
-        \Magento\Quote\Model\PaymentMethodManagement $subject,
-        int $cartId,
-        PaymentInterface $method
-    ): array {
-        $this->ensureShippingAddress($cartId);
-
-        return [$cartId, $method];
-    }
-
-    private function ensureShippingAddress(int $cartId): void
-    {
         try {
             $quote = $this->cartRepository->get($cartId);
             if ($quote->isVirtual()) {
-                return;
+                return [$cartId, $paymentMethod];
             }
 
             $shippingAddress = $quote->getShippingAddress();
@@ -65,28 +47,12 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
                     (string) $quote->getData('fs_delivery_method')
                 );
                 $this->cartRepository->save($quote);
-                return;
-            }
-
-            $billingAddress = $quote->getBillingAddress();
-            if ($this->isAddressComplete($billingAddress)) {
-                $this->copyQuoteAddress($billingAddress, $shippingAddress);
-                $shippingAddress->setSameAsBilling(1);
-                $this->prepareShippingMethod($shippingAddress);
-
-                $this->deliveryFeeManager->applyToQuote(
-                    $quote,
-                    (string) $quote->getData('fs_delivery_method')
-                );
-
-                $quote->setTotalsCollectedFlag(false);
-                $this->cartRepository->save($quote);
-                return;
+                return [$cartId, $paymentMethod];
             }
 
             $customerId = (int) $quote->getCustomerId();
             if ($customerId <= 0) {
-                return;
+                return [$cartId, $paymentMethod];
             }
 
             $customerAddressId = (int) $shippingAddress->getCustomerAddressId();
@@ -95,22 +61,50 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
             }
 
             if ($customerAddressId <= 0) {
-                return;
+                return [$cartId, $paymentMethod];
             }
 
             $customerAddress = $this->addressRepository->getById($customerAddressId);
             if ((int) $customerAddress->getCustomerId() !== $customerId) {
-                return;
+                return [$cartId, $paymentMethod];
             }
 
             $shippingAddress->importCustomerAddressData($customerAddress);
             $shippingAddress->setCustomerAddressId($customerAddressId);
-            $this->prepareShippingMethod($shippingAddress);
+            
+            // Ensure country_id and region_id are properly set
+            if (!$shippingAddress->getCountryId() && $customerAddress->getCountryId()) {
+                $shippingAddress->setCountryId($customerAddress->getCountryId());
+            }
+            if (!$shippingAddress->getRegionId() && $customerAddress->getRegionId()) {
+                $shippingAddress->setRegionId($customerAddress->getRegionId());
+            }
+            
+            $shippingAddress->setCollectShippingRates(true);
+            $shippingAddress->collectShippingRates();
+
+            if ((string) $shippingAddress->getShippingMethod() === '') {
+                $shippingRates = $shippingAddress->getAllShippingRates();
+                if (!empty($shippingRates)) {
+                    $firstRate = reset($shippingRates);
+                    if ($firstRate) {
+                        $shippingAddress->setShippingMethod((string) $firstRate->getCode());
+                    }
+                }
+            }
 
             $billingAddress = $quote->getBillingAddress();
             if (!$this->isAddressComplete($billingAddress)) {
                 $billingAddress->importCustomerAddressData($customerAddress);
                 $billingAddress->setCustomerAddressId($customerAddressId);
+                
+                // Ensure country_id and region_id are properly set
+                if (!$billingAddress->getCountryId() && $customerAddress->getCountryId()) {
+                    $billingAddress->setCountryId($customerAddress->getCountryId());
+                }
+                if (!$billingAddress->getRegionId() && $customerAddress->getRegionId()) {
+                    $billingAddress->setRegionId($customerAddress->getRegionId());
+                }
             }
 
             $this->deliveryFeeManager->applyToQuote(
@@ -121,10 +115,12 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
             $quote->setTotalsCollectedFlag(false);
             $this->cartRepository->save($quote);
         } catch (NoSuchEntityException $exception) {
-            return;
+            return [$cartId, $paymentMethod];
         } catch (\Throwable $exception) {
-            return;
+            return [$cartId, $paymentMethod];
         }
+
+        return [$cartId, $paymentMethod];
     }
 
     private function resolvePreferredCustomerAddressId(int $customerId): int
@@ -167,42 +163,5 @@ class EnsureShippingAddressBeforePlaceOrderPlugin
             && trim((string) $address->getCountryId()) !== ''
             && is_array($street)
             && trim((string) ($street[0] ?? '')) !== '';
-    }
-
-    private function copyQuoteAddress(QuoteAddress $source, QuoteAddress $target): void
-    {
-        $target->setFirstname((string) $source->getFirstname());
-        $target->setLastname((string) $source->getLastname());
-        $target->setCompany((string) $source->getCompany());
-        $target->setStreet($source->getStreet());
-        $target->setCity((string) $source->getCity());
-        $target->setRegion((string) $source->getRegion());
-        $target->setRegionId($source->getRegionId());
-        $target->setCountryId((string) $source->getCountryId());
-        $target->setPostcode((string) $source->getPostcode());
-        $target->setTelephone((string) $source->getTelephone());
-        $target->setFax((string) $source->getFax());
-        $target->setEmail((string) $source->getEmail());
-        $target->setCustomerAddressId($source->getCustomerAddressId());
-    }
-
-    private function prepareShippingMethod(QuoteAddress $shippingAddress): void
-    {
-        $shippingAddress->setCollectShippingRates(true);
-        $shippingAddress->collectShippingRates();
-
-        if ((string) $shippingAddress->getShippingMethod() !== '') {
-            return;
-        }
-
-        $shippingRates = $shippingAddress->getAllShippingRates();
-        if (empty($shippingRates)) {
-            return;
-        }
-
-        $firstRate = reset($shippingRates);
-        if ($firstRate) {
-            $shippingAddress->setShippingMethod((string) $firstRate->getCode());
-        }
     }
 }

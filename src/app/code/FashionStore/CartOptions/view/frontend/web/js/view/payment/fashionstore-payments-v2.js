@@ -8,30 +8,39 @@ define([
 ], function (Component, _, selectPaymentMethod, methodList, rendererList, quote) {
     'use strict';
 
+    if (typeof window.checkoutConfig === 'undefined') {
+        return {};
+    }
+
     var allowedMethods = [
-        'fashionstore_cod',
-        'fashionstore_banktransfer_qr',
-        'fashionstore_zalopay',
         'vnpay',
-        'fashionstore_vnpay'
+        'fashionstore_vnpay',
+        'fashionstore_momo',
+        'fashionstore_cod',
+        'fashionstore_zalopay',
+        'fashionstore_banktransfer_qr'
     ];
 
     var fallbackMethods = {
+        vnpay: {
+            method: 'vnpay',
+            title: 'Thanh toán bằng VNPAY'
+        },
+        fashionstore_momo: {
+            method: 'fashionstore_momo',
+            title: 'MoMo'
+        },
         fashionstore_cod: {
             method: 'fashionstore_cod',
-            title: 'Thanh toán offline khi nhận hàng'
-        },
-        fashionstore_banktransfer_qr: {
-            method: 'fashionstore_banktransfer_qr',
-            title: 'Chuyển khoản QR'
+            title: 'Thanh toan khi nhan hang'
         },
         fashionstore_zalopay: {
             method: 'fashionstore_zalopay',
             title: 'ZaloPay'
         },
-        vnpay: {
-            method: 'vnpay',
-            title: 'Thanh toán bằng VNPAY'
+        fashionstore_banktransfer_qr: {
+            method: 'fashionstore_banktransfer_qr',
+            title: 'Chuyen khoan QR'
         }
     };
 
@@ -49,10 +58,8 @@ define([
     }
 
     function filterMethods(methods) {
-        return _.sortBy(_.filter(ensureSyntheticMethods(methods), function (method) {
+        return _.filter(ensureSyntheticMethods(methods), function (method) {
             return allowedMethods.indexOf(method.method) !== -1;
-        }), function (method) {
-            return allowedMethods.indexOf(method.method);
         });
     }
 
@@ -72,37 +79,45 @@ define([
 
     rendererList.push(
         {
-            type: 'fashionstore_cod',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2-redirect'
-        },
-        {
-            type: 'fashionstore_banktransfer_qr',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/bank-transfer-qr-method-v2'
-        },
-        {
-            type: 'fashionstore_zalopay',
-            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/zalopay-svg-method'
-        },
-        {
             type: 'vnpay',
             component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2-redirect'
         },
         {
             type: 'fashionstore_vnpay',
             component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2-redirect'
+        },
+        {
+            type: 'fashionstore_momo',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2-redirect'
+        },
+        {
+            type: 'fashionstore_cod',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/local-wallet-method-v2-redirect'
+        },
+        {
+            type: 'fashionstore_zalopay',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/zalopay-svg-method'
+        },
+        {
+            type: 'fashionstore_banktransfer_qr',
+            component: 'FashionStore_CartOptions/js/view/payment/method-renderer/bank-transfer-qr-method-v2'
         }
     );
 
     return Component.extend({
         initialize: function () {
             this._super();
-
+            
+            // Get current methods
             var currentMethods = methodList() || [];
-
-            var finalMethods = filterMethods(currentMethods);
-
+            
+            // Ensure VNPAY and other synthetic methods are always available
+            var finalMethods = ensureSyntheticMethods(currentMethods);
+            
+            // Set methodList with all methods including synthetic ones
             methodList(finalMethods);
-
+            
+            // Set up subscription for future changes
             methodList.subscribe(syncVisibleMethods);
 
             return this;

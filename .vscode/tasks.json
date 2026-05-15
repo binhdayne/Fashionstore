@@ -1,25 +1,596 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Magento: Enable Fast Frontend Dev",
-      "type": "shell",
-      "command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento cache:disable full_page block_html; php bin/magento config:set dev/css/merge_css_files 0; php bin/magento config:set dev/css/minify_files 0; php bin/magento config:set dev/js/merge_files 0; php bin/magento config:set dev/js/minify_files 0; php bin/magento config:set dev/js/enable_js_bundling 0; php bin/magento cache:flush\"",
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Magento: Refresh Translate Cache",
-      "type": "shell",
-      "command": "docker compose exec php bash -lc \"cd /var/www/html; php bin/magento cache:clean translate\"",
-      "problemMatcher": []
-    },
-    {
-      "label": "Magento: Rebuild Frontend Static",
-      "type": "shell",
-      "command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento setup:static-content:deploy -f vi_VN en_US; php bin/magento cache:flush\"",
-      "problemMatcher": [],
-      "group": "build"
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Magento: Enable Fast Frontend Dev",
+			"type": "shell",
+			"command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento cache:disable full_page block_html; php bin/magento config:set dev/css/merge_css_files 0; php bin/magento config:set dev/css/minify_files 0; php bin/magento config:set dev/js/merge_files 0; php bin/magento config:set dev/js/minify_files 0; php bin/magento config:set dev/js/enable_js_bundling 0; php bin/magento cache:flush\"",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Magento: Refresh Translate Cache",
+			"type": "shell",
+			"command": "docker compose exec php bash -lc \"cd /var/www/html; php bin/magento cache:clean translate\"",
+			"problemMatcher": []
+		},
+		{
+			"label": "Magento: Rebuild Frontend Static",
+			"type": "shell",
+			"command": "docker compose exec php bash -lc \"cd /var/www/html; rm -rf pub/static/frontend/Fashionstore/* var/view_preprocessed/*; php bin/magento setup:static-content:deploy -f vi_VN en_US; php bin/magento cache:flush\"",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "collect-step1-static",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && find pub/static/frontend -name 'fashionstore-payments-v2.js' 2>/dev/null; echo '---'; find pub/static/frontend -name 'fashionstore-payments.js' 2>/dev/null; echo '---'; find pub/static/frontend/Fashionstore -path '*/CartOptions*' -name '*.js' 2>/dev/null | head -20"
+			]
+		},
+		{
+			"label": "collect-step1b-cartoptions-js",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && find pub/static/frontend/Fashionstore -path '*/CartOptions*' -name '*.js' 2>/dev/null | head -20"
+			]
+		},
+		{
+			"label": "collect-step1c-cartoptions-js-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && find pub/static/frontend/Fashionstore -path \"*/CartOptions*\" -name \"*.js\" 2>/dev/null | head -20"
+			]
+		},
+		{
+			"label": "collect-step2-rest-api",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -e; CART_ID=$(curl -s -X POST http://localhost/rest/V1/guest-carts -H \"Content-Type: application/json\"); echo \"Cart ID: $CART_ID\"; ADMIN_TOKEN=$(curl -s -X POST http://localhost/rest/V1/integration/admin/token -H \"Content-Type: application/json\" -d '{\"username\":\"admin\",\"password\":\"admin123\"}'); echo \"Admin token: $ADMIN_TOKEN\"; echo \"--- payment-methods response ---\"; curl -s http://localhost/rest/V1/carts/mine/payment-methods -H \"Authorization: Bearer $ADMIN_TOKEN\" | python3 -m json.tool 2>/dev/null"
+			]
+		},
+		{
+			"label": "collect-step3-config-db",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo '--- config:show via php container ---'; docker compose exec php bash -lc \"cd /var/www/html/src; php bin/magento config:show payment/fashionstore_momo/active; php bin/magento config:show payment/fashionstore_cod/active; php bin/magento config:show payment/fashionstore_zalopay/active; php bin/magento config:show payment/fashionstore_banktransfer_qr/active\"; echo '--- DB query via mysql container ---'; docker compose exec mysql mysql -u magento -pmagento magento -e \"SELECT path, value, scope, scope_id FROM core_config_data WHERE path LIKE 'payment/fashionstore%' ORDER BY path;\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "collect-step3-config-db-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento; echo \"--- config:show via php container ---\"; docker compose exec php bash -lc 'cd /var/www/html/src; php bin/magento config:show payment/fashionstore_momo/active; php bin/magento config:show payment/fashionstore_cod/active; php bin/magento config:show payment/fashionstore_zalopay/active; php bin/magento config:show payment/fashionstore_banktransfer_qr/active'; echo \"--- DB query via mysql container ---\"; docker compose exec mysql mysql -u magento -pmagento magento -e \"SELECT path, value, scope, scope_id FROM core_config_data WHERE path LIKE 'payment/fashionstore%' ORDER BY path;\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "collect-step3-config-accurate",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"compose",
+				"exec",
+				"php",
+				"php",
+				"/var/www/html/src/bin/magento",
+				"config:show",
+				"payment/fashionstore_momo/active"
+			]
+		},
+		{
+			"label": "collect-step3-config-others",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && docker compose exec php php /var/www/html/src/bin/magento config:show payment/fashionstore_cod/active; docker compose exec php php /var/www/html/src/bin/magento config:show payment/fashionstore_zalopay/active; docker compose exec php php /var/www/html/src/bin/magento config:show payment/fashionstore_banktransfer_qr/active"
+			]
+		},
+		{
+			"label": "collect-step3-db-query-accurate",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"compose",
+				"exec",
+				"mysql",
+				"mysql",
+				"-u",
+				"magento",
+				"-pmagento",
+				"magento",
+				"-e",
+				"SELECT path, value, scope, scope_id FROM core_config_data WHERE path LIKE 'payment/fashionstore%' ORDER BY path;"
+			]
+		},
+		{
+			"label": "collect-step3-db-query-fixed2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && docker compose exec mysql mysql -u magento -pmagento magento -e \"SELECT path, value, scope, scope_id FROM core_config_data WHERE path LIKE 'payment/fashionstore%' ORDER BY path;\""
+			]
+		},
+		{
+			"label": "collect-step3-db-query-fixed3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && docker compose exec mysql mysql -u magento -pmagento magento -e \"SELECT path, value, scope, scope_id FROM core_config_data WHERE path LIKE \\\"payment/fashionstore%\\\" ORDER BY path;\""
+			]
+		},
+		{
+			"label": "collect-step2-rest-api-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"CART_ID=$(curl -s -X POST http://localhost/rest/V1/guest-carts -H \"Content-Type: application/json\"); echo \"Cart ID: $CART_ID\"; ADMIN_TOKEN=$(curl -s -X POST http://localhost/rest/V1/integration/admin/token -H \"Content-Type: application/json\" -d \"{\\\"username\\\":\\\"admin\\\",\\\"password\\\":\\\"admin123\\\"}\"); echo \"Admin token: $ADMIN_TOKEN\"; echo \"--- payment-methods response ---\"; curl -s http://localhost/rest/V1/carts/mine/payment-methods -H \"Authorization: Bearer $ADMIN_TOKEN\" | python3 -m json.tool 2>/dev/null"
+			]
+		},
+		{
+			"label": "checkout-rootcause-step1-3-4-5",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo '=== STEP1: quote.js head + line numbers ===' && nl -ba src/pub/static/frontend/Fashionstore/custom/vi_VN/Magento_Checkout/js/model/quote.js | sed -n '1,60p' && echo '=== STEP3: quote.js overrides ===' && find src/app/design/frontend/Fashionstore -name 'quote.js' 2>/dev/null && find src/app/code/FashionStore -name 'quote.js' 2>/dev/null && echo '=== STEP4: onepage.phtml checkout config injection ===' && grep -n 'checkoutConfig\\|getSerializedCheckoutConfig\\|getJsLayout' src/app/design/frontend/Fashionstore/custom/Magento_Checkout/templates/onepage.phtml | head -20 && echo '=== STEP5: CartOptions JS files referencing quote/quoteData ===' && find src/app/code/FashionStore/CartOptions -name '*.js' | xargs grep -l 'quoteData\\|quote' 2>/dev/null | head -10"
+			]
+		},
+		{
+			"label": "step1-quotejs-only",
+			"type": "shell",
+			"command": "nl",
+			"args": [
+				"-ba",
+				"/home/myng/Sites/magento/src/pub/static/frontend/Fashionstore/custom/vi_VN/Magento_Checkout/js/model/quote.js"
+			]
+		},
+		{
+			"label": "step3-find-quote-overrides",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"find /home/myng/Sites/magento/src/app/design/frontend/Fashionstore -name quote.js 2>/dev/null; find /home/myng/Sites/magento/src/app/code/FashionStore -name quote.js 2>/dev/null"
+			]
+		},
+		{
+			"label": "step4-grep-onepage",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"grep -n \"checkoutConfig\\|getSerializedCheckoutConfig\\|getJsLayout\" /home/myng/Sites/magento/src/app/design/frontend/Fashionstore/custom/Magento_Checkout/templates/onepage.phtml | head -20"
+			]
+		},
+		{
+			"label": "step5-cartoptions-quote-refs",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"find /home/myng/Sites/magento/src/app/code/FashionStore/CartOptions -name '*.js' | xargs grep -l 'quoteData\\|quote' 2>/dev/null | head -10"
+			]
+		},
+		{
+			"label": "step5-cartoptions-quote-refs-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"find /home/myng/Sites/magento/src/app/code/FashionStore/CartOptions -name \"*.js\" | xargs grep -l \"quoteData\\|quote\" 2>/dev/null | head -10"
+			]
+		},
+		{
+			"label": "checkout-fix-deploy-correct-path",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && docker compose exec php bash -lc \"cd /var/www/html/src; php bin/magento cache:flush; php bin/magento setup:static-content:deploy -f vi_VN\""
+			]
+		},
+		{
+			"label": "commit-checkout-fix",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git add src/app/design/frontend/Fashionstore/custom/Magento_Checkout/layout/checkout_index_index.xml && git add src/app/design/frontend/Fashionstore/custom/web/css/custom.css && git commit -m \"fix: remove componentDisabled on shipping-step to fix No Payment Methods\""
+			]
+		},
+		{
+			"label": "grep-static-custom-css-shipping",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && grep -n \"checkout-index-index #shipping\" pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css"
+			]
+		},
+		{
+			"label": "redeploy-viVN-after-grep-miss",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && docker compose exec php bash -lc \"cd /var/www/html/src; php bin/magento setup:static-content:deploy -f vi_VN; php bin/magento cache:flush\""
+			]
+		},
+		{
+			"label": "grep-static-custom-css-shipping-after-redeploy",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && grep -n \"checkout-index-index #shipping\" pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css"
+			]
+		},
+		{
+			"label": "inspect-static-css-location",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && ls -l pub/static/frontend/Fashionstore/custom/vi_VN/css | head -20 && echo '---' && rg -n \"checkout-index-index #shipping\" pub/static/frontend/Fashionstore/custom/vi_VN -g '*.css' || true"
+			]
+		},
+		{
+			"label": "grep-static-css-recursive",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && grep -R -n \"checkout-index-index #shipping\" pub/static/frontend/Fashionstore/custom/vi_VN/*.css pub/static/frontend/Fashionstore/custom/vi_VN/css/*.css 2>/dev/null || true"
+			]
+		},
+		{
+			"label": "compare-source-vs-static-css-tail",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && echo '--- source tail ---' && tail -n 20 app/design/frontend/Fashionstore/custom/web/css/custom.css && echo '--- static tail ---' && tail -n 20 pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css"
+			]
+		},
+		{
+			"label": "compare-source-static-css-tail-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && echo ---source-tail--- && tail -n 20 app/design/frontend/Fashionstore/custom/web/css/custom.css && echo ---static-tail--- && tail -n 20 pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css"
+			]
+		},
+		{
+			"label": "show-latest-commit-hash",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git rev-parse --short HEAD"
+			]
+		},
+		{
+			"label": "locate-theme-custom-css-step1",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo '=== CMD1 ===' && find src/app/design/frontend/Fashionstore/custom -name \"custom.css\" -o -name \"*.css\" | grep -v pub/ && echo '=== CMD2 ===' && find src/app/design/frontend/Fashionstore/custom/web -type f -name \"*.css\" && echo '=== CMD3 ===' && find src/app/design/frontend/Fashionstore/custom -name \"*.css\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "locate-theme-custom-css-step1-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===CMD1=== && find src/app/design/frontend/Fashionstore/custom -name \"custom.css\" -o -name \"*.css\" | grep -v pub/ && echo ===CMD2=== && find src/app/design/frontend/Fashionstore/custom/web -type f -name \"*.css\" && echo ===CMD3=== && find src/app/design/frontend/Fashionstore/custom -name \"*.css\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "locate-shipping-css-rules-step2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===CMD1=== && grep -rn \"checkout-index-index #shipping\" src/app/design/frontend/Fashionstore/ 2>/dev/null && echo ===CMD2=== && grep -rn \"opc-shipping_method\" src/app/design/frontend/Fashionstore/ 2>/dev/null"
+			]
+		},
+		{
+			"label": "list-theme-custom-web-files-step3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && find src/app/design/frontend/Fashionstore/custom/web -type f 2>/dev/null"
+			]
+		},
+		{
+			"label": "verify-custom-css-step1-2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && echo '=== STEP1-CMD1 ===' && grep -rn \"custom.css\" app/design/frontend/Fashionstore/custom/ 2>/dev/null && echo '=== STEP1-CMD2 ===' && grep -rn \"custom.css\" app/code/FashionStore/ 2>/dev/null && echo '=== STEP2-CMD1 ===' && ls -la pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null && echo '=== STEP2-CMD2 ===' && tail -10 pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null"
+			]
+		},
+		{
+			"label": "verify-custom-css-step1-2-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && echo ===STEP1-CMD1=== && grep -rn \"custom.css\" app/design/frontend/Fashionstore/custom/ 2>/dev/null && echo ===STEP1-CMD2=== && grep -rn \"custom.css\" app/code/FashionStore/ 2>/dev/null && echo ===STEP2-CMD1=== && ls -la pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null && echo ===STEP2-CMD2=== && tail -10 pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null"
+			]
+		},
+		{
+			"label": "verify-custom-css-step1-cmd2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && grep -rn \"custom.css\" app/code/FashionStore/ 2>/dev/null || true"
+			]
+		},
+		{
+			"label": "verify-custom-css-step2-cmd1-2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && echo ===STEP2-CMD1=== && ls -la pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null && echo ===STEP2-CMD2=== && tail -10 pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css 2>/dev/null"
+			]
+		},
+		{
+			"label": "verify-custom-css-step3-redeploy",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento/src && rm -f pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css && cd /home/myng/Sites/magento && docker compose exec php bash -lc \"cd /var/www/html/src; php bin/magento setup:static-content:deploy -f vi_VN --theme Fashionstore/custom; php bin/magento cache:flush\" && cd /home/myng/Sites/magento/src && grep -n \"checkout-index-index #shipping\" pub/static/frontend/Fashionstore/custom/vi_VN/css/custom.css"
+			]
+		},
+		{
+			"label": "git-status-before-push",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git status --short && echo '---' && git branch --show-current"
+			]
+		},
+		{
+			"label": "check-target-files-and-last-commit",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git diff --name-only && echo '---' && git log -1 --oneline"
+			]
+		},
+		{
+			"label": "push-current-branch",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git push origin chore/rollback-cleanup-20260507"
+			]
+		},
+		{
+			"label": "verify-pushed-commit-files",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && git show --name-only --oneline 875161f9 | sed -n '1,20p'"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step1",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo '=== STEP1-CMD1 ===' && grep -rn \"selected\\|checkbox\\|checked\\|chon-san-pham\\|select-item\" src/app/design/frontend/Fashionstore/custom/ --include=\"*.phtml\" --include=\"*.js\" --include=\"*.html\" -l 2>/dev/null && echo '=== STEP1-CMD2 ===' && grep -rn \"selected\\|checkbox\\|checked\" src/app/code/FashionStore/CartOptions/ --include=\"*.phtml\" --include=\"*.js\" --include=\"*.html\" -l 2>/dev/null"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step1-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP1-CMD1=== && grep -rn \"selected\\|checkbox\\|checked\\|chon-san-pham\\|select-item\" src/app/design/frontend/Fashionstore/custom/ --include=\"*.phtml\" --include=\"*.js\" --include=\"*.html\" -l 2>/dev/null && echo ===STEP1-CMD2=== && grep -rn \"selected\\|checkbox\\|checked\" src/app/code/FashionStore/CartOptions/ --include=\"*.phtml\" --include=\"*.js\" --include=\"*.html\" -l 2>/dev/null"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP2-CMD1=== && find src/app/design/frontend/Fashionstore/custom -name \"*.phtml\" -path \"*checkout/cart*\" -o -name \"*.phtml\" -path \"*cart*\" 2>/dev/null | grep -v pub/ && echo ===STEP2-CMD2=== && find src/app/design/frontend/Fashionstore/custom -path \"*Magento_Checkout*\" -name \"*.phtml\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step2-cmd1",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && find src/app/design/frontend/Fashionstore/custom -name \"*.phtml\" -path \"*checkout/cart*\" -o -name \"*.phtml\" -path \"*cart*\" 2>/dev/null | grep -v pub/ || true"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step2-cmd2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && find src/app/design/frontend/Fashionstore/custom -path \"*Magento_Checkout*\" -name \"*.phtml\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP3-CMD1=== && find src/app/design/frontend/Fashionstore -name \"default.phtml\" -path \"*cart*item*\" 2>/dev/null && echo ===STEP3-CMD2=== && find src/app/design/frontend/Fashionstore -name \"*.phtml\" | xargs grep -l \"checkbox\\|type.*check\" 2>/dev/null | grep -i cart"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step3-cmd1",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && find src/app/design/frontend/Fashionstore -name \"default.phtml\" -path \"*cart*item*\" 2>/dev/null || true"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step3-cmd2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && find src/app/design/frontend/Fashionstore -name \"*.phtml\" | xargs grep -l \"checkbox\\|type.*check\" 2>/dev/null | grep -i cart || true"
+			]
+		},
+		{
+			"label": "investigate-cart-selection-step4-grep",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP4-CMD1=== && grep -rn \"selected_items\\|item_ids\\|cart_items\\|selected\" src/app/code/FashionStore/CartOptions/ --include=\"*.php\" -l 2>/dev/null && echo ===STEP4-CMD2=== && cat src/app/code/FashionStore/CartOptions/Controller/Cart/Buynow.php"
+			]
+		},
+		{
+			"label": "read-cartoptions-step1-2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo '=== STEP1 ===' && cat src/app/code/FashionStore/CartOptions/view/frontend/web/js/cart-options.js && echo '=== STEP2 ===' && cat src/app/code/FashionStore/CartOptions/view/frontend/templates/default.phtml"
+			]
+		},
+		{
+			"label": "read-cartoptions-step1-2-fixed",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP1=== && cat src/app/code/FashionStore/CartOptions/view/frontend/web/js/cart-options.js && echo ===STEP2=== && cat src/app/code/FashionStore/CartOptions/view/frontend/templates/default.phtml"
+			]
+		},
+		{
+			"label": "read-cartoptions-step3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP3-CMD1=== && find src/app/design/frontend/Fashionstore -name \"*.phtml\" | xargs grep -l \"CHON TAT CA\\|chon-tat-ca\\|select-all\\|item.*check\\|check.*item\" 2>/dev/null && echo ===STEP3-CMD2=== && grep -rn \"checkbox\\|CHON TẤT CẢ\\|chọn tất cả\" src/app/design/frontend/Fashionstore/custom/ --include=\"*.phtml\" --include=\"*.js\" -l 2>/dev/null"
+			]
+		},
+		{
+			"label": "read-cartoptions-step4",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP4-CMD1=== && find src/app/design/frontend/Fashionstore -path \"*cart*\" -name \"*.phtml\" 2>/dev/null && echo ===STEP4-CMD2=== && find src/app/design/frontend/Fashionstore -path \"*Magento_Checkout*cart*\" 2>/dev/null && echo ===STEP4-CMD3=== && find src/app/design/frontend/Fashionstore -path \"*checkout*cart*\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "cart-flow-step1-read-save-controller",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP1=== && cat src/app/code/FashionStore/CartOptions/Controller/Cart/Save.php"
+			]
+		},
+		{
+			"label": "cart-flow-step2-find-checkbox-bindings",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP2-CMD1=== && grep -rn \"fashionstore-cart-select\\|checkout-selection\" src/app/design/frontend/Fashionstore/ --include=\"*.phtml\" --include=\"*.html\" --include=\"*.js\" 2>/dev/null && echo ===STEP2-CMD2=== && grep -rn \"fashionstore-cart-select\\|checkout-selection\" src/app/code/FashionStore/ --include=\"*.phtml\" --include=\"*.html\" --include=\"*.js\" 2>/dev/null"
+			]
+		},
+		{
+			"label": "cart-flow-step2-cmd1",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && grep -rn \"fashionstore-cart-select\\|checkout-selection\" src/app/design/frontend/Fashionstore/ --include=\"*.phtml\" --include=\"*.html\" --include=\"*.js\" 2>/dev/null || true"
+			]
+		},
+		{
+			"label": "cart-flow-step2-cmd2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && grep -rn \"fashionstore-cart-select\\|checkout-selection\" src/app/code/FashionStore/ --include=\"*.phtml\" --include=\"*.html\" --include=\"*.js\" 2>/dev/null || true"
+			]
+		},
+		{
+			"label": "cart-flow-step3-find-select-all",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && grep -rn \"CHON TẤT CẢ\\|chọn tất cả\\|select-all\\|selectAll\" src/app/design/frontend/Fashionstore/ src/app/code/FashionStore/ --include=\"*.phtml\" --include=\"*.html\" --include=\"*.js\" 2>/dev/null | head -20"
+			]
+		},
+		{
+			"label": "cart-flow-step4-layout-files",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP4-CMD1=== && find src/app/design/frontend/Fashionstore -name \"checkout_cart_index.xml\" 2>/dev/null && echo ===STEP4-CMD2=== && find src/app/code/FashionStore -name \"checkout_cart_index.xml\" 2>/dev/null && echo ===STEP4-CMD3=== && cat src/app/code/FashionStore/CartOptions/view/frontend/layout/checkout_cart_index.xml 2>/dev/null"
+			]
+		},
+		{
+			"label": "read-options-phtml-form-flow",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP1-CMD1=== && grep -n \"go_to_checkout\\|checkout-selection\\|form-validate\\|action.*checkout\\|TIẾN HÀNH\\|tien-hanh\" src/app/code/FashionStore/CartOptions/view/frontend/templates/cart/options.phtml | head -30 && echo ===STEP1-CMD2=== && head -50 src/app/code/FashionStore/CartOptions/view/frontend/templates/cart/options.phtml && echo ===STEP1-CMD3=== && tail -100 src/app/code/FashionStore/CartOptions/view/frontend/templates/cart/options.phtml"
+			]
+		},
+		{
+			"label": "read-cart-options-block-class",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/myng/Sites/magento && echo ===STEP2=== && cat src/app/code/FashionStore/CartOptions/Block/Cart/Options.php"
+			]
+		}
+	]
 }

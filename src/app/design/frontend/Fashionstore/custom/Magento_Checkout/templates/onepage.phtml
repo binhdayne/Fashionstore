@@ -421,20 +421,6 @@ $checkoutStyle = <<<'STYLE'
     border-top: none !important;
 }
 
-html.fs-payment-mode .checkout-index-index #shipping,
-html.fs-payment-mode .checkout-index-index #opc-shipping_method,
-.checkout-index-index.fs-payment-mode #shipping,
-.checkout-index-index.fs-payment-mode #opc-shipping_method {
-    display: none !important;
-}
-
-html.fs-address-mode .checkout-index-index #shipping,
-html.fs-address-mode .checkout-index-index #opc-shipping_method,
-.checkout-index-index.fs-address-mode #shipping,
-.checkout-index-index.fs-address-mode #opc-shipping_method {
-    display: block !important;
-}
-
 .checkout-index-index #payment .step-title {
     margin: 0 0 20px !important;
     font-size: 0 !important;
@@ -970,6 +956,30 @@ html.fs-address-mode .checkout-index-index #opc-shipping_method,
     text-align: right !important;
 }
 
+.checkout-index-index .opc-block-summary .fs-order-summary-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #d8d8d8;
+    color: #111;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-label,
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-value {
+    display: block;
+}
+
+.checkout-index-index .opc-block-summary .fs-order-summary-total .fs-order-summary-total-value {
+    white-space: nowrap;
+    text-align: right;
+}
+
 .checkout-index-index .opc-block-summary .totals-tax-summary .mark,
 .checkout-index-index .opc-block-summary .totals-tax-summary .amount,
 .checkout-index-index .opc-block-summary .totals-tax .mark,
@@ -1073,37 +1083,6 @@ STYLE;
     </div>
     <?= /* @noEscape */ $secureRenderer->renderStyleAsTag('position: absolute;', '#checkout-loader img') ?>
     <?= /* @noEscape */ $secureRenderer->renderTag('style', [], $checkoutStyle, false) ?>
-    <?php $scriptString = <<<'script'
-        (function () {
-            var targetHash = '#payment';
-
-            document.documentElement.classList.add('fs-payment-mode');
-            document.documentElement.classList.remove('fs-address-mode');
-
-            if (document.body) {
-                document.body.classList.add('fs-payment-mode');
-                document.body.classList.remove('fs-address-mode');
-            }
-
-            if (window.location.hash && window.location.hash !== '#shipping') {
-                return;
-            }
-
-            if (window.history && typeof window.history.replaceState === 'function') {
-                window.history.replaceState(
-                    null,
-                    '',
-                    window.location.pathname + window.location.search + targetHash
-                );
-
-                return;
-            }
-
-            window.location.hash = targetHash;
-        }());
-script;
-    ?>
-    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
     <!-- ko template: getTemplate() --><!-- /ko -->
     <script type="text/x-magento-init">
         {
@@ -1165,6 +1144,7 @@ script;
             var shippingComponent,
                 billingComponent,
                 globalPlaceOrderButton,
+                paymentHashGuardId,
                 deliveryOptionStorageKey = 'fs_checkout_delivery_method',
                 deliveryExpressFee = 30000,
                 selectedDeliveryMethod = 'standard';
@@ -1229,6 +1209,31 @@ script;
                         : 0;
 
                 return isFinite(value) ? value : 0;
+            }
+
+            function renderOrderSummaryTotal() {
+                var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
+                    grandTotal = getBackendGrandTotal(),
+                    totalNode;
+
+                if (!summaryTitle.length) {
+                    return;
+                }
+
+                totalNode = summaryTitle.siblings('.fs-order-summary-total').first();
+                if (!totalNode.length) {
+                    totalNode = $(
+                        '<div class="fs-order-summary-total" aria-live="polite">' +
+                            '<span class="fs-order-summary-total-label">Tổng thanh toán</span>' +
+                            '<span class="fs-order-summary-total-value"></span>' +
+                        '</div>'
+                    );
+                    summaryTitle.after(totalNode);
+                }
+
+                totalNode.find('.fs-order-summary-total-value').text(
+                    grandTotal === null ? '' : formatDisplayPrice(grandTotal)
+                );
             }
 
             function getDeliveryFee() {
@@ -1299,29 +1304,6 @@ script;
                 }
 
                 return lines.join('');
-            }
-
-            function isCheckoutAddressComplete(address) {
-                var street = address && address.street ? address.street : [],
-                    firstStreetLine = '';
-
-                if (!address) {
-                    return false;
-                }
-
-                if ($.isArray(street)) {
-                    firstStreetLine = street[0] || '';
-                } else {
-                    firstStreetLine = street;
-                }
-
-                return $.trim(address.firstname || '') !== '' &&
-                    $.trim(address.lastname || '') !== '' &&
-                    $.trim(address.city || '') !== '' &&
-                    $.trim(address.postcode || '') !== '' &&
-                    $.trim(address.telephone || '') !== '' &&
-                    $.trim(address.countryId || address.country_id || '') !== '' &&
-                    $.trim(firstStreetLine || '') !== '';
             }
 
             function updateDeliveryPanelContent() {
@@ -1437,35 +1419,52 @@ script;
 
             function tuneOrderSummaryDisplay() {
                 var summaryTitle = $('.opc-sidebar .opc-block-summary > .title').first(),
-                    itemCount = $('.opc-sidebar .opc-block-summary .minicart-items .product-item').length,
                     table = $('.opc-sidebar .opc-block-summary .table-totals').first();
 
                 if (summaryTitle.length) {
                     summaryTitle.text('Tổng đơn hàng');
-                    summaryTitle.attr('data-order-count', String(itemCount || 0) + ' Sản phẩm');
                 }
+
+                renderOrderSummaryTotal();
+
+                // Đọc item count từ quote model (async)
+                try {
+                    require(['Magento_Checkout/js/model/quote'], function (q) {
+                        var itemCount = 0;
+                        try {
+                            itemCount = q.getItems ? q.getItems().length : 0;
+                        } catch (e) {
+                            itemCount = 0;
+                        }
+                        var title = $('.opc-sidebar .opc-block-summary > .title').first();
+                        if (title.length) {
+                            title.text('Tổng đơn hàng');
+                            title.attr('data-order-count', String(itemCount) + ' Sản phẩm');
+                        }
+                    });
+                } catch (e) {}
 
                 if (table.length) {
                     table.find('tr').each(function () {
                         var mark = $(this).find('.mark .label, .mark').first(),
                             text = $.trim(mark.text()).toLowerCase();
-
                         if (text.indexOf('cart subtotal') > -1 || text.indexOf('subtotal') > -1) {
                             mark.text('Tạm tính');
                         }
-
                         if (text.indexOf('grand total') > -1 || text.indexOf('tổng cộng') > -1) {
                             mark.text('Tổng đơn đặt hàng');
                         }
-
                         if (text.indexOf('tax') > -1 || text.indexOf('thuế') > -1) {
                             mark.text('Đã bao gồm thuế giá trị gia tăng');
                         }
                     });
                 }
 
-                if (!$('.opc-sidebar .fs-coupon-row').length && $('.opc-sidebar .opc-block-summary').length) {
-                    $('.opc-sidebar .opc-block-summary').append('<div class="fs-coupon-row" aria-hidden="true"></div>');
+                if (!$('.opc-sidebar .fs-coupon-row').length &&
+                    $('.opc-sidebar .opc-block-summary').length) {
+                    $('.opc-sidebar .opc-block-summary').append(
+                        '<div class="fs-coupon-row" aria-hidden="true"></div>'
+                    );
                 }
             }
 
@@ -1619,7 +1618,6 @@ script;
                     }
 
                     if (!ensureShippingAddressReady()) {
-                        openAddressEditor();
                         return;
                     }
 
@@ -1627,7 +1625,18 @@ script;
 
                     if (syncRequest && typeof syncRequest.always === 'function') {
                         syncRequest.always(function () {
-                            nativeButton.trigger('click');
+                            var finalSyncRequest = syncShippingInformationForTotals();
+
+                            if (finalSyncRequest && typeof finalSyncRequest.always === 'function') {
+                                finalSyncRequest.always(function () {
+                                    nativeButton.trigger('click');
+                                });
+                                return;
+                            }
+
+                            window.setTimeout(function () {
+                                nativeButton.trigger('click');
+                            }, 250);
                         });
                         return;
                     }
@@ -1678,10 +1687,6 @@ script;
             }
 
             function toggleAddressEditor(isEnabled) {
-                $('html, body')
-                    .toggleClass('fs-address-mode', isEnabled)
-                    .toggleClass('fs-payment-mode', !isEnabled);
-
                 $('#shipping, #opc-shipping_method')
                     .find('input, select, textarea, button')
                     .prop('disabled', !isEnabled);
@@ -1765,7 +1770,7 @@ script;
                     ? quote.shippingAddress()
                     : null;
 
-                if (isCheckoutAddressComplete(currentAddress)) {
+                if (currentAddress && currentAddress.firstname) {
                     return true;
                 }
 
@@ -1774,13 +1779,10 @@ script;
                     return false;
                 }
 
-                firstAddress = availableAddresses.filter(function (address) {
-                    return isCheckoutAddressComplete(address);
-                })[0] || availableAddresses[0];
-
+                firstAddress = availableAddresses[0];
                 if (firstAddress) {
                     selectShippingAddressAction(firstAddress);
-                    return isCheckoutAddressComplete(firstAddress);
+                    return true;
                 }
 
                 return false;
@@ -1798,13 +1800,41 @@ script;
                 }
             }
 
+            function startPaymentHashGuard() {
+                var attempts = 0;
+
+                if (paymentHashGuardId) {
+                    window.clearInterval(paymentHashGuardId);
+                }
+
+                paymentHashGuardId = window.setInterval(function () {
+                    attempts += 1;
+                    enforcePaymentHash();
+
+                    if (attempts >= 40) {
+                        window.clearInterval(paymentHashGuardId);
+                        paymentHashGuardId = null;
+                    }
+                }, 250);
+            }
+
             function navigateToPaymentStep() {
-                if (!ensureShippingAddressReady()) {
-                    openAddressEditor();
+                var syncRequest = syncShippingInformationForTotals();
+
+                if (syncRequest && typeof syncRequest.always === 'function') {
+                    syncRequest.always(function () {
+                        ensurePaymentStepVisible();
+                        stepNavigator.navigateTo('payment');
+
+                        enforcePaymentHash();
+                        toggleAddressEditor(false);
+
+                        scrollToStep('#payment');
+                    });
+
                     return;
                 }
 
-                syncShippingInformationForTotals();
                 ensurePaymentStepVisible();
                 stepNavigator.navigateTo('payment');
 
@@ -1890,39 +1920,50 @@ script;
             });
 
             $(window).on('hashchange', function () {
-                if (ensureShippingAddressReady()) {
-                    enforcePaymentHash();
-                    toggleAddressEditor(false);
-                } else {
-                    openAddressEditor();
-                }
+                enforcePaymentHash();
+                toggleAddressEditor(false);
                 window.setTimeout(ensurePaymentStepVisible, 0);
             });
 
             $(document).ready(function () {
                 navigateToPaymentStep();
-                if (ensureShippingAddressReady()) {
-                    toggleAddressEditor(false);
-                } else {
-                    openAddressEditor();
-                }
+                startPaymentHashGuard();
+                toggleAddressEditor(false);
                 ensureDeliveryMethodBox();
                 updateDeliveryFeePresentation();
                 tuneOrderSummaryDisplay();
+                window.setTimeout(tuneOrderSummaryDisplay, 2000);
+                window.setTimeout(tuneOrderSummaryDisplay, 4000);
+                window.setTimeout(enforcePaymentHash, 100);
+                window.setTimeout(enforcePaymentHash, 400);
+                window.setTimeout(enforcePaymentHash, 1200);
                 window.setTimeout(function () {
-                    if (ensureShippingAddressReady()) {
-                        enforcePaymentHash();
-                        toggleAddressEditor(false);
-                    }
+                    toggleAddressEditor(false);
                 }, 300);
                 window.setTimeout(function () {
-                    if (ensureShippingAddressReady()) {
-                        enforcePaymentHash();
-                        toggleAddressEditor(false);
-                    }
+                    toggleAddressEditor(false);
                 }, 1000);
                 window.setInterval(updateDeliveryFeePresentation, 1200);
-                window.setInterval(tuneOrderSummaryDisplay, 1200);
+                require(['Magento_Checkout/js/model/totals'], function (totals) {
+                    if (totals && typeof totals.totals === 'function' && typeof totals.totals.subscribe === 'function') {
+                        totals.totals.subscribe(function () {
+                            window.setTimeout(tuneOrderSummaryDisplay, 100);
+                        });
+                    }
+                });
+                require(['Magento_Checkout/js/model/quote'], function (q) {
+                    if (q && typeof q.getItems === 'function') {
+                        // Poll nhanh trong 5 giây đầu sau khi load
+                        var count = 0;
+                        var poll = window.setInterval(function () {
+                            tuneOrderSummaryDisplay();
+                            count++;
+                            if (count >= 10) {
+                                window.clearInterval(poll);
+                            }
+                        }, 600);
+                    }
+                });
                 window.setTimeout(ensurePaymentStepVisible, 400);
                 window.setTimeout(ensurePaymentStepVisible, 1200);
                 window.setTimeout(ensurePaymentStepVisible, 3000);
