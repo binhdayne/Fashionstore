@@ -27,10 +27,12 @@
                 <field id="key1" translate="label" type="obscure" sortOrder="50"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Key 1</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="key2" translate="label" type="obscure" sortOrder="60"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Callback Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="sandbox_base_url" translate="label" type="text" sortOrder="70"
                        showInDefault="1" showInWebsite="1" showInStore="1">
@@ -54,10 +56,24 @@
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Expire Duration Seconds</label>
                 </field>
-                <field id="preferred_payment_method" translate="label comment" type="text" sortOrder="120"
+                <field id="cancel_pending_after_minutes" translate="label comment" type="text" sortOrder="120"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Cancel Pending Orders After Minutes</label>
+                    <comment>Unpaid ZaloPay orders still pending after this time will be canceled by cron.</comment>
+                </field>
+                <field id="preferred_payment_method" translate="label comment" type="text" sortOrder="130"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Preferred Payment Method JSON</label>
                     <comment>Example: ["vietqr"] or ["zalopay_wallet"]</comment>
+                </field>
+            </group>
+            <group id="fashionstore_banktransfer_qr" translate="label" type="text" sortOrder="240"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>FashionStore Bank Transfer QR</label>
+                <field id="cancel_pending_after_minutes" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Cancel Orders Without Proof After Minutes</label>
+                    <comment>Bank transfer QR orders without uploaded payment proof after this time will be canceled by cron.</comment>
                 </field>
             </group>
         </section>

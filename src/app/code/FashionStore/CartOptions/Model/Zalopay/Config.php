@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace FashionStore\CartOptions\Model\Zalopay;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
 
@@ -19,12 +21,16 @@ class Config
 
     private UrlInterface $urlBuilder;
 
+    private EncryptorInterface $encryptor;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        UrlInterface $urlBuilder
+        UrlInterface $urlBuilder,
+        ?EncryptorInterface $encryptor = null
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->urlBuilder = $urlBuilder;
+        $this->encryptor = $encryptor ?? ObjectManager::getInstance()->get(EncryptorInterface::class);
     }
 
     public function isActive(?int $storeId = null): bool
@@ -41,16 +47,12 @@ class Config
 
     public function getKey1(?int $storeId = null): string
     {
-        $value = trim((string) $this->getValue('key1', $storeId));
-
-        return $value !== '' ? $value : self::SAMPLE_KEY1;
+        return $this->getSecretValue('key1', self::SAMPLE_KEY1, $storeId);
     }
 
     public function getKey2(?int $storeId = null): string
     {
-        $value = trim((string) $this->getValue('key2', $storeId));
-
-        return $value !== '' ? $value : self::SAMPLE_KEY2;
+        return $this->getSecretValue('key2', self::SAMPLE_KEY2, $storeId);
     }
 
     public function getBaseUrl(?int $storeId = null): string
@@ -114,11 +116,30 @@ class Config
 
     public function isConfigured(?int $storeId = null): bool
     {
-        return true;
+        return $this->isActive($storeId)
+            && $this->getAppId($storeId) > 0
+            && $this->getKey1($storeId) !== ''
+            && $this->getKey2($storeId) !== '';
     }
 
     private function getValue(string $field, ?int $storeId = null): mixed
     {
         return $this->scopeConfig->getValue(self::XML_PATH_PREFIX . $field, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    private function getSecretValue(string $field, string $defaultValue, ?int $storeId = null): string
+    {
+        $value = trim((string) $this->getValue($field, $storeId));
+        if ($value === '') {
+            return $defaultValue;
+        }
+
+        if (preg_match('/^\*+$/', $value)) {
+            return $this->getAppId($storeId) === self::SAMPLE_APP_ID ? $defaultValue : '';
+        }
+
+        $decryptedValue = trim((string) $this->encryptor->decrypt($value));
+
+        return $decryptedValue !== '' ? $decryptedValue : $value;
     }
 }

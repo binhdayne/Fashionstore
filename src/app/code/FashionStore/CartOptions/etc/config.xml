@@ -51,6 +51,7 @@
                 <production_base_url>https://openapi.zalopay.vn</production_base_url>
                 <environment>sandbox</environment>
                 <expire_duration_seconds>900</expire_duration_seconds>
+                <cancel_pending_after_minutes>60</cancel_pending_after_minutes>
                 <preferred_payment_method>["vietqr"]</preferred_payment_method>
             </fashionstore_zalopay>
             <fashionstore_banktransfer_qr>
@@ -61,6 +62,7 @@
                 <allowspecific>0</allowspecific>
                 <group>offline</group>
                 <sort_order>240</sort_order>
+                <cancel_pending_after_minutes>1440</cancel_pending_after_minutes>
             </fashionstore_banktransfer_qr>
         </payment>
     </default>

@@ -58,6 +58,12 @@ class Redirect extends Action
             $paymentUrl = $this->config->getPaymentUrl($storeId);
 
             if ($tmnCode === '' || $hashSecret === '' || $paymentUrl === '') {
+                $this->messageManager->addErrorMessage(__('VNPAY chua duoc cau hinh day du. Vui long nhap lai TMN Code va Hash Secret.'));
+
+                return $resultRedirect->setPath('checkout/cart');
+            }
+
+            if (!$this->config->isConfigured($storeId)) {
                 throw new LocalizedException(__('VNPAY configuration is incomplete.'));
             }
 
