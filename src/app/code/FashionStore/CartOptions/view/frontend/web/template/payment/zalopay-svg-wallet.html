@@ -48,32 +48,4 @@
             <span data-bind="text: statusMessage"></span>
         </div>
     </div>
-
-    <div class="fashionstore-zalopay-modal" data-bind="css: {'is-visible': isModalVisible}, visible: isModalVisible">
-        <div class="fashionstore-zalopay-modal__backdrop" data-bind="click: handleOverlayClose"></div>
-        <div class="fashionstore-zalopay-modal__dialog" role="dialog" aria-modal="true" aria-label="Thanh toan ZaloPay">
-            <div class="fashionstore-zalopay-modal__content">
-                <button type="button" class="fashionstore-zalopay-modal__close" data-bind="click: handleOverlayClose" aria-label="Dong">
-                    <span>×</span>
-                </button>
-                <p class="fashionstore-zalopay-modal__intro">Quet ma QR bang ung dung ZaloPay de hoan tat thanh toan.</p>
-                <p class="fashionstore-zalopay-modal__amount" data-bind="visible: amountLabel">
-                    So tien can thanh toan: <strong data-bind="text: amountLabel"></strong>
-                </p>
-                <div class="fashionstore-zalopay-modal__qr" data-bind="if: qrImageUrl">
-                    <img data-bind="attr: {src: qrImageUrl, alt: 'ZaloPay QR'}" />
-                </div>
-                <div class="fashionstore-zalopay-modal__actions">
-                    <a class="action primary" target="_blank" rel="noopener noreferrer" data-bind="attr: {href: gatewayUrl}, visible: gatewayUrl">
-                        <span>Mo cong thanh toan</span>
-                    </a>
-                    <button type="button" class="action secondary" data-bind="click: queryPaymentStatus">
-                        <span>Kiem tra trang thai</span>
-                    </button>
-                </div>
-                <p class="fashionstore-zalopay-modal__note" data-bind="visible: isPolling">He thong dang tu dong truy van lai trang thai sau moi 5 giay.</p>
-                <p class="fashionstore-zalopay-modal__status" data-bind="text: statusMessage"></p>
-            </div>
-        </div>
-    </div>
 </div>

@@ -6,6 +6,7 @@ namespace FashionStore\CartOptions\Model\Zalopay;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\HTTP\Client\Curl;
 use Magento\Framework\Serialize\Serializer\Json;
+use Psr\Log\LoggerInterface;
 
 class ApiClient
 {
@@ -13,16 +14,25 @@ class ApiClient
 
     private Json $jsonSerializer;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         Curl $curl,
-        Json $jsonSerializer
+        Json $jsonSerializer,
+        LoggerInterface $logger
     ) {
         $this->curl = $curl;
         $this->jsonSerializer = $jsonSerializer;
+        $this->logger = $logger;
     }
 
     public function postJson(string $url, array $payload): array
     {
+        $this->logger->info('ZaloPay request', [
+            'url' => $url,
+            'payload' => $payload,
+        ]);
+
         $this->curl->addHeader('Content-Type', 'application/json');
         $this->curl->addHeader('Accept', 'application/json');
         $this->curl->setTimeout(30);
@@ -30,6 +40,12 @@ class ApiClient
 
         $status = (int) $this->curl->getStatus();
         $body = (string) $this->curl->getBody();
+
+        $this->logger->info('ZaloPay response', [
+            'url' => $url,
+            'status' => $status,
+            'body' => $body,
+        ]);
 
         if ($status < 200 || $status >= 300) {
             throw new LocalizedException(__('ZaloPay API returned HTTP %1.', $status));

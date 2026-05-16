@@ -45,7 +45,10 @@ class Create extends Action implements CsrfAwareActionInterface
         }
 
         try {
-            $payload = $this->orderService->createForOrder($order);
+            $payload = $this->orderService->createForOrder(
+                $order,
+                (bool) $this->getRequest()->getParam('force')
+            );
         } catch (\Throwable $throwable) {
             return $result->setData(['success' => false, 'message' => $throwable->getMessage()]);
         }

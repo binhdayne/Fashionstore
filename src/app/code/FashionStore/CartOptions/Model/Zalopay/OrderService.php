@@ -56,7 +56,7 @@ class OrderService
         $this->orderConfig = $orderConfig;
     }
 
-    public function createForOrder(OrderInterface $order): array
+    public function createForOrder(OrderInterface $order, bool $force = false): array
     {
         if ($order->getPayment() === null || $order->getPayment()->getMethod() !== self::PAYMENT_METHOD_CODE) {
             throw new LocalizedException(__('This order is not using ZaloPay.'));
@@ -68,7 +68,7 @@ class OrderService
 
         $existingOrderUrl = (string) $order->getPayment()->getAdditionalInformation(self::INFO_ORDER_URL);
         $existingAppTransId = (string) $order->getPayment()->getAdditionalInformation(self::INFO_APP_TRANS_ID);
-        if ($existingOrderUrl !== '' && $existingAppTransId !== '') {
+        if (!$force && $existingOrderUrl !== '' && $existingAppTransId !== '') {
             return $this->buildFrontendPayload($order, [
                 'order_url' => $existingOrderUrl,
                 'order_token' => (string) $order->getPayment()->getAdditionalInformation(self::INFO_ORDER_TOKEN),
@@ -81,7 +81,7 @@ class OrderService
         }
 
         $appTime = $this->getCurrentMilliseconds();
-        $appTransId = $this->generateAppTransId($order);
+        $appTransId = $this->generateAppTransId($order, $force);
         $itemPayload = $this->buildItemPayload($order);
         $embedData = $this->buildEmbedData($order);
         $amount = (int) round((float) $order->getGrandTotal());
@@ -281,11 +281,17 @@ class OrderService
             && !empty($response['zp_trans_id']);
     }
 
-    private function generateAppTransId(OrderInterface $order): string
+    private function generateAppTransId(OrderInterface $order, bool $force = false): string
     {
         $date = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Ho_Chi_Minh'));
 
-        return $date->format('ymd') . '_' . (string) $order->getIncrementId();
+        $baseId = $date->format('ymd') . '_' . (string) $order->getIncrementId();
+
+        if (!$force) {
+            return $baseId;
+        }
+
+        return sprintf('%s_%s', $baseId, substr((string) $this->getCurrentMilliseconds(), -6));
     }
 
     private function buildAppUser(OrderInterface $order): string
@@ -313,26 +319,46 @@ class OrderService
 
     private function buildEmbedData(OrderInterface $order): string
     {
-        $preferredPaymentMethod = $this->decodePreferredPaymentMethod();
+        $storeId = (int) $order->getStoreId();
+        $preferredPaymentMethod = $this->decodePreferredPaymentMethod($storeId);
 
-        return $this->jsonSerializer->serialize([
-            'redirecturl' => $this->config->getRedirectUrl((int) $order->getStoreId()),
-            'preferred_payment_method' => $preferredPaymentMethod,
+        $payload = [
+            'redirecturl' => $this->config->getRedirectUrl($storeId),
             'merchantinfo' => (string) $order->getIncrementId(),
-        ]);
+        ];
+
+        if ($preferredPaymentMethod !== []) {
+            $payload['preferred_payment_method'] = $preferredPaymentMethod;
+        }
+
+        return $this->jsonSerializer->serialize($payload);
     }
 
-    private function decodePreferredPaymentMethod(): array
+    private function decodePreferredPaymentMethod(?int $storeId = null): array
     {
-        $preferredPaymentMethod = $this->config->getPreferredPaymentMethod();
+        if ($this->config->isSampleSandboxConfig($storeId)) {
+            return [];
+        }
+
+        $preferredPaymentMethod = $this->config->getPreferredPaymentMethod($storeId);
+
+        if ($preferredPaymentMethod === '') {
+            return [];
+        }
 
         try {
             $decodedValue = $this->jsonSerializer->unserialize($preferredPaymentMethod);
         } catch (\InvalidArgumentException $exception) {
-            return ['vietqr'];
+            return [];
         }
 
-        return is_array($decodedValue) ? array_values($decodedValue) : ['vietqr'];
+        if (!is_array($decodedValue)) {
+            return [];
+        }
+
+        return array_values(array_filter($decodedValue, static function ($value): bool {
+            return trim((string) $value) !== '';
+        }));
     }
 
     private function signCreatePayload(array $payload, int $storeId): string

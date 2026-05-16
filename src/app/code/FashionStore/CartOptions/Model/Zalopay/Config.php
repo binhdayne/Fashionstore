@@ -55,11 +55,21 @@ class Config
 
     public function getBaseUrl(?int $storeId = null): string
     {
-        $environment = (string) $this->getValue('environment', $storeId);
-        $path = $environment === 'production' ? 'production_base_url' : 'sandbox_base_url';
+        $path = $this->isProductionMode($storeId) ? 'production_base_url' : 'sandbox_base_url';
         $value = rtrim((string) $this->getValue($path, $storeId), '/');
 
         return $value !== '' ? $value : self::SAMPLE_SANDBOX_BASE_URL;
+    }
+
+    public function isProductionMode(?int $storeId = null): bool
+    {
+        return (string) $this->getValue('environment', $storeId) === 'production';
+    }
+
+    public function isSampleSandboxConfig(?int $storeId = null): bool
+    {
+        return !$this->isProductionMode($storeId)
+            && $this->getAppId($storeId) === self::SAMPLE_APP_ID;
     }
 
     public function getCreateEndpoint(?int $storeId = null): string
@@ -81,7 +91,7 @@ class Config
 
     public function getPreferredPaymentMethod(?int $storeId = null): string
     {
-        return trim((string) $this->getValue('preferred_payment_method', $storeId)) ?: '["vietqr"]';
+        return trim((string) $this->getValue('preferred_payment_method', $storeId));
     }
 
     public function getCallbackUrl(?int $storeId = null): string
