@@ -1146,8 +1146,9 @@ script;
                 globalPlaceOrderButton,
                 paymentHashGuardId,
                 deliveryOptionStorageKey = 'fs_checkout_delivery_method',
-                deliveryExpressFee = 30000,
-                selectedDeliveryMethod = 'standard';
+                deliveryGhtkFee = 20000,
+                deliveryGhnFee = 30000,
+                selectedDeliveryMethod = 'ghtk';
 
             function persistDeliveryMethodToBackend() {
                 var endpointUrl = urlBuilder.build('fashionstore_cartoptions/cart/setdeliverymethod'),
@@ -1237,7 +1238,7 @@ script;
             }
 
             function getDeliveryFee() {
-                return selectedDeliveryMethod === 'express' ? deliveryExpressFee : 0;
+                return selectedDeliveryMethod === 'ghn' ? deliveryGhnFee : deliveryGhtkFee;
             }
 
             function getDeliveryDateText() {
@@ -1245,14 +1246,16 @@ script;
                     fromDate,
                     toDate;
 
-                if (selectedDeliveryMethod === 'express') {
-                    return 'Trong ngày: ' + formatDateVi(now);
+                if (selectedDeliveryMethod === 'ghn') {
+                    fromDate = addDays(now, 1);
+                    toDate = addDays(now, 3);
+                    return 'Dự kiến: ' + formatDateVi(fromDate) + ' - ' + formatDateVi(toDate);
                 }
 
-                fromDate = addDays(now, 2);
-                toDate = addDays(now, 5);
+                fromDate = addDays(now, 3);
+                toDate = addDays(now, 6);
 
-                return 'Đến giữa: ' + formatDateVi(fromDate) + ' - ' + formatDateVi(toDate);
+                return 'Dự kiến: ' + formatDateVi(fromDate) + ' - ' + formatDateVi(toDate);
             }
 
             function getShippingAddressHtml() {
@@ -1401,12 +1404,12 @@ script;
                     return;
                 }
 
-                if (fee > 0) {
-                    note.text('Đã áp dụng phụ thu giao hàng hỏa tốc: ' + formatDisplayPrice(fee));
+                if (selectedDeliveryMethod === 'ghn') {
+                    note.text('Đã chọn Giao Hàng Nhanh (GHN): ' + formatDisplayPrice(fee));
                     return;
                 }
 
-                note.text('Giao hàng thường không tính thêm phí.');
+                note.text('Đã chọn Giao Hàng Tiết Kiệm (GHTK): ' + formatDisplayPrice(fee));
             }
 
             function updateDeliveryFeePresentation() {
@@ -1504,13 +1507,13 @@ script;
                             '</div>' +
                             '<div class="fs-delivery-method-choices-title">Lựa chọn phương thức giao hàng</div>' +
                             '<div class="fs-delivery-method-options" role="radiogroup" aria-label="Phương thức giao hàng">' +
-                            '<button type="button" class="fs-delivery-method-option" data-method="standard" role="radio" aria-checked="false">' +
-                                '<span class="fs-delivery-method-option-title">Giao hàng thường</span>' +
-                                '<span class="fs-delivery-method-option-desc">Sẽ đến trong 2-5 ngày</span>' +
+                            '<button type="button" class="fs-delivery-method-option" data-method="ghtk" role="radio" aria-checked="false">' +
+                                '<span class="fs-delivery-method-option-title">Giao Hàng Tiết Kiệm (GHTK)</span>' +
+                                '<span class="fs-delivery-method-option-desc">Phù hợp đơn không gấp, dự kiến 3-6 ngày</span>' +
                             '</button>' +
-                            '<button type="button" class="fs-delivery-method-option" data-method="express" role="radio" aria-checked="false">' +
-                                '<span class="fs-delivery-method-option-title">Giao hàng hỏa tốc</span>' +
-                                '<span class="fs-delivery-method-option-desc">Sẽ đến trong 1-4 tiếng ở nội thành và trong ngày ở liên tỉnh</span>' +
+                            '<button type="button" class="fs-delivery-method-option" data-method="ghn" role="radio" aria-checked="false">' +
+                                '<span class="fs-delivery-method-option-title">Giao Hàng Nhanh (GHN)</span>' +
+                                '<span class="fs-delivery-method-option-desc">Giao nhanh hơn, dự kiến 1-3 ngày</span>' +
                             '</button>' +
                             '</div>' +
                         '</div>' +
@@ -1521,8 +1524,10 @@ script;
                 paymentMethods.before(container);
 
                 selectedValue = window.localStorage ? window.localStorage.getItem(deliveryOptionStorageKey) : null;
-                if (selectedValue === 'standard' || selectedValue === 'express') {
-                    selectedDeliveryMethod = selectedValue;
+                if (selectedValue === 'ghn' || selectedValue === 'express') {
+                    selectedDeliveryMethod = 'ghn';
+                } else if (selectedValue === 'ghtk' || selectedValue === 'standard') {
+                    selectedDeliveryMethod = 'ghtk';
                 }
 
                 function syncDeliveryMethodOptions() {
@@ -1536,7 +1541,7 @@ script;
                 }
 
                 $('#fs-delivery-method-box .fs-delivery-method-option').on('click', function () {
-                    selectedDeliveryMethod = $(this).attr('data-method') === 'express' ? 'express' : 'standard';
+                    selectedDeliveryMethod = $(this).attr('data-method') === 'ghn' ? 'ghn' : 'ghtk';
 
                     if (window.localStorage) {
                         window.localStorage.setItem(deliveryOptionStorageKey, selectedDeliveryMethod);
