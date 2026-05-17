@@ -1382,6 +1382,13 @@ body.catalogsearch-result-index {
     margin: 12px 0 0 !important;
 }
 
+.wishlist-index-index .products-grid.wishlist .product-item-comment,
+.wishlist-index-index .products-grid.wishlist .field.comment-box,
+.wishlist-index-index .products-grid.wishlist .comment-box,
+.wishlist-index-index .products-grid.wishlist textarea[name='description'] {
+    display: none !important;
+}
+
 .wishlist-index-index .products-grid.wishlist .product-item-actions,
 .wishlist-index-index .products-grid.wishlist .box-tocart,
 .wishlist-index-index .products-grid.wishlist .tocart,
