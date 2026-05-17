@@ -1319,15 +1319,18 @@ body.catalogsearch-result-index {
 
 .wishlist-index-index .products-grid.wishlist .product-items {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(240px, 320px)) !important;
-    gap: 28px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 38px 34px !important;
     align-items: stretch !important;
+    width: 100% !important;
 }
 
 .wishlist-index-index .products-grid.wishlist .product-item {
     width: auto !important;
+    max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
+    float: none !important;
 }
 
 .wishlist-index-index .products-grid.wishlist .product-item-info {
@@ -1339,6 +1342,7 @@ body.catalogsearch-result-index {
     border-radius: 14px !important;
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05) !important;
     overflow: hidden !important;
+    box-sizing: border-box !important;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
 }
 
