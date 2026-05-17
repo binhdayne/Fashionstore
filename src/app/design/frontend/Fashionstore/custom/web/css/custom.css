@@ -695,6 +695,148 @@ body.catalog-category-view .filter-options-content {
     display: none !important;
 }
 
+/* Category/search product cards */
+.catalog-category-view .products-grid .product-item,
+.catalogsearch-result-index .products-grid .product-item {
+    margin-bottom: 34px !important;
+}
+
+.catalog-category-view .products-grid .product-item-info,
+.catalogsearch-result-index .products-grid .product-item-info {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    padding: 14px 14px 18px !important;
+    border: 1px solid transparent !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04) !important;
+    overflow: hidden !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover,
+.catalogsearch-result-index .products-grid .product-item-info:hover {
+    border-color: rgba(209, 154, 52, 0.34) !important;
+    background: linear-gradient(180deg, #fff 0%, #fffaf1 100%) !important;
+    box-shadow: 0 22px 46px rgba(15, 23, 42, 0.15), 0 12px 24px rgba(209, 154, 52, 0.16) !important;
+    transform: translateY(-8px) !important;
+}
+
+.catalog-category-view .products-grid .product-item-photo,
+.catalogsearch-result-index .products-grid .product-item-photo {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+    background: #f4f4f2 !important;
+}
+
+.catalog-category-view .products-grid .product-image-container,
+.catalog-category-view .products-grid .product-image-wrapper,
+.catalogsearch-result-index .products-grid .product-image-container,
+.catalogsearch-result-index .products-grid .product-image-wrapper {
+    display: block !important;
+    width: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background: #f4f4f2 !important;
+}
+
+.catalog-category-view .products-grid .product-image-wrapper,
+.catalogsearch-result-index .products-grid .product-image-wrapper {
+    aspect-ratio: 4 / 5 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+}
+
+.catalog-category-view .products-grid .product-image-photo,
+.catalogsearch-result-index .products-grid .product-image-photo {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border-radius: 16px !important;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition: transform 0.45s ease, filter 0.45s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover .product-image-photo,
+.catalogsearch-result-index .products-grid .product-item-info:hover .product-image-photo {
+    filter: saturate(1.04) contrast(1.02) !important;
+    transform: scale(1.045) !important;
+}
+
+.catalog-category-view .products-grid .product-item-name,
+.catalogsearch-result-index .products-grid .product-item-name {
+    margin: 0 0 10px !important;
+    min-height: 48px !important;
+}
+
+.catalog-category-view .products-grid .product-item-name a,
+.catalogsearch-result-index .products-grid .product-item-name a {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+    transition: color 0.18s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover .product-item-name a,
+.catalogsearch-result-index .products-grid .product-item-info:hover .product-item-name a {
+    color: #8a5b13 !important;
+}
+
+.catalog-category-view .products-grid .price-box .price,
+.catalogsearch-result-index .products-grid .price-box .price {
+    color: #111827 !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+}
+
+.catalog-category-view .products-grid .product-reviews-summary,
+.catalogsearch-result-index .products-grid .product-reviews-summary {
+    margin: 0 0 12px !important;
+}
+
+.catalog-category-view .products-grid .product-item-actions,
+.catalogsearch-result-index .products-grid .product-item-actions {
+    margin-top: 16px !important;
+}
+
+.catalog-category-view .products-grid .actions-primary .action.tocart,
+.catalogsearch-result-index .products-grid .actions-primary .action.tocart {
+    min-height: 44px !important;
+    padding: 0 20px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #ff7a18 0%, #d19a34 52%, #111827 100%) !important;
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 12px 24px rgba(209, 154, 52, 0.24) !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+}
+
+.catalog-category-view .products-grid .actions-primary .action.tocart:hover,
+.catalogsearch-result-index .products-grid .actions-primary .action.tocart:hover {
+    filter: brightness(1.05) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 16px 30px rgba(209, 154, 52, 0.34) !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action,
+.catalogsearch-result-index .products-grid .actions-secondary .action {
+    border-radius: 50% !important;
+}
+
 /* Product detail: size chips and +/- quantity controls */
 .catalog-product-view .product-options-wrapper .fs-size-select--hidden {
     position: absolute !important;
@@ -1297,6 +1439,78 @@ textarea {
 .footer .action.subscribe,
 .newsletter .action.subscribe {
     border-radius: 0 10px 10px 0 !important;
+}
+
+/* Product page review feedback */
+.catalog-product-view .breadcrumbs {
+    display: none !important;
+}
+
+.catalog-product-view .page.messages {
+    max-width: 1240px !important;
+    margin: 26px auto 18px !important;
+    padding: 0 24px !important;
+}
+
+.catalog-product-view .message.error,
+.catalog-product-view .message-error,
+.catalog-product-view .messages .message-error,
+.catalog-product-view .messages .message.error {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 70px !important;
+    margin: 0 !important;
+    padding: 20px 28px 20px 76px !important;
+    border: 1px solid rgba(220, 38, 38, 0.22) !important;
+    border-left: 8px solid #dc2626 !important;
+    border-radius: 18px !important;
+    background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 100%) !important;
+    color: #991b1b !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    line-height: 1.45 !important;
+    box-shadow: 0 18px 42px rgba(220, 38, 38, 0.14) !important;
+}
+
+.catalog-product-view .message.error > div,
+.catalog-product-view .message-error > div,
+.catalog-product-view .messages .message-error > div,
+.catalog-product-view .messages .message.error > div {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+.catalog-product-view .message.error > div::before,
+.catalog-product-view .message-error > div::before,
+.catalog-product-view .messages .message-error > div::before,
+.catalog-product-view .messages .message.error > div::before {
+    display: none !important;
+    content: none !important;
+}
+
+.catalog-product-view .message.error::before,
+.catalog-product-view .message-error::before,
+.catalog-product-view .messages .message-error::before,
+.catalog-product-view .messages .message.error::before {
+    content: "!" !important;
+    position: absolute !important;
+    left: 26px !important;
+    top: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #dc2626 !important;
+    color: #fff !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    transform: translateY(-50%) !important;
 }
 
 .search-autocomplete,

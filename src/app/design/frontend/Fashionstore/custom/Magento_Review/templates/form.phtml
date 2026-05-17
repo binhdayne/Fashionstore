@@ -1,0 +1,284 @@
+<?php
+/** @var \Magento\Review\Block\Form $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->get(\Magento\Customer\Model\Session::class);
+$customerName = '';
+if ($customerSession->isLoggedIn()) {
+    $customer = $customerSession->getCustomer();
+    $customerName = trim((string) $customer->getName());
+    if ($customerName === '') {
+        $customerName = trim((string) $customer->getEmail());
+    }
+}
+if ($customerName === '') {
+    $customerName = 'Khách hàng';
+}
+$ratingLabels = [
+    'Quality' => 'Chất lượng',
+    'Value' => 'Giá trị',
+    'Price' => 'Giá cả',
+];
+$buttonLockManager = $block->getData('button_lock_manager');
+$orderItemId = (int) $block->getRequest()->getParam('order_item_id');
+?>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+    .fs-review-form,
+    .fs-review-form * {
+        font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+        letter-spacing: 0;
+    }
+
+    .fs-review-form {
+        max-width: 860px;
+        margin: 42px 0 64px;
+        padding: 34px 38px 40px;
+        border: 1px solid rgba(209, 154, 52, 0.24);
+        border-radius: 18px;
+        background: linear-gradient(180deg, #fffaf1 0%, #ffffff 58%, #fff7e8 100%);
+        box-shadow: 0 20px 48px rgba(31, 41, 55, 0.1);
+        color: #1f2937;
+    }
+
+    .fs-review-form__title strong {
+        display: block;
+        margin-bottom: 22px;
+        color: #111827;
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .fs-review-form__legend {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin: 0 0 30px;
+        color: #667085;
+        font-size: 18px;
+        line-height: 1.35;
+    }
+
+    .fs-review-form__legend strong {
+        color: #111827;
+        font-size: 24px;
+        font-weight: 800;
+    }
+
+    .fs-review-form__fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .fs-review-form__label,
+    .fs-review-form__rating-label {
+        display: block;
+        margin-bottom: 10px;
+        color: #27364a;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .fs-review-form__rating-row {
+        margin: 0 0 24px;
+    }
+
+    .fs-review-form__stars {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .fs-review-form .review-control-vote label:before,
+    .fs-review-form .review-control-vote:before {
+        color: #d0d5dd;
+        font-size: 38px;
+        line-height: 38px;
+    }
+
+    .fs-review-form .review-control-vote label:hover:before,
+    .fs-review-form .review-control-vote label:hover ~ label:before,
+    .fs-review-form .review-control-vote input:checked + label:before,
+    .fs-review-form .review-control-vote input:checked + label ~ label:before {
+        color: #f59e0b;
+    }
+
+    .fs-review-form__field {
+        margin-top: 30px;
+    }
+
+    .fs-review-form textarea {
+        width: 100%;
+        min-height: 180px;
+        padding: 18px 20px;
+        border: 2px solid #f0c875;
+        border-radius: 16px;
+        background: #fff;
+        color: #101828;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.65;
+        box-shadow: 0 12px 28px rgba(209, 154, 52, 0.12);
+        outline: none;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .fs-review-form textarea::placeholder {
+        color: #98a2b3;
+        font-weight: 400;
+    }
+
+    .fs-review-form textarea:focus {
+        border-color: #d19a34;
+        box-shadow: 0 0 0 5px rgba(209, 154, 52, 0.18), 0 14px 30px rgba(209, 154, 52, 0.16);
+        transform: translateY(-1px);
+    }
+
+    .fs-review-form__actions {
+        margin-top: 28px;
+    }
+
+    .fs-review-form__submit {
+        min-width: 240px;
+        padding: 18px 34px;
+        border: 2px solid rgba(255, 255, 255, 0.65);
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff2d55 0%, #ff7a18 45%, #f5b301 100%) !important;
+        color: #fff !important;
+        font-size: 19px;
+        font-weight: 800;
+        line-height: 1;
+        text-transform: uppercase;
+        box-shadow: 0 16px 34px rgba(255, 45, 85, 0.32), 0 8px 18px rgba(255, 122, 24, 0.28);
+        cursor: pointer;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .fs-review-form__submit:hover,
+    .fs-review-form__submit:focus {
+        color: #fff !important;
+        filter: brightness(1.08) saturate(1.08);
+        transform: translateY(-3px);
+        box-shadow: 0 22px 44px rgba(255, 45, 85, 0.42), 0 12px 24px rgba(255, 122, 24, 0.34);
+    }
+</style>
+
+<div class="block review-add fs-review-form">
+    <div class="block-title fs-review-form__title">
+        <strong>Viết nhận xét của bạn</strong>
+    </div>
+    <div class="block-content fs-review-form__content">
+        <?php if ($block->getAllowWriteReviewFlag()): ?>
+            <form action="<?= $block->escapeUrl($block->getAction()) ?>"
+                  class="review-form fs-review-form__form"
+                  method="post"
+                  id="review-form"
+                  data-role="product-review-form"
+                  data-bind="scope: 'review-form'">
+                <?= $block->getBlockHtml('formkey') ?>
+                <?= $block->getChildHtml('form_fields_before') ?>
+                <input type="hidden" name="nickname" id="nickname_field" value="<?= $block->escapeHtmlAttr($customerName) ?>"/>
+                <input type="hidden" name="title" id="summary_field" value="Nhận xét sản phẩm"/>
+                <input type="hidden" name="order_item_id" value="<?= (int) $orderItemId ?>"/>
+
+                <fieldset class="fieldset review-fieldset fs-review-form__fieldset" data-hasrequired="* Trường bắt buộc">
+                    <legend class="legend review-legend fs-review-form__legend">
+                        <span>Bạn đang nhận xét:</span>
+                        <strong><?= $block->escapeHtml($block->getProductInfo()->getName()) ?></strong>
+                    </legend>
+
+                    <?php if ($block->getRatings() && $block->getRatings()->getSize()): ?>
+                        <span id="input-message-box"></span>
+                        <fieldset class="field required review-field-ratings fs-review-form__ratings">
+                            <legend class="label fs-review-form__label"><span>Đánh giá của bạn</span></legend>
+                            <div class="control">
+                                <div class="nested" id="product-review-table">
+                                    <?php foreach ($block->getRatings() as $_rating): ?>
+                                        <?php
+                                        $ratingCode = (string) $_rating->getRatingCode();
+                                        $ratingLabel = $ratingLabels[$ratingCode] ?? $ratingCode;
+                                        ?>
+                                        <div class="field choice review-field-rating fs-review-form__rating-row">
+                                            <label class="label fs-review-form__rating-label"
+                                                   id="<?= $block->escapeHtmlAttr($ratingCode) ?>_rating_label">
+                                                <span><?= $block->escapeHtml($ratingLabel) ?></span>
+                                            </label>
+                                            <div class="control review-control-vote fs-review-form__stars">
+                                                <?php $iterator = 1; foreach ($_rating->getOptions() as $_option): ?>
+                                                    <input
+                                                        type="radio"
+                                                        name="ratings[<?= $block->escapeHtmlAttr($_rating->getId()) ?>]"
+                                                        id="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>"
+                                                        value="<?= $block->escapeHtmlAttr($_option->getId()) ?>"
+                                                        class="radio"
+                                                        data-validate="{'rating-required':true}"
+                                                        aria-labelledby="<?= $block->escapeHtmlAttr($ratingCode) ?>_rating_label <?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>_label"/>
+                                                    <label
+                                                        class="rating-<?= $block->escapeHtmlAttr($iterator) ?>"
+                                                        for="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>"
+                                                        title="<?= $block->escapeHtmlAttr($iterator . ' sao') ?>"
+                                                        id="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>_label">
+                                                        <span><?= $block->escapeHtml($iterator . ' sao') ?></span>
+                                                    </label>
+                                                    <?php $iterator++; ?>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <input type="hidden" name="validate_rating" class="validate-rating" value=""/>
+                            </div>
+                        </fieldset>
+                    <?php endif; ?>
+
+                    <div class="field review-field-text required fs-review-form__field">
+                        <label for="review_field" class="label fs-review-form__label">
+                            <span>Nhận xét của bạn</span>
+                        </label>
+                        <div class="control">
+                            <textarea name="detail"
+                                      id="review_field"
+                                      cols="5"
+                                      rows="5"
+                                      placeholder="Chia sẻ cảm nhận của bạn về chất liệu, form dáng và trải nghiệm sử dụng sản phẩm..."
+                                      data-validate="{required:true}"
+                                      data-bind="value: review().detail"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="fieldset additional_info">
+                    <?= $block->getChildHtml('form_additional_review_info') ?>
+                </fieldset>
+                <div class="actions-toolbar review-form-actions fs-review-form__actions">
+                    <div class="primary actions-primary">
+                        <button type="submit"
+                                class="action submit primary fs-review-form__submit"
+                            <?php if ($buttonLockManager && $buttonLockManager->isDisabled('review_form_submit')): ?>
+                                disabled="disabled"
+                            <?php endif; ?>>
+                            <span>Gửi nhận xét</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <script type="text/x-magento-init">
+            {
+                "[data-role=product-review-form]": {
+                    "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+                },
+                "#review-form": {
+                    "Magento_Review/js/error-placement": {},
+                    "Magento_Review/js/validate-review": {},
+                    "Magento_Review/js/submit-review": {}
+                }
+            }
+            </script>
+        <?php else: ?>
+            <div class="message info notlogged" id="review-form">
+                <div>Bạn cần đăng nhập bằng tài khoản đã mua hàng để nhận xét sản phẩm.</div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

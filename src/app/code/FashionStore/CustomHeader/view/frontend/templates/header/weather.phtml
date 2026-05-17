@@ -167,24 +167,50 @@ $translationStringsJson = json_encode(
         cursor: pointer;
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        padding: 4px;
+        justify-content: center;
+        gap: 5px;
+        width: 42px;
+        height: 42px;
+        padding: 0 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
         font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
     }
 
     #custom-hamburger div {
-        width: 18px;
-        height: 1px;
+        width: 20px;
+        height: 2px;
+        border-radius: 999px;
         background: #fff;
+        transition: width 0.2s ease, background-color 0.2s ease;
+    }
+
+    #custom-hamburger div:nth-child(2) {
+        width: 15px;
+    }
+
+    #custom-hamburger:hover,
+    #custom-hamburger:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.42);
+        outline: none;
+        transform: translateY(-1px);
+    }
+
+    #custom-hamburger:hover div,
+    #custom-hamburger:focus div {
+        width: 20px;
+        background: #f5d08a;
     }
 
     .weather-info,
     #news-title,
     #custom-welcome {
         color: #fff;
-        font-size: 10px;
-        font-weight: 300;
-        letter-spacing: 0.08em;
+        font-size: 11.5px;
+        font-weight: 400;
+        letter-spacing: 0.075em;
         text-transform: uppercase;
         white-space: nowrap;
     }
@@ -192,7 +218,7 @@ $translationStringsJson = json_encode(
     .weather-location,
     .news-label {
         color: #c9a96e;
-        font-size: 10px;
+        font-size: 11.5px;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -239,8 +265,8 @@ $translationStringsJson = json_encode(
         color: #fff !important;
         text-decoration: none !important;
         font-family: 'Cormorant Garamond', serif;
-        font-size: 22px;
-        letter-spacing: 0.35em;
+        font-size: 24px;
+        letter-spacing: 0.32em;
         text-transform: uppercase;
     }
 
@@ -384,17 +410,20 @@ $translationStringsJson = json_encode(
     #dior-side-menu {
         position: fixed;
         top: 0;
-        left: -380px;
-        width: 360px;
+        left: -430px;
+        width: 400px;
         max-width: calc(100vw - 32px);
         height: 100vh;
-        background: #f3f3f3;
+        background:
+            radial-gradient(circle at 18% 0%, rgba(245, 208, 138, 0.32), transparent 34%),
+            linear-gradient(180deg, #fffaf2 0%, #fff 44%, #f6f0e8 100%);
         z-index: 9999;
         transition: left 0.35s ease;
         display: flex;
         flex-direction: column;
         overflow-y: auto;
         font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
+        box-shadow: 18px 0 46px rgba(25, 17, 8, 0.24);
     }
 
     #dior-side-menu.open {
@@ -402,29 +431,145 @@ $translationStringsJson = json_encode(
     }
 
     .menu-header {
-        padding: 24px 24px 18px;
-        border-bottom: 1px solid #ddd;
-        font-size: 12px;
+        padding: 22px 30px 16px;
+        border-bottom: 0;
+        font-size: 13px;
         font-weight: 700;
-        color: #222;
-        letter-spacing: 0.08em;
+        color: #6e5121;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
+        background: transparent;
     }
 
     #close-btn {
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 76px;
+        color: #15110c;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(246, 226, 185, 0.46));
+        border-bottom: 1px solid rgba(138, 106, 47, 0.16);
+        box-shadow: 0 8px 24px rgba(86, 56, 18, 0.08);
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    #close-btn::after {
+        content: "\00d7";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #19140e;
+        color: #f6d48e;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1;
+        box-shadow: 0 8px 18px rgba(25, 20, 14, 0.18);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    #close-btn:hover {
+        background: linear-gradient(135deg, #fff7e8, #f3dfb9);
+        color: #8a6a2f;
+    }
+
+    #close-btn:hover::after {
+        background: #8a6a2f;
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+    .menu-content {
+        padding: 14px 18px 18px;
+    }
+
+    .menu-content .menu-header {
+        margin: 16px 0 8px;
+        padding: 10px 12px 8px;
+        border-bottom: 0;
+        color: #8a6a2f;
+        font-size: 12px;
+    }
+
+    .menu-content .menu-header:first-child {
+        margin-top: 0;
     }
 
     .menu-item {
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 18px 24px;
-        border-bottom: 1px solid #e5e5e5;
-        color: #222;
+        min-height: 58px;
+        margin: 8px 0;
+        padding: 17px 18px 17px 22px;
+        border: 1px solid rgba(138, 106, 47, 0.12);
+        border-radius: 14px;
+        color: #21170d;
+        background: rgba(255, 255, 255, 0.74);
         text-decoration: none;
-        font-size: 14px;
-        font-weight: 300;
+        font-size: 16.5px;
+        font-weight: 600;
+        line-height: 1.35;
+        letter-spacing: 0.01em;
+        box-shadow: 0 8px 20px rgba(71, 48, 18, 0.05);
+        transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .menu-item::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        width: 4px;
+        height: 22px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #d3a64d, #7f5f2a);
+        opacity: 0;
+        transform: translateY(-50%) scaleY(0.5);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .menu-item span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(138, 106, 47, 0.09);
+        color: #8a6a2f;
+        font-size: 15px;
+        font-weight: 700;
+        margin-left: 16px;
+        transition: color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .menu-item:hover,
+    .menu-item:focus {
+        background: #fff7e8;
+        border-color: rgba(138, 106, 47, 0.34);
+        box-shadow: 0 14px 28px rgba(103, 70, 24, 0.12);
+        color: #8a6a2f;
+        text-decoration: none;
+        outline: none;
+        transform: translateX(4px);
+    }
+
+    .menu-item:hover::before,
+    .menu-item:focus::before {
+        opacity: 1;
+        transform: translateY(-50%) scaleY(1);
+    }
+
+    .menu-item:hover span,
+    .menu-item:focus span {
+        background: #8a6a2f;
+        color: #fff;
+        transform: translateX(3px);
     }
 
     .auth-menu-item[hidden] {
@@ -433,8 +578,9 @@ $translationStringsJson = json_encode(
 
     .menu-footer {
         margin-top: auto;
-        padding: 24px;
-        background: #ececec;
+        padding: 24px 28px 28px;
+        background: linear-gradient(135deg, #18130e 0%, #342617 100%);
+        color: #f7e3bd;
     }
 
     .menu-footer a,
@@ -447,23 +593,29 @@ $translationStringsJson = json_encode(
     .menu-switcher {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0;
-        margin-top: 14px;
-        border: 1px solid #d5d5d5;
+        gap: 8px;
+        margin-top: 16px;
+        border: 1px solid rgba(245, 208, 138, 0.2);
+        border-radius: 14px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.08);
     }
 
     .switch-btn {
-        padding: 12px 10px;
-        font-size: 12px;
+        padding: 13px 12px;
+        border-radius: 10px;
+        font-size: 13px;
         text-align: center;
-        background: #d9d9d9;
-        color: #fff;
-        font-weight: 300;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.68);
+        font-weight: 500;
+        line-height: 1.35;
     }
 
     .switch-btn.active {
-        background: #fff;
-        color: #222;
+        background: #f6d48e;
+        color: #1f160d;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
     }
 
     /* ═══ SEARCH OVERLAY ═══ */
@@ -906,6 +1058,63 @@ $translationStringsJson = json_encode(
     .no-underline:visited {
         text-decoration: none !important;
     }
+
+    #dior-side-menu.fs-luxe-menu {
+        background: radial-gradient(circle at 20% -8%, rgba(250, 218, 148, 0.48), transparent 38%), linear-gradient(180deg, #fff8ec 0%, #ffffff 45%, #f3eadb 100%) !important;
+        box-shadow: 22px 0 54px rgba(30, 20, 10, 0.3) !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu .menu-content {
+        padding: 16px 18px 20px !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu .menu-content .menu-header {
+        margin: 18px 0 9px !important;
+        padding: 10px 12px 8px !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #8b6422 !important;
+        font-size: 12px !important;
+        letter-spacing: 0.14em !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu .menu-item {
+        position: relative !important;
+        min-height: 58px !important;
+        margin: 9px 0 !important;
+        padding: 17px 18px 17px 24px !important;
+        border: 1px solid rgba(139, 100, 34, 0.18) !important;
+        border-radius: 16px !important;
+        background: rgba(255, 255, 255, 0.82) !important;
+        color: #20150b !important;
+        font-size: 16.5px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 10px 24px rgba(82, 54, 18, 0.08) !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu .menu-item span {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 50% !important;
+        background: #f3dfb3 !important;
+        color: #7b5417 !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu #close-btn {
+        background: linear-gradient(135deg, #fff6e5, #efd39b) !important;
+        border-bottom: 1px solid rgba(139, 100, 34, 0.2) !important;
+        color: #1c140c !important;
+    }
+
+    #dior-side-menu.fs-luxe-menu .menu-footer {
+        background: linear-gradient(135deg, #17110b 0%, #3a2915 100%) !important;
+        color: #f8dfad !important;
+    }
 </style>
 
 <div id="header-info-bar">
@@ -952,7 +1161,7 @@ $translationStringsJson = json_encode(
 </div>
 
 <div id="menu-overlay"></div>
-<div id="dior-side-menu">
+<div id="dior-side-menu" class="fs-luxe-menu">
     <div class="menu-header" id="close-btn"><?= $escaper->escapeHtml(__('Close')) ?></div>
 
     <div class="menu-content">
@@ -970,7 +1179,7 @@ $translationStringsJson = json_encode(
     </div>
 
     <div class="menu-footer">
-        <a href="#" style="font-size:12px; color:#666; text-decoration:none; display:block; margin-bottom:10px;"><?= $escaper->escapeHtml(__('Contact us')) ?></a>
+        <a href="#" style="font-size:14px; font-weight:600; color:#f7e3bd; text-decoration:none; display:block; margin-bottom:12px;"><?= $escaper->escapeHtml(__('Contact us')) ?></a>
         <div class="menu-switcher">
             <div class="switch-btn active"><?= $escaper->escapeHtml(__('Fashion & Accessories')) ?></div>
             <div class="switch-btn"><?= $escaper->escapeHtml(__('Fragrance & Beauty')) ?></div>

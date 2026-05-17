@@ -68,6 +68,16 @@ $billing = $order->getBillingAddress();
                                 <span class="fs-order-view__item-sku">
                                     Mã sản phẩm: <?= $block->escapeHtml($item['sku']) ?>
                                 </span>
+                                <?php if (!empty($item['can_review'])): ?>
+                                    <a class="fs-order-view__review-btn"
+                                       href="<?= $block->escapeUrl($item['review_url']) ?>">
+                                        Nhận xét sản phẩm
+                                    </a>
+                                <?php elseif (!empty($item['has_reviewed'])): ?>
+                                    <span class="fs-order-view__reviewed-badge">
+                                        Đã nhận xét
+                                    </span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <span class="fs-order-view__item-price"><?= $block->escapeHtml($item['price']) ?></span>
