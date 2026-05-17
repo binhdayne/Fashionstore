@@ -684,6 +684,176 @@ body.fs-mobile-menu-open {
     }
 }
 
+/* Homepage typography */
+body.cms-index-index {
+    background: #f6f3ee !important;
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+}
+
+.cms-index-index .page-main {
+    max-width: 1440px !important;
+    padding-bottom: 72px !important;
+}
+
+.cms-index-index .column.main {
+    color: #111827 !important;
+}
+
+.cms-index-index h1,
+.cms-index-index h2,
+.cms-index-index h3,
+.cms-index-index .block-title strong,
+.cms-index-index .content-heading .title,
+.cms-index-index .fashionstore-recommendation__heading {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-weight: 850 !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+
+.cms-index-index h2,
+.cms-index-index .block-title strong,
+.cms-index-index .content-heading .title,
+.cms-index-index .fashionstore-recommendation__heading {
+    font-size: 38px !important;
+}
+
+.cms-index-index h3 {
+    font-size: 28px !important;
+}
+
+.cms-index-index p,
+.cms-index-index li,
+.cms-index-index .value,
+.cms-index-index .description,
+.cms-index-index .block-content {
+    font-size: 18px !important;
+    line-height: 1.75 !important;
+}
+
+.cms-index-index a {
+    font-weight: 700 !important;
+    text-decoration-thickness: 1px !important;
+    text-underline-offset: 3px !important;
+}
+
+.cms-index-index .fs-home-hero-slider__eyebrow {
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.28em !important;
+}
+
+.cms-index-index .fs-home-hero-slider__title {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 104px !important;
+    font-weight: 400 !important;
+    line-height: 0.98 !important;
+    letter-spacing: 0.12em !important;
+}
+
+.cms-index-index .fs-home-hero-slider__desc {
+    max-width: 46ch !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: none !important;
+}
+
+.cms-index-index .fs-home-hero-slider__button {
+    min-height: 50px !important;
+    padding: 15px 32px !important;
+    border-radius: 999px !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.12em !important;
+}
+
+.cms-index-index .products-grid .product-item-name,
+.cms-index-index .products-grid .product-item-name a,
+.cms-index-index .fashionstore-recommendation__name {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+}
+
+.cms-index-index .products-grid .price-box .price,
+.cms-index-index .fashionstore-recommendation__price,
+.cms-index-index .fashionstore-recommendation__price .price {
+    color: #8a5b13 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 850 !important;
+    line-height: 1.3 !important;
+}
+
+.cms-index-index .products-grid .product-reviews-summary,
+.cms-index-index .products-grid .reviews-actions a {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+}
+
+.cms-index-index .fashionstore-recommendation {
+    margin: 54px 0 !important;
+    padding: 34px !important;
+    border-radius: 18px !important;
+}
+
+.cms-index-index .fashionstore-recommendation__grid {
+    gap: 24px !important;
+}
+
+.cms-index-index .fashionstore-recommendation__card {
+    border-radius: 16px !important;
+    padding: 18px !important;
+}
+
+@media (max-width: 767px) {
+    .cms-index-index .page-main {
+        padding-bottom: 46px !important;
+    }
+
+    .cms-index-index h2,
+    .cms-index-index .block-title strong,
+    .cms-index-index .content-heading .title,
+    .cms-index-index .fashionstore-recommendation__heading {
+        font-size: 28px !important;
+        letter-spacing: 0.08em !important;
+    }
+
+    .cms-index-index p,
+    .cms-index-index li,
+    .cms-index-index .value,
+    .cms-index-index .description,
+    .cms-index-index .block-content {
+        font-size: 16px !important;
+    }
+
+    .cms-index-index .fs-home-hero-slider__title {
+        font-size: 56px !important;
+        white-space: normal !important;
+    }
+
+    .cms-index-index .fs-home-hero-slider__desc {
+        font-size: 16px !important;
+    }
+
+    .cms-index-index .products-grid .product-item-name,
+    .cms-index-index .products-grid .product-item-name a,
+    .cms-index-index .fashionstore-recommendation__name {
+        font-size: 18px !important;
+    }
+}
+
 /* Keep category toolbar clean: only custom price slider should remain visible */
 body.catalog-category-view .filter-current,
 body.catalog-category-view .filter-actions,
