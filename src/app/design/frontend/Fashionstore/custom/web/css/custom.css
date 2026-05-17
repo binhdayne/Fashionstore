@@ -791,6 +791,110 @@ body.cms-index-index {
     transform: translateY(-2px) !important;
 }
 
+.cms-index-index .dior-btn,
+.cms-index-index .dior-btn-dark,
+.cms-index-index a.dior-btn,
+.cms-index-index a.dior-btn-dark {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 50px !important;
+    min-width: 210px !important;
+    padding: 15px 34px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #ff8a1f 0%, #d19a34 52%, #7a4c11 100%) !important;
+    color: #fff !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 850 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.12em !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 18px 34px rgba(255, 138, 31, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+}
+
+.cms-index-index .dior-btn:hover,
+.cms-index-index .dior-btn:focus-visible,
+.cms-index-index .dior-btn-dark:hover,
+.cms-index-index .dior-btn-dark:focus-visible {
+    color: #fff !important;
+    filter: brightness(1.06) !important;
+    box-shadow: 0 22px 42px rgba(255, 138, 31, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    transform: translateY(-2px) !important;
+}
+
+.cms-index-index .dior-banner {
+    background: radial-gradient(circle at center, rgba(209, 154, 52, 0.18) 0%, rgba(32, 32, 32, 0.98) 42%, #151515 100%) !important;
+}
+
+.cms-index-index .dior-banner-title {
+    color: #fff7e8 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 48px !important;
+    font-weight: 900 !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.12em !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.58), 0 0 34px rgba(215, 185, 139, 0.3) !important;
+}
+
+.cms-index-index .dior-banner p {
+    color: #d7b98b !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.16em !important;
+}
+
+.cms-index-index .dior-featured-title {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 46px !important;
+    font-weight: 900 !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+}
+
+.cms-index-index .dior-featured-label {
+    color: #b9802a !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 750 !important;
+    letter-spacing: 0.18em !important;
+}
+
+.cms-index-index .dior-featured-desc {
+    max-width: 78ch !important;
+    color: #4b5563 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 19px !important;
+    font-weight: 500 !important;
+    line-height: 1.7 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.cms-index-index .dior-value-title {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 30px !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.08em !important;
+}
+
+.cms-index-index .dior-value-desc {
+    color: #6b7280 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.02em !important;
+}
+
 .cms-index-index .products-grid .product-item-name,
 .cms-index-index .products-grid .product-item-name a,
 .cms-index-index .fashionstore-recommendation__name {
