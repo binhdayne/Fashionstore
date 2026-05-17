@@ -22,15 +22,17 @@ $datetime = $block->getDateTime();
             margin-bottom: 12px;
         }
         .exchange-header-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 42px;
-            font-weight: 300;
-            letter-spacing: 6px;
+            font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif;
+            font-size: 44px;
+            font-weight: 900;
+            letter-spacing: 5px;
             text-transform: uppercase;
+            color: #fff7e8;
+            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 24px rgba(201, 169, 110, 0.22);
         }
         .exchange-header-time {
-            font-size: 10px;
-            color: #888;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.72);
             letter-spacing: 2px;
             margin-top: 10px;
         }
@@ -59,7 +61,7 @@ $datetime = $block->getDateTime();
             letter-spacing: 1px;
         }
         .exchange-table tbody tr:hover {
-            background: #2d2d2d;
+            background: rgba(255, 247, 232, 0.08);
         }
         .currency-code {
             font-weight: 600;
@@ -75,10 +77,10 @@ $datetime = $block->getDateTime();
         .rate-transfer { color: #fff; }
         .exchange-footer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 10px;
-            color: #666;
-            letter-spacing: 2px;
+            margin-top: 24px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.68);
+            letter-spacing: 1.4px;
         }
         @media (max-width: 768px) {
             .FashionStore-exchange-rate { padding: 40px 20px; }
@@ -117,6 +119,6 @@ $datetime = $block->getDateTime();
             <?php endforeach; ?>
         </tbody>
     </table>
-    <p class="exchange-footer">✦ Nguồn: Vietcombank · Đơn vị: VND ✦</p>
+    <p class="exchange-footer">Nguồn: Vietcombank · Đơn vị: VND</p>
     <?php endif; ?>
 </div>
