@@ -749,30 +749,46 @@ body.cms-index-index {
 
 .cms-index-index .fs-home-hero-slider__title {
     font-family: 'Cormorant Garamond', Georgia, serif !important;
-    font-size: 104px !important;
-    font-weight: 400 !important;
-    line-height: 0.98 !important;
-    letter-spacing: 0.12em !important;
+    font-size: 112px !important;
+    font-weight: 500 !important;
+    line-height: 0.96 !important;
+    letter-spacing: 0.1em !important;
+    color: #fff7e8 !important;
+    text-shadow: 0 5px 24px rgba(0, 0, 0, 0.62), 0 0 38px rgba(215, 185, 139, 0.34) !important;
 }
 
 .cms-index-index .fs-home-hero-slider__desc {
-    max-width: 46ch !important;
+    max-width: 70ch !important;
     font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
     font-size: 18px !important;
-    font-weight: 500 !important;
-    line-height: 1.75 !important;
+    font-weight: 650 !important;
+    line-height: 1.65 !important;
     letter-spacing: 0.04em !important;
     text-transform: none !important;
+    color: rgba(255, 255, 255, 0.96) !important;
+    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.45) !important;
 }
 
 .cms-index-index .fs-home-hero-slider__button {
     min-height: 50px !important;
-    padding: 15px 32px !important;
+    padding: 16px 36px !important;
+    border: 0 !important;
     border-radius: 999px !important;
+    background: linear-gradient(135deg, #ff8a1f 0%, #d19a34 48%, #7a4c11 100%) !important;
+    color: #fff !important;
     font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
     font-size: 15px !important;
     font-weight: 850 !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: 0 18px 34px rgba(255, 138, 31, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.cms-index-index .fs-home-hero-slider__button:hover,
+.cms-index-index .fs-home-hero-slider__button:focus-visible {
+    background: linear-gradient(135deg, #ff9f3f 0%, #dca640 48%, #8a5b13 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 22px 42px rgba(255, 138, 31, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    transform: translateY(-2px) !important;
 }
 
 .cms-index-index .products-grid .product-item-name,
