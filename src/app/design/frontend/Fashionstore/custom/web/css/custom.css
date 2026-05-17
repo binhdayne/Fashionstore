@@ -827,21 +827,40 @@ body.cms-index-index {
 }
 
 .cms-index-index .dior-banner {
-    background: radial-gradient(circle at center, rgba(209, 154, 52, 0.18) 0%, rgba(32, 32, 32, 0.98) 42%, #151515 100%) !important;
+    background:
+        linear-gradient(120deg, rgba(15, 23, 42, 0.96) 0%, rgba(34, 30, 26, 0.98) 48%, rgba(50, 37, 23, 0.98) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 138, 31, 0.08) 100%) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.cms-index-index .dior-banner::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 34px 12% !important;
+    border: 1px solid rgba(215, 185, 139, 0.18) !important;
+    border-radius: 28px !important;
+    background: linear-gradient(135deg, rgba(255, 247, 232, 0.07) 0%, rgba(255, 138, 31, 0.05) 100%) !important;
+    pointer-events: none !important;
+}
+
+.cms-index-index .dior-banner > div {
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 .cms-index-index .dior-banner-title {
-    color: #fff7e8 !important;
+    color: #fffaf2 !important;
     font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
     font-size: 48px !important;
     font-weight: 900 !important;
     line-height: 1.18 !important;
     letter-spacing: 0.12em !important;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.58), 0 0 34px rgba(215, 185, 139, 0.3) !important;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.48) !important;
 }
 
 .cms-index-index .dior-banner p {
-    color: #d7b98b !important;
+    color: #f0bf72 !important;
     font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
     font-size: 18px !important;
     font-weight: 750 !important;
