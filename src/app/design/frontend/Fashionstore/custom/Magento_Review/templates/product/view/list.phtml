@@ -18,6 +18,160 @@ $ratingLabels = [
 ];
 ?>
 <?php if (count($_items)): ?>
+    <style>
+        #customer-reviews,
+        #customer-reviews * {
+            font-family: "Be Vietnam Pro", "Noto Sans", "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
+        }
+
+        #customer-reviews {
+            margin: 44px auto 72px;
+            color: #172033;
+        }
+
+        #customer-reviews .block-title strong {
+            display: block;
+            margin-bottom: 24px;
+            color: #111827;
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        #customer-reviews .review-items {
+            display: grid;
+            gap: 22px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #customer-reviews .review-item {
+            display: grid;
+            grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+            gap: 28px;
+            padding: 28px 30px;
+            border: 1px solid rgba(25, 121, 195, 0.12);
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+        }
+
+        #customer-reviews .review-title {
+            grid-column: 1 / -1;
+            margin: 0;
+            color: #0f172a;
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.28;
+        }
+
+        #customer-reviews .review-ratings {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+            padding: 18px;
+            border-radius: 14px;
+            background: #f8fbff;
+        }
+
+        #customer-reviews .rating-summary {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+        }
+
+        #customer-reviews .rating-label {
+            color: #475569;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        #customer-reviews .rating-result {
+            width: 132px;
+            min-width: 132px;
+        }
+
+        #customer-reviews .rating-result:before,
+        #customer-reviews .rating-result > span:before {
+            font-size: 22px;
+            line-height: 22px;
+            height: 22px;
+        }
+
+        #customer-reviews .rating-result > span {
+            height: 22px;
+        }
+
+        #customer-reviews .review-content-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+            min-width: 0;
+        }
+
+        #customer-reviews .review-content {
+            color: #1f2937;
+            font-size: 19px;
+            font-weight: 500;
+            line-height: 1.75;
+        }
+
+        #customer-reviews .review-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        #customer-reviews .review-details p {
+            margin: 0;
+        }
+
+        #customer-reviews .review-details-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        #customer-reviews .review-details-value {
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        #customer-reviews .review-author,
+        #customer-reviews .review-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 768px) {
+            #customer-reviews .block-title strong {
+                font-size: 28px;
+            }
+
+            #customer-reviews .review-item {
+                grid-template-columns: 1fr;
+                padding: 24px 20px;
+            }
+
+            #customer-reviews .review-title {
+                font-size: 22px;
+            }
+
+            #customer-reviews .review-content {
+                font-size: 17px;
+            }
+        }
+    </style>
     <div class="block review-list" id="customer-reviews">
         <?php if (!$block->getHideTitle()): ?>
             <div class="block-title">

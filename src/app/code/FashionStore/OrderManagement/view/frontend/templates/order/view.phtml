@@ -10,6 +10,71 @@ $totals = $block->getOrderTotals();
 $shipping = $order->getShippingAddress();
 $billing = $order->getBillingAddress();
 ?>
+<style>
+    .fs-order-view,
+    .fs-order-view * {
+        font-family: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif;
+        letter-spacing: 0;
+    }
+
+    .fs-order-view .fs-order-view__review-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .fs-order-view .fs-order-view__review-btn,
+    .fs-order-view .fs-order-view__reviewed-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        min-width: 190px;
+        width: auto;
+        padding: 0 24px;
+        border-radius: 999px;
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1;
+        text-decoration: none;
+        white-space: nowrap;
+        letter-spacing: 0;
+        transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .fs-order-view .fs-order-view__review-btn {
+        border: 1px solid #1979c3 !important;
+        background: #1979c3 !important;
+        color: #fff !important;
+        box-shadow: 0 10px 22px rgba(25, 121, 195, 0.2);
+        text-transform: none;
+    }
+
+    .fs-order-view a.fs-order-view__review-btn,
+    .fs-order-view a.fs-order-view__review-btn:visited,
+    .fs-order-view a.fs-order-view__review-btn span {
+        color: #fff !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+    }
+
+    .fs-order-view .fs-order-view__review-btn:hover,
+    .fs-order-view .fs-order-view__review-btn:focus {
+        border-color: #006bb4 !important;
+        background: #006bb4 !important;
+        color: #fff !important;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(0, 107, 180, 0.26);
+    }
+
+    .fs-order-view .fs-order-view__reviewed-badge {
+        border: 1px solid #b8c4d3;
+        background: #f4f7fb;
+        color: #526174;
+    }
+</style>
 
 <div class="fs-order-view">
     <div class="fs-order-view__header">
@@ -68,16 +133,19 @@ $billing = $order->getBillingAddress();
                                 <span class="fs-order-view__item-sku">
                                     Mã sản phẩm: <?= $block->escapeHtml($item['sku']) ?>
                                 </span>
-                                <?php if (!empty($item['can_review'])): ?>
-                                    <a class="fs-order-view__review-btn"
-                                       href="<?= $block->escapeUrl($item['review_url']) ?>">
-                                        Nhận xét sản phẩm
-                                    </a>
-                                <?php elseif (!empty($item['has_reviewed'])): ?>
-                                    <span class="fs-order-view__reviewed-badge">
-                                        Đã nhận xét
-                                    </span>
-                                <?php endif; ?>
+                                <div class="fs-order-view__review-actions">
+                                    <?php if (!empty($item['can_review'])): ?>
+                                        <a class="fs-order-view__review-btn"
+                                           href="<?= $block->escapeUrl($item['review_url']) ?>"
+                                           role="button">
+                                            <span>Nhận xét sản phẩm</span>
+                                        </a>
+                                    <?php elseif (!empty($item['has_reviewed'])): ?>
+                                        <span class="fs-order-view__reviewed-badge">
+                                            Đã nhận xét
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                         <span class="fs-order-view__item-price"><?= $block->escapeHtml($item['price']) ?></span>
