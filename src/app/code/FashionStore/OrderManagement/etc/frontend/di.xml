@@ -5,4 +5,8 @@
         <plugin name="fashionstore_order_history_plugin"
                 type="FashionStore\OrderManagement\Plugin\Block\OrderHistoryPlugin"/>
     </type>
+    <type name="Magento\Review\Controller\Product\Post">
+        <plugin name="fashionstore_completed_order_review_guard"
+                type="FashionStore\OrderManagement\Plugin\Review\ProductPostPlugin"/>
+    </type>
 </config>

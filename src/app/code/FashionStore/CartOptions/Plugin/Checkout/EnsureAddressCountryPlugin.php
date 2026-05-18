@@ -13,8 +13,8 @@ use Magento\Quote\Api\Data\PaymentInterface;
 class EnsureAddressCountryPlugin
 {
     private const DEFAULT_COUNTRY_ID = 'VN';
-    private const FALLBACK_SHIPPING_METHOD = 'flatrate_flatrate';
-    private const FALLBACK_SHIPPING_DESC = 'Flat Rate - Fixed';
+    private const FALLBACK_SHIPPING_METHOD = 'fashionstore_ghtk_standard';
+    private const FALLBACK_SHIPPING_DESC = 'Giao Hang Tiet Kiem - GHTK - Giao tiet kiem';
 
     private CustomerSession $customerSession;
     private AddressRepositoryInterface $addressRepository;

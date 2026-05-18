@@ -33,10 +33,10 @@ class ApiClient
             'payload' => $payload,
         ]);
 
-        $this->curl->addHeader('Content-Type', 'application/json');
+        $this->curl->addHeader('Content-Type', 'application/x-www-form-urlencoded');
         $this->curl->addHeader('Accept', 'application/json');
         $this->curl->setTimeout(30);
-        $this->curl->post($url, $this->jsonSerializer->serialize($payload));
+        $this->curl->post($url, $payload);
 
         $status = (int) $this->curl->getStatus();
         $body = (string) $this->curl->getBody();

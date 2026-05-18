@@ -2,6 +2,26 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
+        <carriers>
+            <fashionstore_ghtk>
+                <active>1</active>
+                <model>FashionStore\CartOptions\Model\Carrier\Ghtk</model>
+                <title>Giao Hàng Tiết Kiệm</title>
+                <name>GHTK - Giao tiết kiệm</name>
+                <price>20000</price>
+                <sort_order>110</sort_order>
+                <sallowspecific>0</sallowspecific>
+            </fashionstore_ghtk>
+            <fashionstore_ghn>
+                <active>1</active>
+                <model>FashionStore\CartOptions\Model\Carrier\Ghn</model>
+                <title>Giao Hàng Nhanh</title>
+                <name>GHN - Giao nhanh</name>
+                <price>30000</price>
+                <sort_order>120</sort_order>
+                <sallowspecific>0</sallowspecific>
+            </fashionstore_ghn>
+        </carriers>
         <payment>
             <checkmo>
                 <active>0</active>
@@ -51,7 +71,8 @@
                 <production_base_url>https://openapi.zalopay.vn</production_base_url>
                 <environment>sandbox</environment>
                 <expire_duration_seconds>900</expire_duration_seconds>
-                <preferred_payment_method></preferred_payment_method>
+                <cancel_pending_after_minutes>60</cancel_pending_after_minutes>
+                <preferred_payment_method>["vietqr"]</preferred_payment_method>
             </fashionstore_zalopay>
             <fashionstore_banktransfer_qr>
                 <active>1</active>
@@ -61,6 +82,7 @@
                 <allowspecific>0</allowspecific>
                 <group>offline</group>
                 <sort_order>240</sort_order>
+                <cancel_pending_after_minutes>1440</cancel_pending_after_minutes>
             </fashionstore_banktransfer_qr>
         </payment>
     </default>

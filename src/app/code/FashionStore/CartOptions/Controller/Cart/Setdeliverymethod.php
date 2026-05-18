@@ -48,7 +48,7 @@ class Setdeliverymethod extends Action
                 ]);
             }
 
-            $deliveryMethod = (string) $this->getRequest()->getParam('delivery_method', 'standard');
+            $deliveryMethod = (string) $this->getRequest()->getParam('delivery_method', 'ghtk');
             $normalizedMethod = $this->deliveryFeeManager->normalizeMethod($deliveryMethod);
 
             $quote->setTotalsCollectedFlag(false);

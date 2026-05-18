@@ -155,6 +155,174 @@
     letter-spacing: 4px !important;
 }
 
+/* Account pages */
+.account .page-main {
+    max-width: 1320px !important;
+    padding-top: 42px !important;
+    padding-bottom: 72px !important;
+}
+
+.account .columns {
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    align-items: start !important;
+    column-gap: 56px !important;
+}
+
+.account .sidebar-main {
+    width: 280px !important;
+    max-width: 280px !important;
+    float: none !important;
+    padding: 0 !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    clear: none !important;
+}
+
+.account .column.main {
+    float: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    clear: none !important;
+}
+
+.account .columns::before,
+.account .columns::after {
+    display: none !important;
+    content: none !important;
+}
+
+.account .sidebar-main .block-collapsible-nav,
+.account .sidebar-additional .block-collapsible-nav {
+    background: #f7f7f7 !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-radius: 8px !important;
+    padding: 18px 0 !important;
+    margin: 0 !important;
+}
+
+.account .block-collapsible-nav .content {
+    padding: 0 !important;
+}
+
+.account .block-collapsible-nav .items {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.account .block-collapsible-nav .item {
+    margin: 0 !important;
+    border: 0 !important;
+}
+
+.account .block-collapsible-nav .item a,
+.account .block-collapsible-nav .item strong {
+    display: block !important;
+    padding: 13px 22px !important;
+    border-left: 3px solid transparent !important;
+    color: #555 !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+}
+
+.account .block-collapsible-nav .item a:hover {
+    background: #fff !important;
+    color: #111 !important;
+}
+
+.account .block-collapsible-nav .item.current strong,
+.account .block-collapsible-nav .item.current a {
+    background: #fff !important;
+    border-left-color: #f97316 !important;
+    color: #111 !important;
+    font-weight: 750 !important;
+}
+
+.account .block-collapsible-nav .item.current strong::before,
+.account .block-collapsible-nav .item.current a::before {
+    display: none !important;
+}
+
+.account .block-collapsible-nav .item:nth-child(3),
+.account .block-collapsible-nav .item:nth-child(6) {
+    padding-top: 12px !important;
+    margin-top: 12px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.account .page-title-wrapper {
+    margin: 0 0 34px !important;
+}
+
+.account .page-title {
+    margin: 0 !important;
+}
+
+.account .page-title span,
+.account .page-title .base {
+    color: #111 !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-size: 42px !important;
+    font-weight: 400 !important;
+    letter-spacing: 9px !important;
+    line-height: 1.2 !important;
+    text-transform: uppercase !important;
+}
+
+.account .toolbar,
+.account .limiter,
+.account .toolbar-amount {
+    font-size: 17px !important;
+}
+
+.account .products-grid .product-item-name,
+.account .products-grid .product-item-name a {
+    color: #111 !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+}
+
+.account .products-grid .price-box .price {
+    font-size: 18px !important;
+    font-weight: 750 !important;
+}
+
+.account .actions-toolbar .action,
+.account .action.primary,
+.account button.action {
+    min-height: 44px !important;
+    padding: 11px 22px !important;
+    border-radius: 6px !important;
+    font-size: 16px !important;
+    font-weight: 650 !important;
+    line-height: 1.2 !important;
+}
+
+@media (max-width: 768px) {
+    .account .columns {
+        display: block !important;
+    }
+
+    .account .sidebar-main {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 28px !important;
+    }
+
+    .account .page-title span,
+    .account .page-title .base {
+        font-size: 30px !important;
+        letter-spacing: 5px !important;
+    }
+}
+
 .checkout-cart-index .cart-container {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -930,6 +1098,315 @@ body.fs-mobile-menu-open {
     }
 }
 
+/* Homepage typography */
+body.cms-index-index {
+    background: #f6f3ee !important;
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+}
+
+.cms-index-index .page-main {
+    max-width: 1440px !important;
+    padding-bottom: 72px !important;
+}
+
+.cms-index-index .column.main {
+    color: #111827 !important;
+}
+
+.cms-index-index h1,
+.cms-index-index h2,
+.cms-index-index h3,
+.cms-index-index .block-title strong,
+.cms-index-index .content-heading .title,
+.cms-index-index .fashionstore-recommendation__heading {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-weight: 850 !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+
+.cms-index-index h2,
+.cms-index-index .block-title strong,
+.cms-index-index .content-heading .title,
+.cms-index-index .fashionstore-recommendation__heading {
+    font-size: 38px !important;
+}
+
+.cms-index-index h3 {
+    font-size: 28px !important;
+}
+
+.cms-index-index p,
+.cms-index-index li,
+.cms-index-index .value,
+.cms-index-index .description,
+.cms-index-index .block-content {
+    font-size: 18px !important;
+    line-height: 1.75 !important;
+}
+
+.cms-index-index a {
+    font-weight: 700 !important;
+    text-decoration-thickness: 1px !important;
+    text-underline-offset: 3px !important;
+}
+
+.cms-index-index .fs-home-hero-slider__eyebrow {
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.28em !important;
+}
+
+.cms-index-index .fs-home-hero-slider__title {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 112px !important;
+    font-weight: 500 !important;
+    line-height: 0.96 !important;
+    letter-spacing: 0.1em !important;
+    color: #fff7e8 !important;
+    text-shadow: 0 5px 24px rgba(0, 0, 0, 0.62), 0 0 38px rgba(215, 185, 139, 0.34) !important;
+}
+
+.cms-index-index .fs-home-hero-slider__desc {
+    max-width: 70ch !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 650 !important;
+    line-height: 1.65 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: none !important;
+    color: rgba(255, 255, 255, 0.96) !important;
+    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+.cms-index-index .fs-home-hero-slider__button {
+    min-height: 50px !important;
+    padding: 16px 36px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #ff8a1f 0%, #d19a34 48%, #7a4c11 100%) !important;
+    color: #fff !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: 0 18px 34px rgba(255, 138, 31, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.cms-index-index .fs-home-hero-slider__button:hover,
+.cms-index-index .fs-home-hero-slider__button:focus-visible {
+    background: linear-gradient(135deg, #ff9f3f 0%, #dca640 48%, #8a5b13 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 22px 42px rgba(255, 138, 31, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    transform: translateY(-2px) !important;
+}
+
+.cms-index-index .dior-btn,
+.cms-index-index .dior-btn-dark,
+.cms-index-index a.dior-btn,
+.cms-index-index a.dior-btn-dark {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 50px !important;
+    min-width: 210px !important;
+    padding: 15px 34px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #ff8a1f 0%, #d19a34 52%, #7a4c11 100%) !important;
+    color: #fff !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 850 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.12em !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 18px 34px rgba(255, 138, 31, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+}
+
+.cms-index-index .dior-btn:hover,
+.cms-index-index .dior-btn:focus-visible,
+.cms-index-index .dior-btn-dark:hover,
+.cms-index-index .dior-btn-dark:focus-visible {
+    color: #fff !important;
+    filter: brightness(1.06) !important;
+    box-shadow: 0 22px 42px rgba(255, 138, 31, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    transform: translateY(-2px) !important;
+}
+
+.cms-index-index .dior-banner {
+    background:
+        linear-gradient(120deg, rgba(15, 23, 42, 0.96) 0%, rgba(34, 30, 26, 0.98) 48%, rgba(50, 37, 23, 0.98) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 138, 31, 0.08) 100%) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.cms-index-index .dior-banner::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 34px 12% !important;
+    border: 1px solid rgba(215, 185, 139, 0.18) !important;
+    border-radius: 28px !important;
+    background: linear-gradient(135deg, rgba(255, 247, 232, 0.07) 0%, rgba(255, 138, 31, 0.05) 100%) !important;
+    pointer-events: none !important;
+}
+
+.cms-index-index .dior-banner > div {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.cms-index-index .dior-banner-title {
+    color: #fffaf2 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 48px !important;
+    font-weight: 900 !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.12em !important;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.48) !important;
+}
+
+.cms-index-index .dior-banner p {
+    color: #f0bf72 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.16em !important;
+}
+
+.cms-index-index .dior-featured-title {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 46px !important;
+    font-weight: 900 !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+}
+
+.cms-index-index .dior-featured-label {
+    color: #b9802a !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 750 !important;
+    letter-spacing: 0.18em !important;
+}
+
+.cms-index-index .dior-featured-desc {
+    max-width: 78ch !important;
+    color: #4b5563 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 19px !important;
+    font-weight: 500 !important;
+    line-height: 1.7 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.cms-index-index .dior-value-title {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 30px !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.08em !important;
+}
+
+.cms-index-index .dior-value-desc {
+    color: #6b7280 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.cms-index-index .products-grid .product-item-name,
+.cms-index-index .products-grid .product-item-name a,
+.cms-index-index .fashionstore-recommendation__name {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+}
+
+.cms-index-index .products-grid .price-box .price,
+.cms-index-index .fashionstore-recommendation__price,
+.cms-index-index .fashionstore-recommendation__price .price {
+    color: #8a5b13 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 850 !important;
+    line-height: 1.3 !important;
+}
+
+.cms-index-index .products-grid .product-reviews-summary,
+.cms-index-index .products-grid .reviews-actions a {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+}
+
+.cms-index-index .fashionstore-recommendation {
+    margin: 54px 0 !important;
+    padding: 34px !important;
+    border-radius: 18px !important;
+}
+
+.cms-index-index .fashionstore-recommendation__grid {
+    gap: 24px !important;
+}
+
+.cms-index-index .fashionstore-recommendation__card {
+    border-radius: 16px !important;
+    padding: 18px !important;
+}
+
+@media (max-width: 767px) {
+    .cms-index-index .page-main {
+        padding-bottom: 46px !important;
+    }
+
+    .cms-index-index h2,
+    .cms-index-index .block-title strong,
+    .cms-index-index .content-heading .title,
+    .cms-index-index .fashionstore-recommendation__heading {
+        font-size: 28px !important;
+        letter-spacing: 0.08em !important;
+    }
+
+    .cms-index-index p,
+    .cms-index-index li,
+    .cms-index-index .value,
+    .cms-index-index .description,
+    .cms-index-index .block-content {
+        font-size: 16px !important;
+    }
+
+    .cms-index-index .fs-home-hero-slider__title {
+        font-size: 56px !important;
+        white-space: normal !important;
+    }
+
+    .cms-index-index .fs-home-hero-slider__desc {
+        font-size: 16px !important;
+    }
+
+    .cms-index-index .products-grid .product-item-name,
+    .cms-index-index .products-grid .product-item-name a,
+    .cms-index-index .fashionstore-recommendation__name {
+        font-size: 18px !important;
+    }
+}
+
 /* Keep category toolbar clean: only custom price slider should remain visible */
 body.catalog-category-view .filter-current,
 body.catalog-category-view .filter-actions,
@@ -939,6 +1416,265 @@ body.catalog-category-view .block-layered-nav,
 body.catalog-category-view .filter-options-title,
 body.catalog-category-view .filter-options-content {
     display: none !important;
+}
+
+/* Category/search product cards */
+body.catalog-category-view,
+body.catalogsearch-result-index {
+    background: #f5f3ef !important;
+}
+
+.catalog-category-view .page-main,
+.catalogsearch-result-index .page-main {
+    background: transparent !important;
+}
+
+.catalog-category-view .columns,
+.catalogsearch-result-index .columns {
+    padding-top: 28px !important;
+}
+
+.catalog-category-view .products-grid .product-item,
+.catalogsearch-result-index .products-grid .product-item {
+    margin-bottom: 72px !important;
+}
+
+.catalog-category-view .products-grid .product-item-info,
+.catalogsearch-result-index .products-grid .product-item-info {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    padding: 14px 14px 34px !important;
+    border: 1px solid transparent !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04) !important;
+    overflow: visible !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover,
+.catalogsearch-result-index .products-grid .product-item-info:hover {
+    border-color: rgba(209, 154, 52, 0.34) !important;
+    background: linear-gradient(180deg, #fff 0%, #fffaf1 100%) !important;
+    box-shadow: 0 22px 46px rgba(15, 23, 42, 0.15), 0 12px 24px rgba(209, 154, 52, 0.16) !important;
+    transform: translateY(-4px) !important;
+}
+
+.catalog-category-view .products-grid .product-item-photo,
+.catalogsearch-result-index .products-grid .product-item-photo {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+    background: #f4f4f2 !important;
+}
+
+.catalog-category-view .products-grid .product-image-container,
+.catalog-category-view .products-grid .product-image-wrapper,
+.catalogsearch-result-index .products-grid .product-image-container,
+.catalogsearch-result-index .products-grid .product-image-wrapper {
+    display: block !important;
+    width: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background: #f4f4f2 !important;
+}
+
+.catalog-category-view .products-grid .product-image-wrapper,
+.catalogsearch-result-index .products-grid .product-image-wrapper {
+    aspect-ratio: 4 / 5 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+}
+
+.catalog-category-view .products-grid .product-image-photo,
+.catalogsearch-result-index .products-grid .product-image-photo {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border-radius: 16px !important;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition: transform 0.45s ease, filter 0.45s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover .product-image-photo,
+.catalogsearch-result-index .products-grid .product-item-info:hover .product-image-photo {
+    filter: saturate(1.04) contrast(1.02) !important;
+    transform: scale(1.045) !important;
+}
+
+.catalog-category-view .products-grid .product-item-name,
+.catalogsearch-result-index .products-grid .product-item-name {
+    margin: 0 0 10px !important;
+    min-height: 48px !important;
+}
+
+.catalog-category-view .products-grid .product-item-name a,
+.catalogsearch-result-index .products-grid .product-item-name a {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+    transition: color 0.18s ease !important;
+}
+
+.catalog-category-view .products-grid .product-item-info:hover .product-item-name a,
+.catalogsearch-result-index .products-grid .product-item-info:hover .product-item-name a {
+    color: #8a5b13 !important;
+}
+
+.catalog-category-view .products-grid .price-box .price,
+.catalogsearch-result-index .products-grid .price-box .price {
+    color: #111827 !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+}
+
+.catalog-category-view .products-grid .product-reviews-summary,
+.catalogsearch-result-index .products-grid .product-reviews-summary {
+    margin: 0 0 12px !important;
+}
+
+.catalog-category-view .products-grid .product-item-actions,
+.catalogsearch-result-index .products-grid .product-item-actions {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 18px 0 0 !important;
+    min-height: 50px !important;
+    padding: 0 !important;
+    transform: none !important;
+}
+
+.catalog-category-view .products-grid .actions-primary,
+.catalogsearch-result-index .products-grid .actions-primary,
+.catalog-category-view .products-grid .actions-primary .action.tocart,
+.catalogsearch-result-index .products-grid .actions-primary .action.tocart {
+    display: none !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary,
+.catalogsearch-result-index .products-grid .actions-secondary {
+    display: flex !important;
+    width: 100% !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.towishlist,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist,
+.catalog-category-view .products-grid .actions-secondary .action.towishlist:hover,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist:hover {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 46px !important;
+    width: 100% !important;
+    padding: 0 18px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #111827 0%, #8a6a2f 58%, #d19a34 100%) !important;
+    color: #fff !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    box-shadow: 0 12px 24px rgba(31, 41, 55, 0.18) !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.towishlist::before,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist::before {
+    content: "♡" !important;
+    margin-right: 8px !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.towishlist::after,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist::after {
+    content: "Thêm vào yêu thích" !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.towishlist span,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist span {
+    display: none !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.towishlist:hover,
+.catalogsearch-result-index .products-grid .actions-secondary .action.towishlist:hover {
+    filter: brightness(1.06) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 16px 30px rgba(31, 41, 55, 0.26) !important;
+}
+
+.catalog-category-view .products-grid .actions-secondary .action.tocompare,
+.catalogsearch-result-index .products-grid .actions-secondary .action.tocompare {
+    display: none !important;
+}
+
+.products-grid .product-item-info {
+    padding-bottom: 34px !important;
+    border-radius: 18px !important;
+    overflow: visible !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease !important;
+}
+
+.products-grid .product-item-info:hover {
+    border-color: rgba(209, 154, 52, 0.34) !important;
+    background: linear-gradient(180deg, #fff 0%, #fffaf1 100%) !important;
+    box-shadow: 0 22px 46px rgba(15, 23, 42, 0.15), 0 12px 24px rgba(209, 154, 52, 0.16) !important;
+    transform: translateY(-4px) !important;
+}
+
+.products-grid .product-item-photo,
+.products-grid .product-image-container,
+.products-grid .product-image-wrapper {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background: #f4f4f2 !important;
+}
+
+.products-grid .product-image-wrapper {
+    aspect-ratio: 4 / 5 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+}
+
+.products-grid .product-image-photo {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border-radius: 16px !important;
+    opacity: 1 !important;
+    transition: transform 0.45s ease, filter 0.45s ease !important;
+}
+
+.products-grid .product-item-info:hover .product-image-photo {
+    filter: saturate(1.04) contrast(1.02) !important;
+    transform: scale(1.045) !important;
+}
+
+.products-grid .product-item-actions {
+    position: static !important;
+    clear: both !important;
+    margin-top: 18px !important;
+    min-height: 50px !important;
+    transform: none !important;
 }
 
 /* Product detail: size chips and +/- quantity controls */
@@ -1031,3 +1767,621 @@ body.catalog-category-view .filter-options-content {
 /* Hide shipping step UI - component still runs to load saved address */
 .checkout-index-index #shipping { display: none !important; }
 .checkout-index-index #opc-shipping_method { display: none !important; }
+
+/* Account content polish */
+.account .column.main {
+    color: #1f2933 !important;
+    font-size: 17px !important;
+}
+
+.account .column.main a {
+    color: #0b72c9 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+.account .column.main a:hover {
+    color: #111 !important;
+}
+
+.account .column.main .block {
+    margin-bottom: 34px !important;
+}
+
+.account .column.main .block-title,
+.account .column.main .fieldset > .legend {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 16px !important;
+    margin: 0 0 18px !important;
+    padding: 0 0 14px !important;
+    border-bottom: 1px solid rgba(17, 24, 39, 0.14) !important;
+}
+
+.account .column.main .block-title strong,
+.account .column.main .fieldset > .legend span {
+    color: #111827 !important;
+    font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
+    font-size: 26px !important;
+    font-weight: 650 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+}
+
+.account .column.main .block-title .action,
+.account .column.main .block-title a,
+.account .column.main .fieldset > .legend .action,
+.account .column.main .fieldset > .legend a {
+    font-size: 15px !important;
+}
+
+.account .box,
+.account .block-dashboard-info .box,
+.account .block-dashboard-addresses .box,
+.account .block-reviews-dashboard .item,
+.account .block-dashboard-orders .table-wrapper,
+.account .form-edit-account,
+.account .form-address-edit,
+.account .form-newsletter-manage,
+.account .form.form-wishlist-items {
+    background: #fff !important;
+    border: 1px solid rgba(17, 24, 39, 0.1) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06) !important;
+}
+
+.account .box,
+.account .block-reviews-dashboard .item {
+    padding: 22px 24px !important;
+}
+
+.account .box-title,
+.account .box-title span,
+.account .box-title strong {
+    color: #111827 !important;
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.35 !important;
+}
+
+.account .box-content,
+.account .box-content p,
+.account .block-content,
+.account .block-content p {
+    color: #374151 !important;
+    font-size: 17px !important;
+    line-height: 1.65 !important;
+}
+
+.account .box-actions {
+    margin-top: 14px !important;
+}
+
+.account.customer-account-index .block-dashboard-info .block-content,
+.account.customer-account-index .block-dashboard-addresses .block-content {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+    align-items: stretch !important;
+}
+
+.account.customer-account-index .block-dashboard-info .block-content::before,
+.account.customer-account-index .block-dashboard-info .block-content::after,
+.account.customer-account-index .block-dashboard-addresses .block-content::before,
+.account.customer-account-index .block-dashboard-addresses .block-content::after {
+    display: none !important;
+    content: none !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box,
+.account.customer-account-index .block-dashboard-addresses .box {
+    float: none !important;
+    clear: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    min-height: 190px !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box:nth-of-type(1),
+.account.customer-account-index .block-dashboard-addresses .box:nth-of-type(1) {
+    grid-column: 1 !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box-newsletter {
+    display: none !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box:nth-of-type(2),
+.account.customer-account-index .block-dashboard-addresses .box:nth-of-type(2) {
+    grid-column: 2 !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box-title,
+.account.customer-account-index .block-dashboard-addresses .box-title {
+    margin-bottom: 12px !important;
+}
+
+.account.customer-account-index .block-dashboard-info .box-content,
+.account.customer-account-index .block-dashboard-addresses .box-content {
+    min-height: 76px !important;
+}
+
+.account .table-wrapper {
+    overflow: hidden !important;
+}
+
+.account table.data,
+.account .table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+}
+
+.account table.data thead th,
+.account .table thead th {
+    background: #fafafa !important;
+    border-bottom: 1px solid rgba(17, 24, 39, 0.1) !important;
+    color: #4b5563 !important;
+    font-size: 15px !important;
+    font-weight: 750 !important;
+    letter-spacing: 0.02em !important;
+    padding: 15px 16px !important;
+    text-transform: uppercase !important;
+}
+
+.account table.data tbody td,
+.account .table tbody td {
+    border-top: 1px solid rgba(17, 24, 39, 0.07) !important;
+    color: #1f2937 !important;
+    font-size: 16px !important;
+    padding: 15px 16px !important;
+    vertical-align: middle !important;
+}
+
+.account .form-edit-account,
+.account .form-address-edit,
+.account .form-newsletter-manage,
+.account .form.form-wishlist-items {
+    padding: 28px !important;
+}
+
+.account .fieldset {
+    margin: 0 0 28px !important;
+}
+
+.account .fieldset .field {
+    margin-bottom: 22px !important;
+}
+
+.account .column.main .fieldset .label,
+.account .column.main .field .label,
+.account .column.main label {
+    color: #111827 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+}
+
+.account .column.main input.input-text,
+.account .column.main input[type='text'],
+.account .column.main input[type='email'],
+.account .column.main input[type='password'],
+.account .column.main input[type='tel'],
+.account .column.main select,
+.account .column.main textarea {
+    min-height: 48px !important;
+    border: 1px solid rgba(17, 24, 39, 0.18) !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #111827 !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    padding: 11px 14px !important;
+    box-shadow: none !important;
+}
+
+.account .column.main input.input-text:focus,
+.account .column.main input[type='text']:focus,
+.account .column.main input[type='email']:focus,
+.account .column.main input[type='password']:focus,
+.account .column.main input[type='tel']:focus,
+.account .column.main select:focus,
+.account .column.main textarea:focus {
+    border-color: #111827 !important;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08) !important;
+    outline: none !important;
+}
+
+.account .column.main .choice input[type='checkbox'],
+.account .column.main .choice input[type='radio'] {
+    width: 18px !important;
+    height: 18px !important;
+    margin-right: 8px !important;
+    accent-color: #111827 !important;
+}
+
+.account .actions-toolbar {
+    margin-top: 22px !important;
+}
+
+.account .actions-toolbar .primary,
+.account .actions-toolbar .secondary {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.account .action.primary,
+.account button.action.primary,
+.account .actions-toolbar .action.primary,
+.account .actions-toolbar button.action {
+    background: #111827 !important;
+    border-color: #111827 !important;
+    color: #fff !important;
+}
+
+.account .action.primary:hover,
+.account button.action.primary:hover,
+.account .actions-toolbar .action.primary:hover,
+.account .actions-toolbar button.action:hover {
+    background: #333 !important;
+    border-color: #333 !important;
+}
+
+.account .actions-toolbar .secondary .action,
+.account .action.back {
+    background: #fff !important;
+    border: 1px solid rgba(17, 24, 39, 0.14) !important;
+    color: #1f2937 !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-items {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 38px 34px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-info {
+    width: 100% !important;
+    min-height: 100% !important;
+    padding: 22px !important;
+    background: #fff !important;
+    border: 1px solid rgba(17, 24, 39, 0.1) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-info:hover {
+    border-color: rgba(17, 24, 39, 0.18) !important;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.09) !important;
+    transform: translateY(-4px) !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-image-container,
+.wishlist-index-index .products-grid.wishlist .product-image-wrapper {
+    width: 100% !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    background: #f5f5f5 !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-image-photo {
+    border-radius: 12px !important;
+    transition: transform 0.18s ease !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-info:hover .product-image-photo {
+    transform: scale(1.025) !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-name {
+    margin-top: 16px !important;
+    min-height: 50px !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-reviews-summary {
+    margin: 10px 0 !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .price-box {
+    margin: 12px 0 0 !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-comment,
+.wishlist-index-index .products-grid.wishlist .field.comment-box,
+.wishlist-index-index .products-grid.wishlist .comment-box,
+.wishlist-index-index .products-grid.wishlist textarea[name='description'] {
+    display: none !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-actions,
+.wishlist-index-index .products-grid.wishlist .box-tocart,
+.wishlist-index-index .products-grid.wishlist .tocart,
+.wishlist-index-index .products-grid.wishlist .action.tocart {
+    display: none !important;
+}
+
+.wishlist-index-index .products-grid.wishlist .product-item-actions {
+    position: static !important;
+}
+
+.wishlist-index-index .form.form-wishlist-items {
+    padding-bottom: 34px !important;
+}
+
+.wishlist-index-index .form-wishlist-items .actions-toolbar {
+    clear: both !important;
+    position: static !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    margin-top: 32px !important;
+    padding-top: 22px !important;
+    border-top: 1px solid rgba(17, 24, 39, 0.1) !important;
+}
+
+.wishlist-index-index .form-wishlist-items .actions-toolbar .primary {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
+}
+
+.wishlist-index-index .form-wishlist-items .actions-toolbar .action.tocart {
+    display: none !important;
+}
+
+.wishlist-index-index .form-wishlist-items .actions-toolbar .action.update,
+.wishlist-index-index .form-wishlist-items .actions-toolbar .action.share {
+    min-height: 44px !important;
+    padding: 12px 22px !important;
+    border-radius: 8px !important;
+    background: #111827 !important;
+    border: 1px solid #111827 !important;
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+.wishlist-index-index .form-wishlist-items .actions-toolbar .action.update:hover,
+.wishlist-index-index .form-wishlist-items .actions-toolbar .action.share:hover {
+    background: #333 !important;
+    border-color: #333 !important;
+}
+
+.review-customer-index .table-wrapper.reviews {
+    background: #fff !important;
+    border: 1px solid rgba(17, 24, 39, 0.1) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06) !important;
+    overflow: hidden !important;
+}
+
+.review-customer-index .table-reviews {
+    table-layout: fixed !important;
+    margin: 0 !important;
+}
+
+.review-customer-index .table-reviews thead th {
+    background: #fafafa !important;
+    color: #4b5563 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.03em !important;
+    padding: 18px 20px !important;
+}
+
+.review-customer-index .table-reviews tbody td {
+    color: #1f2937 !important;
+    font-size: 17px !important;
+    line-height: 1.55 !important;
+    padding: 20px !important;
+}
+
+.review-customer-index .table-reviews .col.date {
+    width: 110px !important;
+    color: #6b7280 !important;
+    font-weight: 600 !important;
+}
+
+.review-customer-index .table-reviews .col.item {
+    width: 220px !important;
+}
+
+.review-customer-index .table-reviews .col.summary {
+    width: 150px !important;
+}
+
+.review-customer-index .table-reviews .col.description {
+    width: auto !important;
+}
+
+.review-customer-index .table-reviews .col.actions {
+    width: 140px !important;
+    text-align: right !important;
+}
+
+.review-customer-index .table-reviews .product-name,
+.review-customer-index .table-reviews .product-name a {
+    color: #0b72c9 !important;
+    font-size: 17px !important;
+    font-weight: 750 !important;
+}
+
+.review-customer-index .table-reviews .rating-summary {
+    white-space: nowrap !important;
+}
+
+.review-customer-index .table-reviews .rating-result {
+    transform: scale(1.08);
+    transform-origin: left center;
+}
+
+.review-customer-index .table-reviews .col.description {
+    color: #374151 !important;
+}
+
+.review-customer-index .table-reviews .col.actions a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 38px !important;
+    padding: 8px 14px !important;
+    border: 1px solid rgba(17, 24, 39, 0.12) !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #0b72c9 !important;
+    font-size: 15px !important;
+    font-weight: 750 !important;
+}
+
+.review-customer-index .table-reviews .col.actions a:hover {
+    border-color: #111827 !important;
+    color: #111827 !important;
+}
+
+.review-customer-index .toolbar {
+    margin-top: 18px !important;
+}
+
+.review-customer-index .toolbar .limiter select {
+    width: 64px !important;
+    min-height: 44px !important;
+    text-align: center !important;
+}
+
+/* Rounded form fields across the storefront */
+input.input-text:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='hidden']):not([type='submit']),
+input[type='text']:not(.qty),
+input[type='email'],
+input[type='password'],
+input[type='tel'],
+input[type='number']:not(.qty),
+input[type='search'],
+select,
+textarea {
+    border-radius: 10px !important;
+}
+
+.block.newsletter input[type='email'],
+.page-footer input[type='email'],
+.footer input[type='email'],
+.newsletter input[type='email'] {
+    border-radius: 10px 0 0 10px !important;
+}
+
+.block.newsletter .action.subscribe,
+.page-footer .action.subscribe,
+.footer .action.subscribe,
+.newsletter .action.subscribe {
+    border-radius: 0 10px 10px 0 !important;
+}
+
+/* Product page review feedback */
+.catalog-product-view .breadcrumbs {
+    display: none !important;
+}
+
+.catalog-product-view .page.messages {
+    max-width: 1240px !important;
+    margin: 26px auto 18px !important;
+    padding: 0 24px !important;
+}
+
+.catalog-product-view .message.error,
+.catalog-product-view .message-error,
+.catalog-product-view .messages .message-error,
+.catalog-product-view .messages .message.error {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 70px !important;
+    margin: 0 !important;
+    padding: 20px 28px 20px 76px !important;
+    border: 1px solid rgba(220, 38, 38, 0.22) !important;
+    border-left: 8px solid #dc2626 !important;
+    border-radius: 18px !important;
+    background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 100%) !important;
+    color: #991b1b !important;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    line-height: 1.45 !important;
+    box-shadow: 0 18px 42px rgba(220, 38, 38, 0.14) !important;
+}
+
+.catalog-product-view .message.error > div,
+.catalog-product-view .message-error > div,
+.catalog-product-view .messages .message-error > div,
+.catalog-product-view .messages .message.error > div {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+.catalog-product-view .message.error > div::before,
+.catalog-product-view .message-error > div::before,
+.catalog-product-view .messages .message-error > div::before,
+.catalog-product-view .messages .message.error > div::before {
+    display: none !important;
+    content: none !important;
+}
+
+.catalog-product-view .message.error::before,
+.catalog-product-view .message-error::before,
+.catalog-product-view .messages .message-error::before,
+.catalog-product-view .messages .message.error::before {
+    content: "!" !important;
+    position: absolute !important;
+    left: 26px !important;
+    top: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #dc2626 !important;
+    color: #fff !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    transform: translateY(-50%) !important;
+}
+
+.search-autocomplete,
+.fs-search-categories,
+.minisearch input[type='text'],
+.block-search input[type='text'],
+.block-search input[type='search'] {
+    border-radius: 10px !important;
+}
+
+@media (max-width: 1100px) {
+    .wishlist-index-index .products-grid.wishlist .product-items {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .account.customer-account-index .block-dashboard-info .block-content,
+    .account.customer-account-index .block-dashboard-addresses .block-content,
+    .wishlist-index-index .products-grid.wishlist .product-items {
+        grid-template-columns: 1fr !important;
+    }
+}

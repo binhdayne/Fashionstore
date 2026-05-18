@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace FashionStore\OrderManagement\Block\Order;
 
+use FashionStore\OrderManagement\Model\ReviewEligibility;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Framework\Registry;
@@ -18,6 +20,8 @@ class View extends Template
     private Registry $registry;
     private PriceHelper $priceHelper;
     private FormKey $formKey;
+    private CustomerSession $customerSession;
+    private ReviewEligibility $reviewEligibility;
 
     public function __construct(
         Template\Context $context,
@@ -26,6 +30,8 @@ class View extends Template
         Registry $registry,
         PriceHelper $priceHelper,
         FormKey $formKey,
+        CustomerSession $customerSession,
+        ReviewEligibility $reviewEligibility,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -34,6 +40,8 @@ class View extends Template
         $this->registry = $registry;
         $this->priceHelper = $priceHelper;
         $this->formKey = $formKey;
+        $this->customerSession = $customerSession;
+        $this->reviewEligibility = $reviewEligibility;
     }
 
     public function getOrder(): ?Order
@@ -49,11 +57,24 @@ class View extends Template
         }
 
         $items = [];
+        $customerId = (int) ($order->getCustomerId() ?: $this->customerSession->getCustomerId());
+        $isComplete = $order->getState() === Order::STATE_COMPLETE;
+
         foreach ($order->getAllVisibleItems() as $item) {
+            $productId = (int) $item->getProductId();
+            $orderItemId = (int) $item->getItemId();
             $imageUrl = $this->getProductImageUrl(
-                (int) $item->getProductId(),
+                $productId,
                 (string) $item->getSku()
             );
+            $hasReviewed = $customerId > 0
+                && $orderItemId > 0
+                && $this->reviewEligibility->hasCustomerReviewedOrderItem($customerId, $orderItemId);
+            $canReview = $isComplete
+                && $customerId > 0
+                && $productId > 0
+                && $orderItemId > 0
+                && !$hasReviewed;
             $options = [];
             if ($item->getProductOptions()) {
                 $opts = $item->getProductOptions();
@@ -64,6 +85,8 @@ class View extends Template
                 }
             }
             $items[] = [
+                'product_id' => $productId,
+                'order_item_id' => $orderItemId,
                 'name' => $item->getName(),
                 'sku' => $item->getSku(),
                 'image_url' => $imageUrl,
@@ -71,6 +94,9 @@ class View extends Template
                 'price' => $this->priceHelper->currency((float) $item->getPrice(), true, false),
                 'subtotal' => $this->priceHelper->currency((float) $item->getRowTotal(), true, false),
                 'options' => $options,
+                'can_review' => $canReview,
+                'has_reviewed' => $hasReviewed,
+                'review_url' => $this->getProductReviewUrl($productId, $orderItemId),
             ];
         }
 
@@ -175,6 +201,22 @@ class View extends Template
     public function getFormKey(): string
     {
         return $this->formKey->getFormKey();
+    }
+
+    private function getProductReviewUrl(int $productId, int $orderItemId): string
+    {
+        if ($productId <= 0) {
+            return '#';
+        }
+
+        return $this->getUrl(
+            'review/product/list',
+            [
+                'id' => $productId,
+                'order_item_id' => $orderItemId,
+                '_fragment' => 'review-form',
+            ]
+        );
     }
 
     private function getProductImageUrl(int $productId, string $sku): string

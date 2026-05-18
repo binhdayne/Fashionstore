@@ -1,0 +1,142 @@
+<?php
+/**
+ * @var \Magento\Review\Block\Form $block
+ * @var \FashionStore\OrderManagement\ViewModel\ReviewFormCustomer|null $reviewCustomer
+ */
+$reviewCustomer = $block->getData('review_customer');
+$customerName = $reviewCustomer ? $reviewCustomer->getCustomerName() : '';
+$orderItemId = (int) $block->getRequest()->getParam('order_item_id');
+$ratingLabels = [
+    'Quality' => 'Chất lượng',
+    'Value' => 'Giá trị',
+    'Price' => 'Giá cả',
+];
+?>
+<div class="block review-add fs-review-form">
+    <div class="block-title fs-review-form__title">
+        <strong>Viết nhận xét của bạn</strong>
+    </div>
+    <div class="block-content fs-review-form__content">
+        <?php if ($block->getAllowWriteReviewFlag()): ?>
+            <form action="<?= $block->escapeUrl($block->getAction()) ?>"
+                  class="review-form fs-review-form__form"
+                  method="post"
+                  id="review-form"
+                  data-role="product-review-form"
+                  data-bind="scope: 'review-form'">
+                <?= $block->getBlockHtml('formkey') ?>
+                <?= $block->getChildHtml('form_fields_before') ?>
+                <input type="hidden"
+                       name="nickname"
+                       id="nickname_field"
+                       value="<?= $block->escapeHtmlAttr($customerName) ?>"/>
+                <input type="hidden"
+                       name="title"
+                       id="summary_field"
+                       value="Nhận xét sản phẩm"/>
+                <input type="hidden" name="order_item_id" value="<?= (int) $orderItemId ?>"/>
+
+                <fieldset class="fieldset review-fieldset fs-review-form__fieldset"
+                          data-hasrequired="* Trường bắt buộc">
+                    <legend class="legend review-legend fs-review-form__legend">
+                        <span>Bạn đang nhận xét:</span>
+                        <strong><?= $block->escapeHtml($block->getProductInfo()->getName()) ?></strong>
+                    </legend>
+
+                    <?php if ($block->getRatings() && $block->getRatings()->getSize()): ?>
+                        <span id="input-message-box"></span>
+                        <fieldset class="field required review-field-ratings fs-review-form__ratings">
+                            <legend class="label fs-review-form__label">
+                                <span>Đánh giá của bạn</span>
+                            </legend>
+                            <div class="control">
+                                <div class="nested" id="product-review-table">
+                                    <?php foreach ($block->getRatings() as $_rating): ?>
+                                        <?php
+                                        $ratingCode = (string) $_rating->getRatingCode();
+                                        $ratingLabel = $ratingLabels[$ratingCode] ?? $ratingCode;
+                                        ?>
+                                        <div class="field choice review-field-rating fs-review-form__rating-row">
+                                            <label class="label fs-review-form__rating-label"
+                                                   id="<?= $block->escapeHtmlAttr($ratingCode) ?>_rating_label">
+                                                <span><?= $block->escapeHtml($ratingLabel) ?></span>
+                                            </label>
+                                            <div class="control review-control-vote fs-review-form__stars">
+                                                <?php $options = $_rating->getOptions(); ?>
+                                                <?php $iterator = 1; foreach ($options as $_option): ?>
+                                                    <input
+                                                        type="radio"
+                                                        name="ratings[<?= $block->escapeHtmlAttr($_rating->getId()) ?>]"
+                                                        id="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>"
+                                                        value="<?= $block->escapeHtmlAttr($_option->getId()) ?>"
+                                                        class="radio"
+                                                        data-validate="{'rating-required':true}"
+                                                        aria-labelledby="<?= $block->escapeHtmlAttr($ratingCode) ?>_rating_label <?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>_label"/>
+                                                    <label
+                                                        class="rating-<?= $block->escapeHtmlAttr($iterator) ?>"
+                                                        for="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>"
+                                                        title="<?= $block->escapeHtmlAttr($iterator . ' sao') ?>"
+                                                        id="<?= $block->escapeHtmlAttr($ratingCode) ?>_<?= $block->escapeHtmlAttr($_option->getValue()) ?>_label">
+                                                        <span><?= $block->escapeHtml($iterator . ' sao') ?></span>
+                                                    </label>
+                                                    <?php $iterator++; ?>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <input type="hidden" name="validate_rating" class="validate-rating" value=""/>
+                            </div>
+                        </fieldset>
+                    <?php endif; ?>
+
+                    <div class="field review-field-text required fs-review-form__field">
+                        <label for="review_field" class="label fs-review-form__label">
+                            <span>Nhận xét của bạn</span>
+                        </label>
+                        <div class="control">
+                            <textarea name="detail"
+                                      id="review_field"
+                                      cols="5"
+                                      rows="5"
+                                      placeholder="Chia sẻ cảm nhận của bạn về chất liệu, form dáng và trải nghiệm sử dụng sản phẩm..."
+                                      data-validate="{required:true}"
+                                      data-bind="value: review().detail"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="fieldset additional_info">
+                    <?= $block->getChildHtml('form_additional_review_info') ?>
+                </fieldset>
+                <div class="actions-toolbar review-form-actions fs-review-form__actions">
+                    <div class="primary actions-primary">
+                        <button type="submit"
+                                class="action submit primary fs-review-form__submit"
+                            <?php if ($block->getButtonLockManager()->isDisabled('review_form_submit')): ?>
+                                disabled="disabled"
+                            <?php endif; ?>>
+                            <span>Gửi nhận xét</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <script type="text/x-magento-init">
+            {
+                "[data-role=product-review-form]": {
+                    "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+                },
+                "#review-form": {
+                    "Magento_Review/js/error-placement": {},
+                    "Magento_Review/js/validate-review": {},
+                    "Magento_Review/js/submit-review": {}
+                }
+            }
+            </script>
+        <?php else: ?>
+            <div class="message info notlogged fs-review-form__login" id="review-form">
+                <div>Bạn cần đăng nhập bằng tài khoản đã mua hàng để nhận xét sản phẩm.</div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

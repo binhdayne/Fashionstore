@@ -5,6 +5,7 @@
         <css src="FashionStore_OrderManagement::css/order-history.css"/>
     </head>
     <body>
+        <referenceBlock name="page.main.title" remove="true"/>
         <referenceBlock name="sales.order.history" remove="true"/>
         <referenceContainer name="content">
             <block class="FashionStore\OrderManagement\Block\Order\History"
