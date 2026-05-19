@@ -1,0 +1,251 @@
+.checkout-onepage-success {
+    --fs-success-ink: #0f172a;
+    --fs-success-muted: #64748b;
+    --fs-success-line: #e2e8f0;
+    --fs-success-soft: #f8fafc;
+    --fs-success-accent: #2563eb;
+    --fs-success-red: #e11d2e;
+    --fs-success-green: #16a34a;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--fs-success-ink);
+    font-family: "Be Vietnam Pro", "Noto Sans", "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    letter-spacing: 0;
+}
+
+.checkout-onepage-success * {
+    font-family: inherit;
+    letter-spacing: 0;
+    box-sizing: border-box;
+}
+
+.checkout-onepage-success .page-main {
+    max-width: 1180px;
+    min-height: 560px;
+    margin: 0 auto;
+    padding: 54px 24px 86px;
+}
+
+.checkout-onepage-success .columns,
+.checkout-onepage-success .column.main {
+    width: 100%;
+    max-width: none;
+    float: none;
+    padding: 0;
+}
+
+.checkout-onepage-success .page-title-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 28px;
+}
+
+.checkout-onepage-success .page-title {
+    margin: 0;
+}
+
+.checkout-onepage-success .page-title .base {
+    display: block;
+    color: var(--fs-success-ink);
+    font-size: clamp(38px, 4vw, 58px);
+    line-height: 1.06;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.checkout-onepage-success .action.print,
+.checkout-onepage-success .checkout-success-print-button .action,
+.checkout-onepage-success [data-role="print-receipt"] {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--fs-success-accent);
+    font-size: 16px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, .08);
+}
+
+.checkout-onepage-success .action.print:hover,
+.checkout-onepage-success .checkout-success-print-button .action:hover {
+    border-color: var(--fs-success-accent);
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.checkout-onepage-success .checkout-success {
+    position: relative;
+    max-width: 900px;
+    padding: 42px 48px;
+    border: 1px solid var(--fs-success-line);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, .12);
+}
+
+.checkout-onepage-success .checkout-success::before {
+    content: "";
+    position: absolute;
+    top: 38px;
+    right: 42px;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background:
+        linear-gradient(135deg, var(--fs-success-green), #22c55e);
+    box-shadow: 0 18px 34px rgba(22, 163, 74, .25);
+}
+
+.checkout-onepage-success .checkout-success::after {
+    content: "";
+    position: absolute;
+    top: 56px;
+    right: 66px;
+    width: 17px;
+    height: 30px;
+    border-right: 5px solid #ffffff;
+    border-bottom: 5px solid #ffffff;
+    transform: rotate(42deg);
+}
+
+.checkout-onepage-success .message.success,
+.checkout-onepage-success .message-success {
+    display: flex;
+    align-items: center;
+    min-height: 62px;
+    margin: 0 0 22px;
+    padding: 16px 22px 16px 58px;
+    border: 1px solid #bbf7d0;
+    border-radius: 16px;
+    background: #f0fdf4;
+    color: #166534;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.checkout-onepage-success .message.success > *:first-child::before,
+.checkout-onepage-success .message-success > *:first-child::before {
+    left: 22px;
+    color: var(--fs-success-green);
+    font-size: 24px;
+}
+
+.checkout-onepage-success .checkout-success p {
+    max-width: 680px;
+    margin: 0 0 14px;
+    color: #334155;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.65;
+}
+
+.checkout-onepage-success .checkout-success p:first-child {
+    padding-right: 120px;
+    color: var(--fs-success-ink);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.checkout-onepage-success .order-number,
+.checkout-onepage-success .checkout-success span {
+    color: var(--fs-success-accent);
+    font-size: 22px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.checkout-onepage-success .order-number:hover {
+    color: #1d4ed8;
+}
+
+.checkout-onepage-success .actions-toolbar {
+    margin: 30px 0 0;
+}
+
+.checkout-onepage-success .actions-toolbar .primary {
+    float: none;
+}
+
+.checkout-onepage-success .action.primary.continue {
+    display: inline-flex;
+    min-height: 58px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 32px;
+    border: 0;
+    border-radius: 16px;
+    background: var(--fs-success-ink);
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    box-shadow: 0 18px 34px rgba(15, 23, 42, .2);
+}
+
+.checkout-onepage-success .action.primary.continue:hover {
+    background: var(--fs-success-red);
+    color: #ffffff;
+}
+
+.checkout-onepage-success .checkout-registration {
+    max-width: 900px;
+    margin-top: 24px;
+    padding: 26px 32px;
+    border: 1px solid var(--fs-success-line);
+    border-radius: 20px;
+    background: var(--fs-success-soft);
+}
+
+@media (max-width: 767px) {
+    .checkout-onepage-success {
+        font-size: 16px;
+    }
+
+    .checkout-onepage-success .page-main {
+        padding: 34px 16px 58px;
+    }
+
+    .checkout-onepage-success .page-title-wrapper {
+        display: block;
+    }
+
+    .checkout-onepage-success .page-title .base {
+        font-size: 34px;
+        line-height: 1.12;
+    }
+
+    .checkout-onepage-success .action.print,
+    .checkout-onepage-success .checkout-success-print-button .action {
+        margin-top: 16px;
+    }
+
+    .checkout-onepage-success .checkout-success {
+        padding: 30px 22px;
+        border-radius: 18px;
+    }
+
+    .checkout-onepage-success .checkout-success::before,
+    .checkout-onepage-success .checkout-success::after {
+        display: none;
+    }
+
+    .checkout-onepage-success .checkout-success p,
+    .checkout-onepage-success .checkout-success p:first-child {
+        padding-right: 0;
+        font-size: 17px;
+    }
+
+    .checkout-onepage-success .action.primary.continue {
+        width: 100%;
+    }
+}
