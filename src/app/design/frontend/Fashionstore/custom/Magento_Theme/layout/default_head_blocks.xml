@@ -4,5 +4,6 @@
     <head>
         <css src="css/custom.css"/>
         <script src="js/product-options-enhancements.js"/>
+        <script src="js/mobile-category-toolbar.js"/>
     </head>
 </page>
