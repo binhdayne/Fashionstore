@@ -7,6 +7,7 @@ if (!$order): ?>
 
 $items = $block->getOrderItems();
 $totals = $block->getOrderTotals();
+$tracking = $block->getShippingTracking();
 $shipping = $order->getShippingAddress();
 $billing = $order->getBillingAddress();
 ?>
@@ -105,6 +106,39 @@ $billing = $order->getBillingAddress();
     </div>
 
     <div class="fs-order-view__body">
+        <?php if (!empty($tracking)): ?>
+            <section class="fs-order-tracking" aria-label="Theo dõi vận chuyển">
+                <div class="fs-order-tracking__header">
+                    <div>
+                        <p class="fs-order-tracking__eyebrow">Theo dõi vận chuyển</p>
+                        <h2 class="fs-order-tracking__title">
+                            <?= $block->escapeHtml($tracking['current_status']) ?>
+                        </h2>
+                        <p class="fs-order-tracking__location">
+                            <?= $block->escapeHtml($tracking['current_location']) ?>
+                        </p>
+                    </div>
+                    <div class="fs-order-tracking__summary">
+                        <span><?= $block->escapeHtml($tracking['carrier']) ?></span>
+                        <strong><?= $block->escapeHtml($tracking['tracking_number']) ?></strong>
+                        <em>Dự kiến giao: <?= $block->escapeHtml($tracking['eta']) ?></em>
+                    </div>
+                </div>
+                <ol class="fs-order-tracking__timeline">
+                    <?php foreach ($tracking['steps'] as $step): ?>
+                        <li class="fs-order-tracking__step<?= !empty($step['is_done']) ? ' is-done' : '' ?><?= !empty($step['is_current']) ? ' is-current' : '' ?>">
+                            <span class="fs-order-tracking__dot"></span>
+                            <div class="fs-order-tracking__content">
+                                <strong><?= $block->escapeHtml($step['label']) ?></strong>
+                                <span><?= $block->escapeHtml($step['location']) ?></span>
+                                <time><?= $block->escapeHtml($step['time_label']) ?></time>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+            </section>
+        <?php endif; ?>
+
         <div class="fs-order-view__section">
             <h2 class="fs-order-view__section-title">Sản phẩm đã đặt</h2>
             <div class="fs-order-view__items">

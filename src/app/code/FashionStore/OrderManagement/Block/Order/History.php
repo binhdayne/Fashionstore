@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace FashionStore\OrderManagement\Block\Order;
 
+use FashionStore\OrderManagement\Model\ShippingTimeline;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Framework\View\Element\Template;
 use Magento\Sales\Block\Order\History as CoreHistory;
@@ -15,6 +17,8 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 
 class History extends CoreHistory
 {
+    private ShippingTimeline $shippingTimeline;
+
     public function __construct(
         Template\Context $context,
         CollectionFactory $orderCollectionFactory,
@@ -24,9 +28,12 @@ class History extends CoreHistory
         private readonly ImageHelper $imageHelper,
         private readonly PriceHelper $priceHelper,
         private readonly FormKey $formKey,
-        array $data = []
+        array $data = [],
+        ?ShippingTimeline $shippingTimeline = null
     ) {
         parent::__construct($context, $orderCollectionFactory, $customerSession, $orderConfig, $data);
+        $this->shippingTimeline = $shippingTimeline
+            ?? ObjectManager::getInstance()->get(ShippingTimeline::class);
         $this->setTemplate('FashionStore_OrderManagement::order/history.phtml');
     }
 
@@ -76,6 +83,7 @@ class History extends CoreHistory
                 'grand_total' => $this->priceHelper->currency((float) $order->getGrandTotal(), true, false),
                 'can_cancel' => $order->canCancel() && $order->getStatus() === 'pending',
                 'view_url' => $this->getViewUrl($order),
+                'tracking' => $this->shippingTimeline->getTrackingData($order),
                 'items' => $items,
             ];
         }

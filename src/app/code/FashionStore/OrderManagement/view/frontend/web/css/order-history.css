@@ -210,6 +210,62 @@
     gap: 28px;
 }
 
+.fs-order-card__tracking {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 32px 0;
+    padding: 16px 18px;
+    border: 1px solid rgba(59, 130, 246, 0.16);
+    border-radius: 14px;
+    background: #f8fbff;
+    color: #334155;
+    font-family: "Be Vietnam Pro", "Noto Sans", "Segoe UI", Arial, sans-serif;
+    letter-spacing: 0;
+}
+
+.fs-order-card__tracking-carrier {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.fs-order-card__tracking-location {
+    display: inline-flex;
+    align-items: center;
+    color: #0f172a;
+    font-size: 17px;
+    font-weight: 850;
+    line-height: 1.35;
+}
+
+.fs-order-card__tracking-status {
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.fs-order-card__tracking-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    margin-right: 14px;
+    border-radius: 50%;
+    background: #cbd5e1;
+}
+
 .fs-order-item {
     display: flex;
     align-items: center;
