@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace FashionStore\OrderManagement\Block\Order;
 
 use FashionStore\OrderManagement\Model\ReviewEligibility;
+use FashionStore\OrderManagement\Model\ShippingTimeline;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
@@ -22,6 +24,7 @@ class View extends Template
     private FormKey $formKey;
     private CustomerSession $customerSession;
     private ReviewEligibility $reviewEligibility;
+    private ShippingTimeline $shippingTimeline;
 
     public function __construct(
         Template\Context $context,
@@ -32,7 +35,8 @@ class View extends Template
         FormKey $formKey,
         CustomerSession $customerSession,
         ReviewEligibility $reviewEligibility,
-        array $data = []
+        array $data = [],
+        ?ShippingTimeline $shippingTimeline = null
     ) {
         parent::__construct($context, $data);
         $this->productRepository = $productRepository;
@@ -42,6 +46,8 @@ class View extends Template
         $this->formKey = $formKey;
         $this->customerSession = $customerSession;
         $this->reviewEligibility = $reviewEligibility;
+        $this->shippingTimeline = $shippingTimeline
+            ?? ObjectManager::getInstance()->get(ShippingTimeline::class);
     }
 
     public function getOrder(): ?Order
@@ -180,6 +186,16 @@ class View extends Template
         ];
 
         return $map[(string) $order->getState()] ?? 'default';
+    }
+
+    public function getShippingTracking(): array
+    {
+        $order = $this->getOrder();
+        if (!$order) {
+            return [];
+        }
+
+        return $this->shippingTimeline->getTrackingData($order);
     }
 
     public function canCancel(): bool

@@ -5,6 +5,9 @@
  */
 $reviewCustomer = $block->getData('review_customer');
 $customerName = $reviewCustomer ? $reviewCustomer->getCustomerName() : '';
+if (trim((string) $customerName) === '') {
+    $customerName = 'Khách hàng';
+}
 $orderItemId = (int) $block->getRequest()->getParam('order_item_id');
 $ratingLabels = [
     'Quality' => 'Chất lượng',

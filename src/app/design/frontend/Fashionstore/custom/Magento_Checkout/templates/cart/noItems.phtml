@@ -1,0 +1,23 @@
+<?php
+/**
+ * Empty shopping cart template.
+ *
+ * @var $block \Magento\Checkout\Block\Cart
+ */
+?>
+<div class="cart-empty">
+    <?= $block->getChildHtml('checkout_cart_empty_widget') ?>
+    <p><?= $block->escapeHtml(__('Giỏ hàng của bạn đang trống')) ?></p>
+    <p><?= $block->escapeHtml(__('Hãy chọn thêm sản phẩm yêu thích trước khi thanh toán.')) ?></p>
+    <a class="cart-empty__action" href="<?= $block->escapeUrl($block->getContinueShoppingUrl()) ?>">
+        <?= $block->escapeHtml(__('Tiếp tục mua sắm')) ?>
+    </a>
+    <?= $block->getChildHtml('shopping.cart.table.after') ?>
+</div>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Checkout/js/empty-cart": {}
+    }
+}
+</script>

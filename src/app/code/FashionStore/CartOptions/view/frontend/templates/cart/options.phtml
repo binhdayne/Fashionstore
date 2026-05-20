@@ -11,19 +11,38 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
     <style>
         .checkout-cart-index {
             background: linear-gradient(180deg, #fbf8f2 0%, #f5f1e8 100%) !important;
+            color: #0f172a !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            letter-spacing: 0 !important;
         }
 
         .checkout-cart-index .page-main {
-            max-width: 1320px !important;
-            padding-top: 36px !important;
-            padding-bottom: 48px !important;
+            max-width: 1380px !important;
+            padding-top: 46px !important;
+            padding-bottom: 64px !important;
+        }
+
+        .checkout-cart-index .page-title-wrapper {
+            margin-bottom: 56px !important;
+        }
+
+        .checkout-cart-index .page-title,
+        .checkout-cart-index .page-title span,
+        .checkout-cart-index .page-title .base {
+            color: #0f172a !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 48px !important;
+            font-weight: 850 !important;
+            line-height: 1.15 !important;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
         }
 
         .checkout-cart-index .cart-container {
             display: grid !important;
-            grid-template-columns: minmax(0, 7fr) minmax(320px, 3fr) !important;
+            grid-template-columns: minmax(840px, 1fr) minmax(320px, 380px) !important;
             align-items: start !important;
-            gap: 68px !important;
+            gap: 44px !important;
         }
 
         .checkout-cart-index .cart-container::after {
@@ -49,10 +68,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             grid-column: 2 !important;
             width: 100% !important;
             margin: 0 !important;
-            padding: 28px 24px !important;
+            padding: 32px 30px !important;
             background: #fff !important;
             border: 1px solid #ece4d5 !important;
-            box-shadow: 0 18px 44px rgba(26, 26, 26, 0.06) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 22px 54px rgba(15, 23, 42, 0.10) !important;
             position: sticky !important;
             top: 20px !important;
             z-index: 100120 !important;
@@ -61,10 +81,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart.table-wrapper {
             margin: 0 !important;
             width: 100% !important;
-            padding: 20px 22px 8px !important;
+            padding: 28px 30px 12px !important;
             background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%) !important;
             border: 1px solid #ece4d5 !important;
-            box-shadow: 0 18px 44px rgba(26, 26, 26, 0.05) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 22px 54px rgba(15, 23, 42, 0.08) !important;
             overflow: hidden !important;
         }
 
@@ -96,19 +117,20 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index #shopping-cart-table thead tr,
         .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
             display: grid !important;
-            grid-template-columns: minmax(260px, 1.8fr) 128px 92px 150px !important;
-            gap: 16px !important;
+            grid-template-columns: minmax(410px, 1fr) 150px 132px 170px !important;
+            gap: 22px !important;
             align-items: start !important;
         }
 
         .checkout-cart-index .cart.table-wrapper thead th {
-            padding: 0 0 18px !important;
+            padding: 0 0 22px !important;
             border-bottom: 1px solid #e8e0d2 !important;
-            font-size: 10px !important;
-            font-weight: 500 !important;
-            letter-spacing: 2px !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
             text-transform: uppercase !important;
-            color: #74654a !important;
+            color: #6b5f4a !important;
         }
 
         .checkout-cart-index #shopping-cart-table td[data-th]::before,
@@ -118,7 +140,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index #shopping-cart-table tbody.cart.item {
-            padding: 22px 0 14px !important;
+            padding: 30px 0 22px !important;
             border-top: 1px solid #f1ebde !important;
         }
 
@@ -145,9 +167,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .cart.item .col.item {
             display: flex !important;
-            gap: 14px !important;
+            gap: 18px !important;
             align-items: flex-start !important;
             min-width: 0 !important;
+            width: 100% !important;
         }
 
         .checkout-cart-index .fashionstore-item-select {
@@ -168,9 +191,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             align-items: center !important;
             gap: 8px !important;
             margin-bottom: 10px !important;
-            font-size: 11px !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
             color: #1a1a1a !important;
-            letter-spacing: 0.5px !important;
+            letter-spacing: 0 !important;
         }
 
         .checkout-cart-index .fashionstore-select-all__checkbox {
@@ -181,11 +206,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.item .product-item-photo {
-            width: 98px !important;
-            min-width: 98px !important;
-            padding: 8px !important;
+            width: 116px !important;
+            min-width: 116px !important;
+            padding: 10px !important;
             background: #f5efe4 !important;
-            border-radius: 14px !important;
+            border-radius: 18px !important;
             overflow: hidden !important;
         }
 
@@ -195,25 +220,31 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .cart.item .product-item-details {
             min-width: 0 !important;
+            flex: 1 1 auto !important;
+            width: auto !important;
         }
 
         .checkout-cart-index .cart.item .product-item-name {
-            margin: 0 0 10px !important;
-            font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif !important;
-            font-size: 17px !important;
-            font-weight: 500 !important;
-            line-height: 1.45 !important;
+            margin: 0 0 14px !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 22px !important;
+            font-weight: 850 !important;
+            line-height: 1.28 !important;
             white-space: normal !important;
-            word-break: break-word !important;
+            word-break: normal !important;
+            overflow-wrap: normal !important;
+            hyphens: none !important;
         }
 
         .checkout-cart-index .cart.item .product-item-name a {
-            color: #1a1a1a !important;
+            color: #0f172a !important;
+            text-decoration: none !important;
         }
 
         .checkout-cart-index .cart.item .item-options dt,
         .checkout-cart-index .cart.item .item-options dd {
-            font-size: 12px !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 16px !important;
             line-height: 1.65 !important;
         }
 
@@ -235,15 +266,16 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .cart.item .col.price .price,
         .checkout-cart-index .cart.item .col.subtotal .price {
-            color: #9b6b2d !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
+            color: #9a5f12 !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 19px !important;
+            font-weight: 850 !important;
             line-height: 1.25 !important;
             white-space: nowrap !important;
         }
 
         .checkout-cart-index .cart.item .control.qty {
-            width: 96px !important;
+            width: 126px !important;
         }
 
         .checkout-cart-index .fashionstore-qty-control {
@@ -251,7 +283,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             align-items: center !important;
             gap: 0 !important;
             border: 1px solid #d7d0c3 !important;
-            border-radius: 6px !important;
+            border-radius: 999px !important;
             overflow: hidden !important;
             background: #fff !important;
         }
@@ -261,7 +293,7 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             align-items: center !important;
             gap: 0 !important;
             border: 1px solid #d7d0c3 !important;
-            border-radius: 6px !important;
+            border-radius: 999px !important;
             overflow: hidden !important;
             background: #fff !important;
         }
@@ -286,15 +318,16 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            width: 28px !important;
-            height: 28px !important;
+            width: 38px !important;
+            height: 38px !important;
             padding: 0 !important;
             border: none !important;
             border-right: 1px solid #d7d0c3 !important;
             border-radius: 0 !important;
             background: #fff !important;
-            color: #9f9f9f !important;
-            font-size: 16px !important;
+            color: #334155 !important;
+            font-size: 20px !important;
+            font-weight: 800 !important;
             line-height: 1 !important;
             cursor: pointer !important;
         }
@@ -315,17 +348,18 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.item .input-text.qty {
-            height: 28px !important;
+            height: 38px !important;
             border: none !important;
             background: #fff !important;
             border-radius: 0 !important;
             text-align: center !important;
-            font-size: 13px !important;
-            font-weight: 400 !important;
-            color: #666 !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 17px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
             box-shadow: none !important;
-            width: 34px !important;
-            min-width: 34px !important;
+            width: 46px !important;
+            min-width: 46px !important;
             padding: 0 !important;
             -moz-appearance: textfield !important;
             appearance: textfield !important;
@@ -355,14 +389,16 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .cart.main.actions .action {
-            min-height: 42px !important;
+            min-height: 48px !important;
             border-radius: 999px !important;
-            padding: 0 20px !important;
+            padding: 0 24px !important;
             border: 1px solid #d7ccb8 !important;
             background: #fff !important;
             color: #1a1a1a !important;
-            font-size: 9px !important;
-            letter-spacing: 2px !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.06em !important;
             text-transform: uppercase !important;
         }
 
@@ -375,11 +411,11 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart-summary > .summary.title::after {
             content: 'ĐƠN HÀNG';
             display: block;
-            font-family: 'Be Vietnam Pro', 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 2.8px;
-            color: #1a1a1a;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            color: #0f172a;
         }
 
         .checkout-cart-index .cart-summary > .block.shipping,
@@ -410,18 +446,18 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .cart-summary .table.totals th,
         .checkout-cart-index .cart-summary .table.totals td {
-            padding: 10px 0 16px !important;
+            padding: 12px 0 18px !important;
             border: none !important;
-            color: #1a1a1a !important;
-            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
-            font-size: 12px !important;
+            color: #0f172a !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 16px !important;
             line-height: 1.6 !important;
         }
 
         .checkout-cart-index .cart-summary .table.totals .mark,
         .checkout-cart-index .cart-summary .table.totals .amount {
-            color: #1a1a1a !important;
-            font-weight: 500 !important;
+            color: #0f172a !important;
+            font-weight: 800 !important;
         }
 
         .checkout-cart-index .cart-summary .table.totals .amount,
@@ -440,8 +476,9 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .cart-summary .table.totals .grand .price,
         .checkout-cart-index .cart-summary .table.totals .grand .amount {
             color: #d2232a !important;
-            font-size: 28px !important;
-            font-weight: 600 !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 34px !important;
+            font-weight: 900 !important;
         }
 
         .checkout-cart-index .cart-summary .table.totals .totals.sub {
@@ -468,17 +505,17 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
 
         .checkout-cart-index .checkout.methods.items .action.primary.checkout {
             width: 100% !important;
-            min-height: 52px !important;
-            border-radius: 6px !important;
-            background: #000 !important;
-            border: 1px solid #000 !important;
+            min-height: 60px !important;
+            border-radius: 14px !important;
+            background: #0f172a !important;
+            border: 1px solid #0f172a !important;
             color: #fff !important;
-            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
-            font-size: 11px !important;
-            font-weight: 500 !important;
-            letter-spacing: 0.1em !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 850 !important;
+            letter-spacing: 0.03em !important;
             text-transform: uppercase !important;
-            box-shadow: 0 8px 16px rgba(26, 26, 26, 0.18) !important;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22) !important;
             position: relative !important;
             z-index: 100130 !important;
         }
@@ -489,10 +526,10 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         }
 
         .checkout-cart-index .checkout.methods.items .action.primary.checkout span {
-            font-family: 'Montserrat', 'Helvetica Neue', sans-serif !important;
-            font-size: 11px !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.1em !important;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 850 !important;
+            letter-spacing: 0.03em !important;
             color: #fff !important;
         }
 
@@ -508,10 +545,12 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         .checkout-cart-index .checkout.methods.items::after {
             content: 'Dùng mã giảm giá ở bước tiếp theo';
             display: block;
-            margin-top: 14px;
-            font-size: 12px;
+            margin-top: 16px;
+            font-family: 'Be Vietnam Pro', 'Noto Sans', 'Segoe UI', Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
             line-height: 1.6;
-            color: #1a1a1a;
+            color: #475569;
             text-align: center;
         }
 
@@ -528,8 +567,8 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         @media (max-width: 1200px) {
             .checkout-cart-index #shopping-cart-table thead tr,
             .checkout-cart-index #shopping-cart-table tbody.cart.item .item-info {
-                grid-template-columns: minmax(220px, 1.5fr) 110px 84px 128px !important;
-                gap: 12px !important;
+                grid-template-columns: minmax(360px, 1fr) 128px 118px 150px !important;
+                gap: 16px !important;
             }
         }
 
@@ -552,6 +591,13 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
         @media (max-width: 767px) {
             .checkout-cart-index .page-main {
                 padding-bottom: 320px !important;
+            }
+
+            .checkout-cart-index .page-title,
+            .checkout-cart-index .page-title span,
+            .checkout-cart-index .page-title .base {
+                font-size: 34px !important;
+                letter-spacing: 0.04em !important;
             }
 
             .checkout-cart-index #shopping-cart-table thead {
@@ -595,12 +641,17 @@ $selectedPaymentMethod = $block->getSelectedPaymentMethod();
             }
 
             .checkout-cart-index .cart.item .product-item-photo {
-                width: 84px !important;
-                min-width: 84px !important;
+                width: 104px !important;
+                min-width: 104px !important;
             }
 
             .checkout-cart-index .cart.item .product-item-name {
-                font-size: 16px !important;
+                font-size: 21px !important;
+            }
+
+            .checkout-cart-index .cart.item .col.price .price,
+            .checkout-cart-index .cart.item .col.subtotal .price {
+                font-size: 18px !important;
             }
 
             .checkout-cart-index .cart.main.actions {

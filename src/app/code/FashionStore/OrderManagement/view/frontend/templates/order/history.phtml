@@ -55,6 +55,20 @@ $formKey = $block->getFormKey();
                         </span>
                     </div>
 
+                    <?php if (!empty($order['tracking']) && $order['state'] === 'processing'): ?>
+                        <div class="fs-order-card__tracking">
+                            <span class="fs-order-card__tracking-carrier">
+                                <?= $block->escapeHtml($order['tracking']['carrier']) ?>
+                            </span>
+                            <span class="fs-order-card__tracking-location">
+                                <?= $block->escapeHtml($order['tracking']['current_location']) ?>
+                            </span>
+                            <span class="fs-order-card__tracking-status">
+                                <?= $block->escapeHtml($order['tracking']['current_status']) ?>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="fs-order-card__items">
                         <?php foreach ($order['items'] as $item): ?>
                             <div class="fs-order-item">

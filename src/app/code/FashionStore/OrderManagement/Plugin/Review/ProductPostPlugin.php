@@ -9,6 +9,8 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Review\Controller\Product\Post;
+use Magento\Review\Model\Review;
+use Magento\Review\Model\ReviewFactory;
 
 class ProductPostPlugin
 {
@@ -17,7 +19,8 @@ class ProductPostPlugin
         private readonly CustomerSession $customerSession,
         private readonly ReviewEligibility $reviewEligibility,
         private readonly ManagerInterface $messageManager,
-        private readonly RedirectFactory $redirectFactory
+        private readonly RedirectFactory $redirectFactory,
+        private readonly ReviewFactory $reviewFactory
     ) {
     }
 
@@ -26,6 +29,17 @@ class ProductPostPlugin
         $productId = (int) $this->request->getParam('id');
         $orderItemId = (int) $this->request->getParam('order_item_id');
         $customerId = (int) $this->customerSession->getCustomerId();
+        $post = $this->request->getPostValue();
+
+        if (is_array($post)) {
+            $post['nickname'] = $this->getCustomerName();
+
+            if (trim((string)($post['title'] ?? '')) === '') {
+                $post['title'] = (string) __('Nhận xét sản phẩm');
+            }
+
+            $this->request->setPostValue($post);
+        }
 
         if ($productId > 0 && $customerId <= 0) {
             $this->messageManager->addErrorMessage(
@@ -67,6 +81,7 @@ class ProductPostPlugin
 
         if ($newReviewId > $latestReviewId) {
             $this->reviewEligibility->linkReviewToOrderItem($newReviewId, $orderItemId, $customerId, $productId);
+            $this->approveReview($newReviewId);
         }
 
         return $result;
@@ -78,5 +93,44 @@ class ProductPostPlugin
         $resultRedirect->setRefererUrl();
 
         return $resultRedirect;
+    }
+
+    private function getCustomerName(): string
+    {
+        if (!$this->customerSession->isLoggedIn()) {
+            return 'Khách hàng';
+        }
+
+        $customer = $this->customerSession->getCustomer();
+        $name = trim((string) $customer->getName());
+
+        if ($name !== '') {
+            return $name;
+        }
+
+        $email = trim((string) $customer->getEmail());
+
+        if ($email !== '' && str_contains($email, '@')) {
+            return trim((string) strstr($email, '@', true));
+        }
+
+        return $email !== '' ? $email : 'Khách hàng';
+    }
+
+    private function approveReview(int $reviewId): void
+    {
+        if ($reviewId <= 0) {
+            return;
+        }
+
+        $review = $this->reviewFactory->create()->load($reviewId);
+
+        if (!$review->getId()) {
+            return;
+        }
+
+        $review->setStatusId(Review::STATUS_APPROVED);
+        $review->save();
+        $review->aggregate();
     }
 }

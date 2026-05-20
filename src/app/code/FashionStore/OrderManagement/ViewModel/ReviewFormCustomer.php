@@ -16,12 +16,22 @@ class ReviewFormCustomer implements ArgumentInterface
     public function getCustomerName(): string
     {
         if (!$this->customerSession->isLoggedIn()) {
-            return '';
+            return 'Khách hàng';
         }
 
         $customer = $this->customerSession->getCustomer();
         $name = trim((string) $customer->getName());
 
-        return $name !== '' ? $name : trim((string) $customer->getEmail());
+        if ($name !== '') {
+            return $name;
+        }
+
+        $email = trim((string) $customer->getEmail());
+
+        if ($email !== '' && str_contains($email, '@')) {
+            return trim((string) strstr($email, '@', true));
+        }
+
+        return $email !== '' ? $email : 'Khách hàng';
     }
 }
