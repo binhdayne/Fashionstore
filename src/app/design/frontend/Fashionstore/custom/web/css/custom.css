@@ -5123,6 +5123,328 @@ textarea {
     }
 }
 
+/* Final review tab alignment: keep customer reviews inside the product tab panel. */
+.catalog-product-view .product.info.detailed,
+.catalog-product-view .product.info.detailed .data.items,
+.catalog-product-view .product.info.detailed .product.data.items,
+.catalog-product-view .product.data.items {
+    clear: both !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.catalog-product-view .product.info.detailed .data.item.content,
+.catalog-product-view .product.info.detailed .product.data.items > .item.content,
+.catalog-product-view .product.data.items > .item.content,
+.catalog-product-view .product.data.items > #reviews.item.content,
+.catalog-product-view .product.data.items > #reviews.data.item.content {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    float: none !important;
+    clear: both !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+.catalog-product-view #reviews #customer-reviews,
+.catalog-product-view #customer-reviews,
+.catalog-product-view #customer-reviews .block-title,
+.catalog-product-view #customer-reviews .block-content,
+.catalog-product-view #customer-reviews .fs-review-items,
+.catalog-product-view #customer-reviews .fs-review-card,
+.catalog-product-view #customer-reviews .fs-review-ratings,
+.catalog-product-view #customer-reviews .fs-rating-summary,
+.catalog-product-view #customer-reviews .fs-review-content-container,
+.catalog-product-view #customer-reviews .fs-review-content,
+.catalog-product-view #customer-reviews .fs-review-details {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+    text-indent: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.catalog-product-view #customer-reviews {
+    margin-top: 0 !important;
+    margin-bottom: 48px !important;
+}
+
+.catalog-product-view #customer-reviews .fs-review-items {
+    display: grid !important;
+    gap: 22px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow: visible !important;
+}
+
+.catalog-product-view #customer-reviews .fs-review-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 18px 14px !important;
+    overflow: visible !important;
+}
+
+.catalog-product-view #customer-reviews .fs-review-ratings {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+@media (max-width: 767px) {
+    .catalog-product-view .product.info.detailed,
+    .catalog-product-view .product.info.detailed .data.items,
+    .catalog-product-view .product.info.detailed .product.data.items,
+    .catalog-product-view .product.data.items {
+        overflow-x: hidden !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content,
+    .catalog-product-view .product.data.items > .item.content,
+    .catalog-product-view .product.data.items > #reviews.item.content,
+    .catalog-product-view .product.data.items > #reviews.data.item.content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        overflow-x: hidden !important;
+    }
+
+    .catalog-product-view #customer-reviews {
+        margin: 0 0 38px !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-review-items {
+        gap: 16px !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-review-card {
+        padding: 16px 12px !important;
+        border-radius: 14px !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-rating-summary {
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-rating-label {
+        flex: 0 0 62px !important;
+        font-size: 13px !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-rating-result {
+        flex: 0 0 100px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+        max-width: 100px !important;
+    }
+}
+
+/* Mobile review hard stop: neutralize Magento accordion offsets and inner text clipping. */
+@media (max-width: 768px) {
+    html,
+    body.catalog-product-view,
+    .catalog-product-view .page-wrapper {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .catalog-product-view .product.info.detailed,
+    .catalog-product-view .product.info.detailed .data.items,
+    .catalog-product-view .product.info.detailed .product.data.items,
+    .catalog-product-view .product.data.items {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding-top: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.title,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title,
+    .catalog-product-view .product.data.items > .item.title {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 0 0 150px !important;
+        width: 150px !important;
+        max-width: 150px !important;
+        float: none !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .catalog-product-view .product.info.detailed #tab-label-description,
+    .catalog-product-view .product.info.detailed .product.data.items > #tab-label-description,
+    .catalog-product-view .product.data.items > #tab-label-description {
+        order: 1 !important;
+        left: auto !important;
+    }
+
+    .catalog-product-view .product.info.detailed #tab-label-reviews,
+    .catalog-product-view .product.info.detailed .product.data.items > #tab-label-reviews,
+    .catalog-product-view .product.data.items > #tab-label-reviews {
+        order: 2 !important;
+        left: auto !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.title > .switch,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title > .switch,
+    .catalog-product-view .product.data.items > .item.title > .switch {
+        width: 150px !important;
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content,
+    .catalog-product-view .product.data.items > .item.content,
+    .catalog-product-view .product.data.items > #reviews.item.content,
+    .catalog-product-view .product.data.items > #reviews.data.item.content {
+        order: 3 !important;
+        flex: 0 0 100% !important;
+        display: block !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        float: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 20px 14px !important;
+        transform: none !important;
+        text-indent: 0 !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content:not(.active),
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content:not(.active),
+    .catalog-product-view .product.data.items > .item.content:not(.active),
+    .catalog-product-view .product.info.detailed .data.item.content[aria-hidden='true'],
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content[aria-hidden='true'],
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='true'] {
+        display: none !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content.active,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content.active,
+    .catalog-product-view .product.data.items > .item.content.active,
+    .catalog-product-view .product.info.detailed .data.item.content[aria-hidden='false'],
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content[aria-hidden='false'],
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='false'] {
+        display: block !important;
+    }
+
+    .catalog-product-view #customer-reviews,
+    .catalog-product-view #customer-reviews .block-title,
+    .catalog-product-view #customer-reviews .block-title strong,
+    .catalog-product-view #customer-reviews .block-content,
+    .catalog-product-view #customer-reviews .fs-review-items,
+    .catalog-product-view #customer-reviews .fs-review-card,
+    .catalog-product-view #customer-reviews .fs-review-title,
+    .catalog-product-view #customer-reviews .fs-review-ratings,
+    .catalog-product-view #customer-reviews .fs-rating-summary,
+    .catalog-product-view #customer-reviews .fs-rating-label,
+    .catalog-product-view #customer-reviews .fs-rating-result,
+    .catalog-product-view #customer-reviews .fs-review-content-container,
+    .catalog-product-view #customer-reviews .fs-review-content,
+    .catalog-product-view #customer-reviews .fs-review-details,
+    .catalog-product-view #customer-reviews .fs-review-author,
+    .catalog-product-view #customer-reviews .fs-review-date {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        float: none !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: none !important;
+        text-indent: 0 !important;
+        clip-path: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .catalog-product-view #customer-reviews {
+        width: 100% !important;
+        margin: 0 0 36px !important;
+        overflow: visible !important;
+    }
+
+    .catalog-product-view #customer-reviews .block-title strong {
+        display: block !important;
+        width: 100% !important;
+        padding-left: 4px !important;
+        white-space: normal !important;
+        overflow: visible !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-review-items {
+        width: 100% !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-review-card {
+        width: 100% !important;
+        padding: 16px 14px !important;
+        overflow: visible !important;
+    }
+
+    .catalog-product-view #customer-reviews .fs-review-title,
+    .catalog-product-view #customer-reviews .fs-review-content {
+        width: 100% !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        overflow: visible !important;
+    }
+}
+
+@media (max-width: 430px) {
+    .catalog-product-view .product.info.detailed .data.item.title,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title,
+    .catalog-product-view .product.data.items > .item.title {
+        flex-basis: 132px !important;
+        width: 132px !important;
+        max-width: 132px !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.title > .switch,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title > .switch,
+    .catalog-product-view .product.data.items > .item.title > .switch {
+        width: 132px !important;
+        min-width: 132px !important;
+        max-width: 132px !important;
+    }
+}
+
 /* Final desktop catch-all for Magento tab IDs (e.g. tab-label-*-title). */
 @media (min-width: 769px) {
     .catalog-product-view .product.data.items > [id*='tab-label-description'],
