@@ -293,7 +293,9 @@
                 max-width: 33.3333% !important;
             }
             .fs-price-box {
-                width: 100% !important;
+                width: min(50vw, 280px) !important;
+                min-width: 0 !important;
+                max-width: 280px !important;
             }
             .fs-toolbar-right {
                 margin-left: auto !important;
@@ -317,7 +319,9 @@
             <?php if ($block->isExpanded()): ?>
 
                 <!-- Price filter slider -->
-                <div class="fs-price-box" id="<?= $block->escapeHtmlAttr($sliderId) ?>-box">
+                <div class="fs-price-box"
+                     id="<?= $block->escapeHtmlAttr($sliderId) ?>-box"
+                     style="width: min(50vw, 280px) !important; min-width: 0 !important; max-width: 280px !important;">
                     <div class="fs-price-box-label">GIÁ</div>
                     <div class="fs-slider-track-wrap">
                         <div class="fs-slider-track">
