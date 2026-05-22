@@ -190,6 +190,11 @@ $zaloIcon = $block->escapeUrl($siteBaseUrl . 'media/zalo.png');
   function updateBackToTop() {
     var btn = document.getElementById('back-to-top');
     if (btn) {
+      btn.style.setProperty(
+        'bottom',
+        document.body.classList.contains('checkout-cart-index') ? '118px' : '40px',
+        'important'
+      );
       btn.style.display = (window.pageYOffset > 300) ? 'flex' : 'none';
     }
   }
