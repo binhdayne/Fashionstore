@@ -3517,6 +3517,11 @@ textarea {
     clear: both !important;
     position: relative !important;
     margin-top: 42px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     padding-top: 66px !important;
     border: 0 !important;
 }
@@ -4875,5 +4880,323 @@ textarea {
     .cms-index-index .dior-featured-desc {
         max-width: 27ch !important;
         font-size: 17px !important;
+    }
+}
+
+/* Final product review mobile containment. */
+.catalog-product-view .product.data.items > .item.content #customer-reviews,
+.catalog-product-view .product.data.items > .item.content #product-review-container,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .block-content,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-items,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-item,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-ratings,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-content-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #reviews,
+.catalog-product-view .product.data.items > .item.content #product-review-container,
+.catalog-product-view .product.data.items > .item.content #customer-reviews,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-item,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-ratings,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-title,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-content {
+    overflow: visible !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 18px 14px !important;
+    border-radius: 16px !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-ratings {
+    display: flex !important;
+    flex-direction: column !important;
+    float: none !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 12px 10px !important;
+    border-radius: 12px !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .rating-summary {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .block-title strong {
+    font-size: clamp(24px, 4vw, 34px) !important;
+    line-height: 1.25 !important;
+    margin-left: 0 !important;
+    transform: none !important;
+    overflow: visible !important;
+    white-space: normal !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-title {
+    font-size: clamp(19px, 3vw, 24px) !important;
+    line-height: 1.35 !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .rating-label {
+    display: inline-flex !important;
+    flex: 0 0 70px !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-content {
+    font-size: clamp(15px, 2.5vw, 19px) !important;
+    line-height: 1.65 !important;
+}
+
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-details,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-details p,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-details span,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-details strong,
+.catalog-product-view .product.data.items > .item.content #customer-reviews .review-details time {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+}
+
+@media (max-width: 767px) {
+    .catalog-product-view .product.data.items {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 18px 12px !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .catalog-product-view .product.data.items > #reviews.item.content,
+    .catalog-product-view .product.data.items > #reviews.data.item.content {
+        left: auto !important;
+        right: auto !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: none !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews {
+        margin: 20px 0 38px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-items {
+        gap: 16px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-item {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 14px !important;
+        padding: 16px 12px !important;
+        border-radius: 14px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-ratings {
+        gap: 8px !important;
+        padding: 12px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-summary {
+        display: flex !important;
+        gap: 8px !important;
+        align-items: center !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-label {
+        flex-basis: 62px !important;
+        font-size: 13px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-result {
+        flex: 0 0 100px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+        max-width: 100px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-result::before,
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-result > span::before {
+        font-size: 17px !important;
+        line-height: 17px !important;
+        height: 17px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .rating-result > span {
+        height: 17px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-content {
+        font-size: 15px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-details {
+        gap: 8px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-author,
+    .catalog-product-view .product.data.items > .item.content #customer-reviews .review-date {
+        max-width: 100% !important;
+        padding: 7px 9px !important;
+    }
+}
+
+/* Desktop tab-mode guard: keep Details/Reviews inline on top like mobile. */
+@media (min-width: 769px) {
+    .catalog-product-view .product.info.detailed .data.items,
+    .catalog-product-view .product.info.detailed .product.data.items,
+    .catalog-product-view .product.data.items {
+        display: block !important;
+        position: relative !important;
+        padding-top: 66px !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.title,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title,
+    .catalog-product-view .product.data.items > .item.title {
+        position: absolute !important;
+        top: 0 !important;
+        left: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        float: none !important;
+        margin: 0 !important;
+        z-index: 3 !important;
+    }
+
+    .catalog-product-view .product.info.detailed #tab-label-description,
+    .catalog-product-view .product.info.detailed .product.data.items > #tab-label-description,
+    .catalog-product-view .product.data.items > #tab-label-description {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+    .catalog-product-view .product.info.detailed #tab-label-reviews,
+    .catalog-product-view .product.info.detailed .product.data.items > #tab-label-reviews,
+    .catalog-product-view .product.data.items > #tab-label-reviews {
+        top: 0 !important;
+        left: 202px !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content:not(.active),
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='true'] {
+        display: none !important;
+    }
+
+    .catalog-product-view .product.data.items > .item.content.active,
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='false'] {
+        display: block !important;
+    }
+}
+
+/* Final desktop catch-all for Magento tab IDs (e.g. tab-label-*-title). */
+@media (min-width: 769px) {
+    .catalog-product-view .product.data.items > [id*='tab-label-description'],
+    .catalog-product-view .product.data.items > [id*='tab-label-reviews'] {
+        position: absolute !important;
+        top: 0 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        float: none !important;
+        margin: 0 !important;
+        z-index: 4 !important;
+    }
+
+    .catalog-product-view .product.data.items > [id*='tab-label-description'] {
+        left: 0 !important;
+    }
+
+    .catalog-product-view .product.data.items > [id*='tab-label-reviews'] {
+        left: 202px !important;
+    }
+}
+
+/* Desktop hard fix: keep Details/Reviews titles on the same row. */
+@media (min-width: 769px) {
+    .catalog-product-view .product.info.detailed .data.items,
+    .catalog-product-view .product.info.detailed .product.data.items,
+    .catalog-product-view .product.data.items {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        position: relative !important;
+        padding-top: 0 !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.title,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.title,
+    .catalog-product-view .product.data.items > .item.title {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        display: block !important;
+        order: 1 !important;
+        margin: 0 !important;
+        float: none !important;
+        z-index: 2 !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content,
+    .catalog-product-view .product.data.items > .item.content {
+        order: 2 !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content:not(.active),
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content:not(.active),
+    .catalog-product-view .product.data.items > .item.content:not(.active),
+    .catalog-product-view .product.info.detailed .data.item.content[aria-hidden='true'],
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content[aria-hidden='true'],
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='true'] {
+        display: none !important;
+    }
+
+    .catalog-product-view .product.info.detailed .data.item.content.active,
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content.active,
+    .catalog-product-view .product.data.items > .item.content.active,
+    .catalog-product-view .product.info.detailed .data.item.content[aria-hidden='false'],
+    .catalog-product-view .product.info.detailed .product.data.items > .item.content[aria-hidden='false'],
+    .catalog-product-view .product.data.items > .item.content[aria-hidden='false'] {
+        display: block !important;
     }
 }
