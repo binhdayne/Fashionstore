@@ -302,3 +302,194 @@
         grid-column: auto;
     }
 }
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-product {
+    display: grid !important;
+    grid-template-columns: 136px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    align-items: start !important;
+    width: 100% !important;
+    padding: 24px 0 !important;
+    box-sizing: border-box !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-left {
+    display: grid !important;
+    grid-template-columns: 22px 110px !important;
+    gap: 8px !important;
+    align-items: start !important;
+    width: 136px !important;
+    min-width: 136px !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-left .product-item-details {
+    display: block !important;
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-left .product-item-name,
+.checkout-cart-index .fashionstore-cart-item-left .product-item-name a {
+    display: block !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-left .fashionstore-item-select {
+    margin: 4px 0 0 !important;
+    padding: 0 !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-left .product-item-photo {
+    display: block !important;
+    float: none !important;
+    width: 110px !important;
+    min-width: 110px !important;
+    margin: 0 !important;
+    padding: 8px !important;
+    border-radius: 14px !important;
+    background: #f5efe4 !important;
+    box-sizing: border-box !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-right {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: start !important;
+    align-content: start !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    padding-right: 12px !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-right .product-item-details,
+.checkout-cart-index .fashionstore-cart-item-right .col.price,
+.checkout-cart-index .fashionstore-cart-item-right .col.qty,
+.checkout-cart-index .fashionstore-cart-item-right .col.subtotal,
+.checkout-cart-index .fashionstore-cart-item-right .item-actions {
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-right .product-item-name {
+    margin: 0 0 4px !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-right .item-options {
+    margin: 0 !important;
+}
+
+.checkout-cart-index .fashionstore-cart-item-right .actions-toolbar {
+    display: flex !important;
+    justify-content: flex-start !important;
+    width: auto !important;
+}
+
+@media (max-width: 767px) {
+    .checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-product {
+        grid-template-columns: 136px minmax(0, 1fr) !important;
+        gap: 14px !important;
+        padding: 18px 0 !important;
+    }
+
+    .checkout-cart-index .fashionstore-cart-item-right {
+        gap: 8px !important;
+        padding-right: 18px !important;
+    }
+
+    .checkout-cart-index .fashionstore-cart-item-right .product-item-name,
+    .checkout-cart-index .fashionstore-cart-item-right .product-item-name a {
+        display: block !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: clip !important;
+    }
+
+    .checkout-cart-index .fashionstore-cart-item-right .price {
+        white-space: nowrap !important;
+    }
+}
+
+/* Final correction: keep image visible and product text below the image. */
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-product {
+    grid-template-columns: 150px minmax(0, 1fr) !important;
+    column-gap: 14px !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    gap: 8px !important;
+    padding-left: 24px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .fashionstore-item-select {
+    position: absolute !important;
+    top: 4px !important;
+    left: 0 !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-photo {
+    display: block !important;
+    float: none !important;
+    position: static !important;
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
+    margin: 0 !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    border-radius: 14px !important;
+    background: #f5efe4 !important;
+    overflow: hidden !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-details {
+    display: block !important;
+    position: static !important;
+    width: 126px !important;
+    max-width: 126px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-name,
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-name a,
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .item-options {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+}
+
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-name,
+.checkout-cart-index #shopping-cart-table tbody.cart.item .fashionstore-cart-item-left .product-item-name a {
+    line-height: 1.28 !important;
+    text-wrap: wrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+}

@@ -26,153 +26,268 @@ $ratingLabels = [
         }
 
         #customer-reviews {
-            margin: 44px auto 72px;
+            margin: 24px 0 48px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: visible;
             color: #172033;
         }
 
         #customer-reviews .block-title strong {
             display: block;
-            margin-bottom: 24px;
+            margin: 0 0 18px;
             color: #111827;
-            font-size: 34px;
+            font-size: clamp(22px, 4vw, 30px);
             font-weight: 800;
-            line-height: 1.2;
+            line-height: 1.25;
+            white-space: normal;
+            overflow: visible;
         }
 
-        #customer-reviews .review-items {
+        #customer-reviews .fs-review-items {
             display: grid;
             gap: 22px;
+            width: 100%;
+            max-width: 100%;
             margin: 0;
             padding: 0;
             list-style: none;
+            box-sizing: border-box;
         }
 
-        #customer-reviews .review-item {
-            display: grid;
-            grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
-            gap: 28px;
-            padding: 28px 30px;
+        #customer-reviews .fs-review-card {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            margin: 0;
+            padding: 18px 14px;
             border: 1px solid rgba(25, 121, 195, 0.12);
-            border-radius: 18px;
+            border-radius: 16px;
             background: #fff;
             box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+            box-sizing: border-box;
+            overflow: visible;
         }
 
-        #customer-reviews .review-title {
-            grid-column: 1 / -1;
+        #customer-reviews .fs-review-title {
             margin: 0;
             color: #0f172a;
-            font-size: 24px;
+            font-size: clamp(18px, 3vw, 22px);
             font-weight: 800;
-            line-height: 1.28;
+            line-height: 1.35;
+            overflow: visible;
         }
 
-        #customer-reviews .review-ratings {
-            display: grid;
-            gap: 10px;
-            align-content: start;
-            padding: 18px;
-            border-radius: 14px;
-            background: #f8fbff;
-        }
-
-        #customer-reviews .rating-summary {
-            display: grid;
-            grid-template-columns: 92px 1fr;
-            align-items: center;
-            gap: 12px;
+        #customer-reviews .fs-review-ratings {
+            display: flex;
+            flex-direction: column;
+            float: none;
+            gap: 8px;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
             margin: 0;
+            padding: 12px 10px;
+            border-radius: 12px;
+            background: #f8fbff;
+            box-sizing: border-box;
+            overflow: visible;
         }
 
-        #customer-reviews .rating-label {
+        #customer-reviews .fs-rating-summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #customer-reviews .fs-rating-label {
+            display: inline-flex;
+            flex: 0 0 70px;
+            min-width: 0;
+            padding: 0;
             color: #475569;
-            font-size: 17px;
+            font-size: 14px;
             font-weight: 700;
+            line-height: 1.25;
         }
 
-        #customer-reviews .rating-result {
-            width: 132px;
-            min-width: 132px;
+        #customer-reviews .fs-rating-result {
+            display: block;
+            flex: 0 0 104px;
+            width: 104px;
+            min-width: 104px;
+            max-width: 104px;
+            overflow: hidden;
         }
 
-        #customer-reviews .rating-result:before,
-        #customer-reviews .rating-result > span:before {
-            font-size: 22px;
-            line-height: 22px;
-            height: 22px;
+        #customer-reviews .fs-rating-result:before,
+        #customer-reviews .fs-rating-result > span:before {
+            font-size: 17px;
+            line-height: 17px;
+            height: 17px;
         }
 
-        #customer-reviews .rating-result > span {
-            height: 22px;
+        #customer-reviews .fs-rating-result > span {
+            height: 17px;
         }
 
-        #customer-reviews .review-content-container {
+        #customer-reviews .fs-review-content-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 18px;
+            width: 100%;
+            max-width: 100%;
             min-width: 0;
         }
 
-        #customer-reviews .review-content {
+        #customer-reviews .fs-review-content {
             color: #1f2937;
-            font-size: 19px;
+            font-size: clamp(15px, 2.5vw, 17px);
             font-weight: 500;
-            line-height: 1.75;
+            line-height: 1.65;
+            overflow: visible;
         }
 
-        #customer-reviews .review-details {
+        #customer-reviews .fs-review-details {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             color: #64748b;
-            font-size: 16px;
+            font-size: 14px;
         }
 
-        #customer-reviews .review-details p {
+        #customer-reviews .fs-review-details p {
             margin: 0;
         }
 
-        #customer-reviews .review-details-label {
+        #customer-reviews .fs-review-details-label {
             color: #64748b;
             font-weight: 600;
         }
 
-        #customer-reviews .review-details-value {
+        #customer-reviews .fs-review-details-value {
             color: #0f172a;
             font-weight: 800;
         }
 
-        #customer-reviews .review-author,
-        #customer-reviews .review-date {
+        #customer-reviews .fs-review-author,
+        #customer-reviews .fs-review-date {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
+            max-width: 100%;
+            gap: 5px;
+            padding: 7px 9px;
             border-radius: 999px;
             background: #f1f5f9;
         }
 
         @media (max-width: 768px) {
+            #customer-reviews {
+                margin: 22px 0 42px;
+                width: 100%;
+                max-width: 100%;
+                position: static;
+                left: auto;
+                right: auto;
+                transform: none;
+                text-indent: 0;
+                box-sizing: border-box;
+            }
+
+            #customer-reviews .block-title,
+            #customer-reviews .block-content,
+            #customer-reviews .fs-review-items,
+            #customer-reviews .fs-review-card,
+            #customer-reviews .fs-review-title,
+            #customer-reviews .fs-review-content,
+            #customer-reviews .fs-review-details,
+            #customer-reviews .fs-review-author,
+            #customer-reviews .fs-review-date,
+            #customer-reviews .fs-rating-summary,
+            #customer-reviews .fs-rating-label,
+            #customer-reviews .fs-rating-result {
+                margin-left: 0;
+                left: auto;
+                right: auto;
+                transform: none;
+                text-indent: 0;
+            }
+
             #customer-reviews .block-title strong {
-                font-size: 28px;
+                margin-bottom: 18px;
+                font-size: 24px;
+                line-height: 1.25;
             }
 
-            #customer-reviews .review-item {
-                grid-template-columns: 1fr;
-                padding: 24px 20px;
+            #customer-reviews .fs-review-card {
+                gap: 16px;
+                padding: 18px 14px;
             }
 
-            #customer-reviews .review-title {
-                font-size: 22px;
+            #customer-reviews .fs-review-title {
+                font-size: 19px;
+                line-height: 1.35;
             }
 
-            #customer-reviews .review-content {
-                font-size: 17px;
+            #customer-reviews .fs-review-ratings {
+                padding: 14px 12px;
             }
+
+            #customer-reviews .fs-rating-summary {
+                gap: 8px;
+            }
+
+            #customer-reviews .fs-rating-label {
+                font-size: 14px;
+                line-height: 1.25;
+            }
+
+            #customer-reviews .fs-rating-result {
+                width: 110px;
+                min-width: 110px;
+            }
+
+            #customer-reviews .fs-rating-result:before,
+            #customer-reviews .fs-rating-result > span:before {
+                font-size: 18px;
+                line-height: 18px;
+                height: 18px;
+            }
+
+            #customer-reviews .fs-rating-result > span {
+                height: 18px;
+            }
+
+            #customer-reviews .fs-review-content {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            #customer-reviews .fs-review-details {
+                gap: 8px;
+                font-size: 13px;
+            }
+
+            #customer-reviews .fs-review-author,
+            #customer-reviews .fs-review-date {
+                max-width: 100%;
+                padding: 7px 10px;
+                gap: 5px;
+            }
+
         }
     </style>
-    <div class="block review-list" id="customer-reviews">
+    <div class="block fs-review-list" id="customer-reviews">
         <?php if (!$block->getHideTitle()): ?>
             <div class="block-title">
                 <strong><?= $escaper->escapeHtml(__('Nhận xét của khách hàng')) ?></strong>
@@ -182,22 +297,22 @@ $ratingLabels = [
             <div class="toolbar review-toolbar">
                 <?= $block->getChildHtml('toolbar') ?>
             </div>
-            <ol class="items review-items">
+            <ol class="fs-review-items">
                 <?php foreach ($_items as $_review): ?>
-                    <li class="item review-item" itemscope itemprop="review" itemtype="http://schema.org/Review">
-                        <div class="review-title" itemprop="name">
+                    <li class="fs-review-card" itemscope itemprop="review" itemtype="http://schema.org/Review">
+                        <div class="fs-review-title" itemprop="name">
                             <?= $escaper->escapeHtml($_review->getTitle()) ?>
                         </div>
                         <?php if (count($_review->getRatingVotes())): ?>
-                            <div class="review-ratings">
+                            <div class="fs-review-ratings">
                                 <?php foreach ($_review->getRatingVotes() as $_vote): ?>
                                     <?php $ratingCode = (string) $_vote->getRatingCode(); ?>
-                                    <div class="rating-summary item"
+                                    <div class="fs-rating-summary"
                                          itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-                                        <span class="label rating-label">
+                                        <span class="fs-rating-label">
                                             <span><?= $escaper->escapeHtml($ratingLabels[$ratingCode] ?? $ratingCode) ?></span>
                                         </span>
-                                        <div class="rating-result"
+                                        <div class="rating-result fs-rating-result"
                                              id="review_<?= /* @noEscape */ $_review->getReviewId() . '_vote_' . $_vote->getVoteId() ?>"
                                              title="<?= $escaper->escapeHtmlAttr($_vote->getPercent()) ?>%">
                                             <meta itemprop="worstRating" content="1"/>
@@ -216,20 +331,20 @@ $ratingLabels = [
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <div class="review-content-container">
-                            <div class="review-content" itemprop="description">
+                        <div class="fs-review-content-container">
+                            <div class="fs-review-content" itemprop="description">
                                 <?= /* @noEscape */ nl2br($escaper->escapeHtml($_review->getDetail())) ?>
                             </div>
-                            <div class="review-details">
-                                <p class="review-author">
-                                    <span class="review-details-label">Người nhận xét</span>
-                                    <strong class="review-details-value" itemprop="author">
+                            <div class="fs-review-details">
+                                <p class="fs-review-author">
+                                    <span class="fs-review-details-label">Người nhận xét</span>
+                                    <strong class="fs-review-details-value" itemprop="author">
                                         <?= $escaper->escapeHtml($_review->getNickname()) ?>
                                     </strong>
                                 </p>
-                                <p class="review-date">
-                                    <span class="review-details-label">Ngày đăng</span>
-                                    <time class="review-details-value" itemprop="datePublished"
+                                <p class="fs-review-date">
+                                    <span class="fs-review-details-label">Ngày đăng</span>
+                                    <time class="fs-review-details-value" itemprop="datePublished"
                                           datetime="<?= $escaper->escapeHtmlAttr($block->formatDate($_review->getCreatedAt(), $format)) ?>">
                                         <?= $escaper->escapeHtml($block->formatDate($_review->getCreatedAt(), $format)) ?>
                                     </time>

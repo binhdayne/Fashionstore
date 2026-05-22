@@ -1052,6 +1052,55 @@ $translationStringsJson = json_encode(
         }
     }
 
+    @media (max-width: 768px) {
+        #header-info-bar #w-icon {
+            display: inline-block !important;
+            width: 13px !important;
+            height: 13px !important;
+            margin: 0 2px !important;
+            object-fit: contain !important;
+            vertical-align: middle !important;
+        }
+
+        body.catalog-category-view .toolbar-sorter,
+        body.catalogsearch-result-index .toolbar-sorter,
+        body.catalog-category-view .sorter,
+        body.catalogsearch-result-index .sorter,
+        body.catalog-category-view .sorter-action,
+        body.catalogsearch-result-index .sorter-action,
+        body.catalog-category-view select.sorter-options,
+        body.catalogsearch-result-index select.sorter-options,
+        body.catalog-category-view .toolbar.toolbar-products,
+        body.catalogsearch-result-index .toolbar.toolbar-products {
+            display: none !important;
+        }
+
+        body.catalog-category-view .toolbar.toolbar-products.fs-mobile-toolbar,
+        body.catalogsearch-result-index .toolbar.toolbar-products.fs-mobile-toolbar {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) !important;
+            align-items: center !important;
+            gap: 10px !important;
+            width: 100% !important;
+            margin: 12px 0 28px !important;
+            padding: 14px 10px !important;
+            border-top: 1px solid #e3d9ca !important;
+            border-bottom: 1px solid #e3d9ca !important;
+            background: rgba(255, 250, 243, .88) !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalog-category-view .fs-mobile-toolbar .toolbar-sorter,
+        body.catalogsearch-result-index .fs-mobile-toolbar .toolbar-sorter,
+        body.catalog-category-view .fs-toolbar-right,
+        body.catalogsearch-result-index .fs-toolbar-right {
+            display: none !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+
     .no-underline,
     .no-underline:hover,
     .no-underline:focus,
@@ -1594,6 +1643,46 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
         $headerBar.addClass('is-mounted');
     }
 
+    function moveMobileCategoryToolbar() {
+        if (!window.matchMedia('(max-width: 768px)').matches) {
+            return;
+        }
+
+        if (!$('body').hasClass('catalog-category-view') && !$('body').hasClass('catalogsearch-result-index')) {
+            return;
+        }
+
+        var $recommendation = $('.fashionstore-recommendation').first();
+        var $priceBox = $('.fs-price-box').first();
+        var $sorter = $('.toolbar-sorter').first();
+
+        if (!$recommendation.length || !$priceBox.length) {
+            return;
+        }
+
+        var $toolbar = $priceBox.closest('.toolbar.toolbar-products');
+        if (!$toolbar.length) {
+            $toolbar = $('<div class="toolbar toolbar-products"></div>');
+            $priceBox.before($toolbar);
+            $toolbar.append($priceBox);
+        }
+
+        var $right = $toolbar.children('.fs-toolbar-right').first();
+        if (!$right.length) {
+            $right = $('<div class="fs-toolbar-right"></div>');
+            $toolbar.append($right);
+        }
+
+        if ($sorter.length && !$toolbar.has($sorter).length) {
+            $right.append($sorter);
+        } else if ($sorter.length && !$sorter.parent().hasClass('fs-toolbar-right')) {
+            $right.append($sorter);
+        }
+
+        $toolbar.addClass('fs-mobile-toolbar');
+        $recommendation.after($toolbar);
+    }
+
     function hideSearchResults() {
         $('#search-filled-state').prop('hidden', true);
         $('#search-products-section').prop('hidden', true);
@@ -1920,6 +2009,9 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
     });
 
     mountHeaderBar();
+    moveMobileCategoryToolbar();
+    window.setTimeout(moveMobileCategoryToolbar, 250);
+    window.setTimeout(moveMobileCategoryToolbar, 900);
     renderCustomerState(customerData.get('customer')());
     customerData.get('customer').subscribe(renderCustomerState);
     startPlaceholderRotation();
