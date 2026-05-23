@@ -174,12 +174,19 @@
 }
 
 .fs-order-history .fs-order-card__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 16px !important;
     font-weight: 700;
     padding: 12px 26px;
     border-radius: 999px;
     background: #f0f0f0;
     color: #555;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
 .fs-order-card__status--pending,
@@ -463,6 +470,23 @@
     .fs-order-card__footer {
         padding-left: 16px;
         padding-right: 16px;
+    }
+
+    .fs-order-card__header {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .fs-order-card__meta {
+        min-width: 0;
+    }
+
+    .fs-order-history .fs-order-card__status {
+        flex: 0 0 auto;
+        min-width: max-content;
+        padding: 10px 18px;
+        font-size: 15px !important;
+        white-space: nowrap;
     }
 
     .fs-order-item__image img {
